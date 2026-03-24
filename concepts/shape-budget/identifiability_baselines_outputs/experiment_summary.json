@@ -1,0 +1,50 @@
+{
+  "identifiability": {
+    "full_low_noise": {
+      "mean_mae": 0.00014641909625238742,
+      "worst_p95_abs_error": 0.000527710642765733
+    },
+    "full_medium_noise": {
+      "mean_mae": 0.0005954873156113148,
+      "worst_p95_abs_error": 0.0021714648566059478
+    },
+    "partial_arc_medium_noise": {
+      "mean_mae": 0.0009221477036733702,
+      "worst_p95_abs_error": 0.0031543880725919955
+    },
+    "sparse_full_medium_noise": {
+      "mean_mae": 0.0019801339544423813,
+      "worst_p95_abs_error": 0.006892966967012636
+    },
+    "sparse_partial_high_noise": {
+      "mean_mae": 0.0034627434823938396,
+      "worst_p95_abs_error": 0.01262075548203448
+    }
+  },
+  "baseline_rmse": {
+    "major_tip_response": {
+      "e_only": 0.15885496216226325,
+      "d_only": 36.233118216440396,
+      "S_only": 116.70746043561948,
+      "d_and_S": 13.252963424425193
+    },
+    "minor_tip_response": {
+      "e_only": 0.0010469143524335887,
+      "d_only": 8.07067998481663,
+      "S_only": 12.806180565823997,
+      "d_and_S": 1.2695347030318083
+    },
+    "normalized_perimeter": {
+      "e_only": 0.000189624275699767,
+      "d_only": 3.637744391903379,
+      "S_only": 5.647291333493884,
+      "d_and_S": 0.5589693715056178
+    },
+    "width_residue": {
+      "e_only": 0.0010469143524335887,
+      "d_only": 8.07067998481663,
+      "S_only": 12.806180565823997,
+      "d_and_S": 1.2695347030318083
+    }
+  }
+}

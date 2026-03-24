@@ -17,29 +17,28 @@ What is already supported:
 - the constant-sum two-circle process reconstructs the analytic ellipse
 - normalized loci collapse across scale for fixed `e`
 - multiple normalized observables behave as one-dimensional functions of `e`
+- the first asymmetry pilot breaks one-knob sufficiency but preserves a clean two-parameter collapse under `(e, w)`
+- `e` is recoverable from noisy, partial, and sparse boundary observations when the source positions are known
+- `e` strongly outperforms raw `d`, raw `S`, and low-capacity models on `(d, S)` under a scale-held-out predictive test
 
 What is not yet established:
 
-- whether `e` remains sufficient once symmetry is broken
-- whether `e` is recoverable from noisy or partial observations
-- whether `e` outperforms more naive alternatives as a predictive variable
+- whether the inverse story remains strong when the source positions are unknown
 - whether the same budget logic survives in nearby families such as hyperbolas, anisotropic media, or multi-source systems
+- whether the symmetric family is best understood as a genuinely one-dimensional manifold in boundary space
+- how conditioning changes near the degenerate edges `e -> 0` and `e -> 1`
 
 ## Priority Order
 
-| Priority | Experiment | Primary purpose | Success metric |
+| Status | Experiment | Primary purpose | Success metric |
 |---|---|---|---|
-| 1 | Unequal growth / unequal budget split | Robustness test | Clean low-dimensional collapse under `(e, w)` with normalized residuals near floating-point error for fixed `(e, w)` and visible one-knob failure when `w` varies |
-| 2 | Identifiability and baseline comparison | Operational usefulness | `e` recovers reliably from noisy boundary data and outperforms raw single-variable baselines across scale |
-| 3 | Hyperbola flip | Theory extension | Parallel normalized control parameter emerges with clean scale collapse in the fixed-difference family |
-| 4 | Controlled anisotropy | Universality test | Collapse survives after adding one directional descriptor or a whitened coordinate transform |
-| 5 | Multi-source generalization | Higher-dimensional extension | A low-dimensional allocation space organizes normalized geometry better than raw coordinates alone |
-
-1. Unequal growth / unequal budget split
-2. Identifiability and baseline comparison
-3. Hyperbola flip
-4. Controlled anisotropy
-5. Multi-source generalization
+| completed | Unequal growth / unequal budget split | Robustness test | Completed: one-knob sufficiency fails under asymmetry, but normalized geometry collapses cleanly under `(e, w)` |
+| completed | Identifiability and baseline comparison | Operational usefulness | Completed: `e` recovers reliably in the known-source setting and outperforms raw baselines across scale |
+| next | Manifold-dimension test | One-dimensionality confirmation | One dominant dimension explains nearly all variation in the symmetric normalized boundary family |
+| next | Hyperbola flip | Theory extension | Parallel normalized control parameter emerges with clean scale collapse in the fixed-difference family |
+| next | Controlled anisotropy | Universality test | Collapse survives after adding one directional descriptor or a whitened coordinate transform |
+| later | Multi-source generalization | Higher-dimensional extension | A low-dimensional allocation space organizes normalized geometry better than raw coordinates alone |
+| later | Edge-regime stability | Conditioning map | Clear sensitivity map of width, perimeter, and curvature responses near `e -> 0` and `e -> 1` |
 
 This order is deliberate. The first two experiments harden the evidence for the existing claim. The later ones broaden the theory.
 
@@ -325,9 +324,9 @@ Clear map of which downstream quantities are robust and which become unstable ne
 
 If the goal is to harden the evidence as efficiently as possible, I would do:
 
-1. Unequal growth / unequal budget split
-2. Identifiability and baseline comparison
-3. Manifold-dimension test
+1. Manifold-dimension test
+2. Edge-regime stability
+3. Hyperbola flip
 
 If the goal is instead to broaden the concept as quickly as possible, I would do:
 
@@ -339,11 +338,11 @@ My recommendation is the first path.
 
 ## Bottom Line
 
-The project now has enough evidence to justify the phrase “control knob” inside the symmetric two-source Euclidean model.
+The project now has enough evidence to justify the phrase “control knob” inside the symmetric two-source Euclidean model, and enough inverse/predictive evidence to say that the knob is operational in the known-source setting.
 
 The next scientific question is not whether the phrase is evocative. It is:
 
-> How far does the sufficiency of `e = c/a` actually extend, and when does it break?
+> How compactly does Shape Budget continue to organize geometry once we leave the simplest symmetric setting?
 
 That is the right question for the next phase.
 
@@ -358,11 +357,16 @@ At a deeper level, this roadmap is testing whether Shape Budget is best understo
 
 If the asymmetry experiment still produces a clean low-dimensional collapse, that would be evidence in favor of the stronger process reading.
 
+The asymmetry pilot and the identifiability/baseline experiment now both push in that direction:
+
+- asymmetry did not destroy the program; it promoted the family from one control dimension to two
+- the symmetric control variable is recoverable and predictive, not just algebraically available
+
 ## Risk Register
 
-- Risk: asymmetry introduces too many free parameters and collapse fails trivially.
-  Mitigation: start with one fixed asymmetry parameter `w` and hold everything else constant.
-- Risk: numerical instability near the degenerate edge obscures the result.
-  Mitigation: cap early pilot sweeps away from `e -> 1` and only extend to the edge after the pipeline is stable.
-- Risk: an appealing extension distracts from hardening the original claim.
-  Mitigation: treat hyperbola, anisotropy, and multi-source work as phase-2 only unless Experiment 1 is complete.
+- Risk: known-source identifiability looks strong but the harder unknown-source inverse problem may be substantially less stable.
+  Mitigation: keep future inverse experiments explicit about which latent quantities are assumed known.
+- Risk: symmetric observables can be deceptively redundant because several normalized quantities collapse to the same function of `e`.
+  Mitigation: include boundary-space or manifold-level tests, not only scalar observables.
+- Risk: extension work outruns conditioning analysis near the degenerate edge.
+  Mitigation: run the edge-regime stability experiment before making strong claims about robustness near `e -> 1`.
