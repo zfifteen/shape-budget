@@ -1,10 +1,12 @@
-"""Support-aware pose-marginalized policy solver (packet-level iteration).
+"""Out-of-sample validated support-aware joint policy solver.
 
-Design goal: keep the support-aware baseline's robustness while preserving the
-joint solver's complementary wins using an observable reliability gate.
+This script evaluates policy-gated routing between support-aware and joint
+candidates on the focused bottleneck slice using disjoint validation:
 
-This script operates on the same-trial packet produced by the current
-`joint-pose-marginalized-solver` experiment and outputs a new solver packet.
+1) leave-one-trial-out (LOTO)
+2) leave-one-cell-out (LOCO)
+
+Calibration and evaluation are explicitly separated in each fold.
 """
 
 from __future__ import annotations
@@ -12,12 +14,10 @@ from __future__ import annotations
 import csv
 import json
 import os
-from collections import defaultdict
 from dataclasses import dataclass
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
-FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 SOURCE_TRIALS = os.path.join(
     BASE_DIR,
     "..",
@@ -25,51 +25,115 @@ SOURCE_TRIALS = os.path.join(
     "outputs",
     "joint_pose_marginalized_solver_trials.csv",
 )
-os.makedirs(FIGURE_DIR, exist_ok=True)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 FOCUS_CONDITIONS = ["sparse_full_noisy", "sparse_partial_high_noise"]
-FOCUS_ALPHA_BIN = "moderate"
 GEOMETRY_SKEW_BIN_LABELS = ["low_skew", "mid_skew", "high_skew"]
+FOCUS_ALPHA_BIN = "moderate"
+
+@dataclass
+class FoldParams:
+    entropy_partial: float
+    ratio_partial: float
+    entropy_full: float
+    ratio_full: float
 
 
 @dataclass
-class TrialRow:
+class Trial:
+    row_id: int
     condition: str
     geometry_skew_bin: str
     trial_in_cell: int
-    support_gated_alpha_error: float
-    support_gated_fit_rmse: float
-    joint_alpha_error: float
-    joint_fit_rmse: float
-    joint_score: float
-    joint_pose_entropy: float
-    policy_alpha_error: float
-    policy_fit_rmse: float
-    policy_choose_joint: int
-    oracle_two_alpha_error: float
-    oracle_pose_alpha_error: float
-
-
-def to_float(row: dict[str, str], key: str) -> float:
-    return float(row[key])
-
-
-def choose_policy(row: dict[str, str]) -> int:
-    condition = row["condition"]
-    entropy = to_float(row, "joint_pose_entropy")
-    joint_fit = to_float(row, "joint_fit_rmse")
-    support_fit = to_float(row, "support_gated_fit_rmse")
-
-    if condition == "sparse_partial_high_noise":
-        return int(entropy <= 0.62 and joint_fit <= support_fit * 1.20)
-    return int(entropy <= 0.76 and joint_fit <= support_fit * 1.16)
+    support_alpha: float
+    support_fit: float
+    joint_alpha: float
+    joint_fit: float
+    joint_entropy: float
+    oracle_pose_alpha: float
 
 
 def mean(values: list[float]) -> float:
     return sum(values) / max(len(values), 1)
 
 
-def write_csv(path: str, rows: list[dict[str, float | int | str]]) -> None:
+def parse_trials() -> list[Trial]:
+    trials: list[Trial] = []
+    with open(SOURCE_TRIALS, "r", encoding="utf-8") as f:
+        for idx, row in enumerate(csv.DictReader(f)):
+            if row["condition"] not in FOCUS_CONDITIONS:
+                continue
+            trials.append(
+                Trial(
+                    row_id=idx,
+                    condition=row["condition"],
+                    geometry_skew_bin=row["geometry_skew_bin"],
+                    trial_in_cell=int(float(row["trial_in_cell"])),
+                    support_alpha=float(row["support_gated_alpha_error"]),
+                    support_fit=float(row["support_gated_fit_rmse"]),
+                    joint_alpha=float(row["joint_alpha_error"]),
+                    joint_fit=float(row["joint_fit_rmse"]),
+                    joint_entropy=float(row["joint_pose_entropy"]),
+                    oracle_pose_alpha=float(row["oracle_pose_alpha_error"]),
+                )
+            )
+    return trials
+
+
+def choose_joint(trial: Trial, p: FoldParams) -> int:
+    if trial.condition == "sparse_partial_high_noise":
+        return int(trial.joint_entropy <= p.entropy_partial and trial.joint_fit <= trial.support_fit * p.ratio_partial)
+    return int(trial.joint_entropy <= p.entropy_full and trial.joint_fit <= trial.support_fit * p.ratio_full)
+
+
+def policy_alpha(trial: Trial, p: FoldParams) -> float:
+    return trial.joint_alpha if choose_joint(trial, p) else trial.support_alpha
+
+
+def calibrate(train_trials: list[Trial]) -> FoldParams:
+    best_params = FoldParams(0.62, 1.20, 0.76, 1.16)
+    best_error = float("inf")
+
+    entropy_values = sorted({round(t.joint_entropy, 12) for t in train_trials})
+    ratio_values = sorted({round(t.joint_fit / max(t.support_fit, 1.0e-12), 12) for t in train_trials})
+
+    # add conservative/open sentinels so the search can choose "almost never" and
+    # "almost always" routes.
+    entropy_values = [min(entropy_values) - 1.0e-9] + entropy_values + [max(entropy_values) + 1.0e-9]
+    ratio_values = [min(ratio_values) - 1.0e-9] + ratio_values + [max(ratio_values) + 1.0e-9]
+
+    for ep in entropy_values:
+        for rp in ratio_values:
+            for ef in entropy_values:
+                for rf in ratio_values:
+                    params = FoldParams(float(ep), float(rp), float(ef), float(rf))
+                    err = mean([policy_alpha(t, params) for t in train_trials])
+                    if err + 1.0e-12 < best_error:
+                        best_error = err
+                        best_params = params
+    return best_params
+
+
+def summarize(rows: list[dict[str, float | str | int]], key_field: str) -> list[dict[str, float | str]]:
+    keys = sorted({str(r[key_field]) for r in rows})
+    out: list[dict[str, float | str]] = []
+    for key in keys:
+        subset = [r for r in rows if str(r[key_field]) == key]
+        out.append(
+            {
+                key_field: key,
+                "count": float(len(subset)),
+                "support_alpha_mean": mean([float(r["support_alpha"]) for r in subset]),
+                "joint_alpha_mean": mean([float(r["joint_alpha"]) for r in subset]),
+                "policy_alpha_mean": mean([float(r["policy_alpha"]) for r in subset]),
+                "oracle_two_alpha_mean": mean([float(r["oracle_two_alpha"]) for r in subset]),
+                "policy_choose_joint_fraction": mean([float(r["policy_choose_joint"]) for r in subset]),
+            }
+        )
+    return out
+
+
+def write_csv(path: str, rows: list[dict[str, float | str | int]]) -> None:
     if not rows:
         return
     with open(path, "w", newline="", encoding="utf-8") as f:
@@ -78,177 +142,168 @@ def write_csv(path: str, rows: list[dict[str, float | int | str]]) -> None:
         writer.writerows(rows)
 
 
-def build_simple_svg(path: str, title: str, labels: list[str], a: list[float], b: list[float], c: list[float]) -> None:
-    width = 840
-    height = 360
-    margin = 50
-    chart_h = height - 2 * margin
-    max_v = max(a + b + c + [1e-9])
-    bar_w = 28
-    group_gap = 90
+def run_loto(trials: list[Trial]) -> dict[str, object]:
+    eval_rows: list[dict[str, float | str | int]] = []
+    calibration_rows: list[dict[str, float | str | int]] = []
 
-    lines = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}">',
-        '<rect width="100%" height="100%" fill="white"/>',
-        f'<text x="{width//2}" y="26" text-anchor="middle" font-size="18" font-family="sans-serif">{title}</text>',
-    ]
+    for i, holdout in enumerate(trials):
+        train = [t for j, t in enumerate(trials) if j != i]
+        params = calibrate(train)
 
-    for i, label in enumerate(labels):
-        gx = margin + i * (3 * bar_w + group_gap)
-        vals = [a[i], b[i], c[i]]
-        colors = ["#2a9d8f", "#e76f51", "#264653"]
-        for j, (v, color) in enumerate(zip(vals, colors)):
-            h = int((v / max_v) * (chart_h - 10))
-            x = gx + j * bar_w
-            y = height - margin - h
-            lines.append(f'<rect x="{x}" y="{y}" width="{bar_w-4}" height="{h}" fill="{color}"/>')
-            lines.append(f'<text x="{x+10}" y="{y-6}" font-size="10" font-family="monospace">{v:.3f}</text>')
-        lines.append(f'<text x="{gx+bar_w}" y="{height-margin+18}" font-size="11" font-family="sans-serif">{label}</text>')
-
-    lines.extend(
-        [
-            '<text x="560" y="70" font-size="11" font-family="sans-serif" fill="#2a9d8f">support-aware</text>',
-            '<text x="560" y="88" font-size="11" font-family="sans-serif" fill="#e76f51">joint solver</text>',
-            '<text x="560" y="106" font-size="11" font-family="sans-serif" fill="#264653">new policy solver</text>',
-            "</svg>",
-        ]
-    )
-    with open(path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines))
-
-
-def main() -> None:
-    with open(SOURCE_TRIALS, "r", encoding="utf-8") as f:
-        source_rows = [row for row in csv.DictReader(f) if row["condition"] in FOCUS_CONDITIONS]
-
-    out_rows: list[TrialRow] = []
-    for row in source_rows:
-        choose_joint = choose_policy(row)
-        support_alpha = to_float(row, "support_gated_alpha_error")
-        joint_alpha = to_float(row, "joint_alpha_error")
-        support_fit = to_float(row, "support_gated_fit_rmse")
-        joint_fit = to_float(row, "joint_fit_rmse")
-
-        out_rows.append(
-            TrialRow(
-                condition=row["condition"],
-                geometry_skew_bin=row["geometry_skew_bin"],
-                trial_in_cell=int(float(row["trial_in_cell"])),
-                support_gated_alpha_error=support_alpha,
-                support_gated_fit_rmse=support_fit,
-                joint_alpha_error=joint_alpha,
-                joint_fit_rmse=joint_fit,
-                joint_score=to_float(row, "joint_score"),
-                joint_pose_entropy=to_float(row, "joint_pose_entropy"),
-                policy_alpha_error=joint_alpha if choose_joint else support_alpha,
-                policy_fit_rmse=joint_fit if choose_joint else support_fit,
-                policy_choose_joint=choose_joint,
-                oracle_two_alpha_error=min(support_alpha, joint_alpha),
-                oracle_pose_alpha_error=to_float(row, "oracle_pose_alpha_error"),
-            )
-        )
-
-    by_condition: list[dict[str, float | str]] = []
-    for condition in FOCUS_CONDITIONS:
-        subset = [r for r in out_rows if r.condition == condition]
-        by_condition.append(
+        choose = choose_joint(holdout, params)
+        policy = holdout.joint_alpha if choose else holdout.support_alpha
+        eval_rows.append(
             {
-                "condition": condition,
-                "support_gated_alpha_error_mean": mean([r.support_gated_alpha_error for r in subset]),
-                "joint_alpha_error_mean": mean([r.joint_alpha_error for r in subset]),
-                "policy_alpha_error_mean": mean([r.policy_alpha_error for r in subset]),
-                "oracle_two_alpha_error_mean": mean([r.oracle_two_alpha_error for r in subset]),
-                "oracle_pose_alpha_error_mean": mean([r.oracle_pose_alpha_error for r in subset]),
-                "policy_choose_joint_fraction": mean([float(r.policy_choose_joint) for r in subset]),
-                "joint_pose_entropy_mean": mean([r.joint_pose_entropy for r in subset]),
+                "row_id": holdout.row_id,
+                "condition": holdout.condition,
+                "geometry_skew_bin": holdout.geometry_skew_bin,
+                "trial_in_cell": holdout.trial_in_cell,
+                "support_alpha": holdout.support_alpha,
+                "joint_alpha": holdout.joint_alpha,
+                "policy_alpha": policy,
+                "oracle_two_alpha": min(holdout.support_alpha, holdout.joint_alpha),
+                "oracle_pose_alpha": holdout.oracle_pose_alpha,
+                "policy_choose_joint": choose,
             }
         )
 
-    grouped: dict[tuple[str, str], list[TrialRow]] = defaultdict(list)
-    for r in out_rows:
-        grouped[(r.condition, r.geometry_skew_bin)].append(r)
+        calibration_rows.append(
+            {
+                "fold": i,
+                "holdout_row_id": holdout.row_id,
+                "holdout_condition": holdout.condition,
+                "holdout_geometry_skew_bin": holdout.geometry_skew_bin,
+                "entropy_partial": params.entropy_partial,
+                "ratio_partial": params.ratio_partial,
+                "entropy_full": params.entropy_full,
+                "ratio_full": params.ratio_full,
+                "train_policy_alpha_mean": mean([policy_alpha(t, params) for t in train]),
+                "train_support_alpha_mean": mean([t.support_alpha for t in train]),
+                "train_joint_alpha_mean": mean([t.joint_alpha for t in train]),
+            }
+        )
 
-    by_cell: list[dict[str, float | str]] = []
-    for condition in FOCUS_CONDITIONS:
-        for skew_bin in GEOMETRY_SKEW_BIN_LABELS:
-            subset = grouped[(condition, skew_bin)]
-            if not subset:
-                continue
-            by_cell.append(
+    overall = {
+        "support_alpha_mean": mean([float(r["support_alpha"]) for r in eval_rows]),
+        "joint_alpha_mean": mean([float(r["joint_alpha"]) for r in eval_rows]),
+        "policy_alpha_mean": mean([float(r["policy_alpha"]) for r in eval_rows]),
+        "oracle_two_alpha_mean": mean([float(r["oracle_two_alpha"]) for r in eval_rows]),
+        "policy_minus_support": mean([float(r["policy_alpha"]) - float(r["support_alpha"]) for r in eval_rows]),
+        "policy_minus_joint": mean([float(r["policy_alpha"]) - float(r["joint_alpha"]) for r in eval_rows]),
+        "policy_choose_joint_fraction": mean([float(r["policy_choose_joint"]) for r in eval_rows]),
+    }
+
+    by_condition = summarize(eval_rows, "condition")
+
+    for row in eval_rows:
+        row["cell"] = f"{row['condition']}::{row['geometry_skew_bin']}"
+    by_cell = summarize(eval_rows, "cell")
+
+    return {
+        "evaluation_rows": eval_rows,
+        "calibration_rows": calibration_rows,
+        "overall": overall,
+        "by_condition": by_condition,
+        "by_cell": by_cell,
+    }
+
+
+def run_loco(trials: list[Trial]) -> dict[str, object]:
+    cells = sorted({(t.condition, t.geometry_skew_bin) for t in trials})
+    eval_rows: list[dict[str, float | str | int]] = []
+    calibration_rows: list[dict[str, float | str | int]] = []
+
+    for fold_idx, (cond, skew) in enumerate(cells):
+        holdout = [t for t in trials if t.condition == cond and t.geometry_skew_bin == skew]
+        train = [t for t in trials if not (t.condition == cond and t.geometry_skew_bin == skew)]
+        params = calibrate(train)
+
+        calibration_rows.append(
+            {
+                "fold": fold_idx,
+                "holdout_cell": f"{cond}::{skew}",
+                "entropy_partial": params.entropy_partial,
+                "ratio_partial": params.ratio_partial,
+                "entropy_full": params.entropy_full,
+                "ratio_full": params.ratio_full,
+                "train_policy_alpha_mean": mean([policy_alpha(t, params) for t in train]),
+                "train_support_alpha_mean": mean([t.support_alpha for t in train]),
+                "train_joint_alpha_mean": mean([t.joint_alpha for t in train]),
+            }
+        )
+
+        for t in holdout:
+            choose = choose_joint(t, params)
+            eval_rows.append(
                 {
-                    "condition": condition,
-                    "alpha_strength_bin": FOCUS_ALPHA_BIN,
-                    "geometry_skew_bin": skew_bin,
-                    "count": len(subset),
-                    "support_gated_alpha_error_mean": mean([r.support_gated_alpha_error for r in subset]),
-                    "joint_alpha_error_mean": mean([r.joint_alpha_error for r in subset]),
-                    "policy_alpha_error_mean": mean([r.policy_alpha_error for r in subset]),
-                    "oracle_two_alpha_error_mean": mean([r.oracle_two_alpha_error for r in subset]),
-                    "policy_choose_joint_fraction": mean([float(r.policy_choose_joint) for r in subset]),
+                    "row_id": t.row_id,
+                    "condition": t.condition,
+                    "geometry_skew_bin": t.geometry_skew_bin,
+                    "trial_in_cell": t.trial_in_cell,
+                    "support_alpha": t.support_alpha,
+                    "joint_alpha": t.joint_alpha,
+                    "policy_alpha": t.joint_alpha if choose else t.support_alpha,
+                    "oracle_two_alpha": min(t.support_alpha, t.joint_alpha),
+                    "policy_choose_joint": choose,
                 }
             )
 
-    focused_support = mean([r.support_gated_alpha_error for r in out_rows])
-    focused_joint = mean([r.joint_alpha_error for r in out_rows])
-    focused_policy = mean([r.policy_alpha_error for r in out_rows])
-    focused_oracle_two = mean([r.oracle_two_alpha_error for r in out_rows])
+    overall = {
+        "support_alpha_mean": mean([float(r["support_alpha"]) for r in eval_rows]),
+        "joint_alpha_mean": mean([float(r["joint_alpha"]) for r in eval_rows]),
+        "policy_alpha_mean": mean([float(r["policy_alpha"]) for r in eval_rows]),
+        "oracle_two_alpha_mean": mean([float(r["oracle_two_alpha"]) for r in eval_rows]),
+        "policy_minus_support": mean([float(r["policy_alpha"]) - float(r["support_alpha"]) for r in eval_rows]),
+        "policy_minus_joint": mean([float(r["policy_alpha"]) - float(r["joint_alpha"]) for r in eval_rows]),
+        "policy_choose_joint_fraction": mean([float(r["policy_choose_joint"]) for r in eval_rows]),
+    }
+    by_condition = summarize(eval_rows, "condition")
+    for row in eval_rows:
+        row["cell"] = f"{row['condition']}::{row['geometry_skew_bin']}"
+    by_cell = summarize(eval_rows, "cell")
+
+    return {
+        "evaluation_rows": eval_rows,
+        "calibration_rows": calibration_rows,
+        "overall": overall,
+        "by_condition": by_condition,
+        "by_cell": by_cell,
+    }
+
+
+def main() -> None:
+    trials = parse_trials()
+
+    loto = run_loto(trials)
+    loco = run_loco(trials)
 
     summary = {
-        "source_packet": "joint_pose_marginalized_solver_trials.csv",
+        "source_packet": os.path.relpath(SOURCE_TRIALS, BASE_DIR),
         "focused_conditions": FOCUS_CONDITIONS,
         "focused_alpha_bin": FOCUS_ALPHA_BIN,
-        "focused_support_gated_mean_alpha_error": focused_support,
-        "focused_joint_mean_alpha_error": focused_joint,
-        "focused_policy_mean_alpha_error": focused_policy,
-        "focused_oracle_two_mean_alpha_error": focused_oracle_two,
-        "policy_minus_support_alpha_error": focused_policy - focused_support,
-        "policy_minus_joint_alpha_error": focused_policy - focused_joint,
-        "policy_gap_to_oracle_two": focused_policy - focused_oracle_two,
-        "condition_means": by_condition,
+        "benchmark_support_overall_mean": 0.1714,
+        "benchmark_joint_overall_mean": 0.1835,
+        "validation": {
+            "leave_one_trial_out": {
+                "overall": loto["overall"],
+                "by_condition": loto["by_condition"],
+                "by_cell": loto["by_cell"],
+            },
+            "leave_one_cell_out": {
+                "overall": loco["overall"],
+                "by_condition": loco["by_condition"],
+                "by_cell": loco["by_cell"],
+            },
+        },
     }
 
-    complementarity = {
-        "focused_support_gated_mean_alpha_error": focused_support,
-        "focused_joint_mean_alpha_error": focused_joint,
-        "focused_policy_mean_alpha_error": focused_policy,
-        "focused_oracle_two_mean_alpha_error": focused_oracle_two,
-        "policy_choose_joint_fraction": mean([float(r.policy_choose_joint) for r in out_rows]),
-        "policy_oracle_alignment_fraction": mean(
-            [
-                float(
-                    (r.policy_choose_joint == 1 and r.joint_alpha_error <= r.support_gated_alpha_error + 1.0e-12)
-                    or (r.policy_choose_joint == 0 and r.support_gated_alpha_error <= r.joint_alpha_error + 1.0e-12)
-                )
-                for r in out_rows
-            ]
-        ),
-    }
+    write_csv(os.path.join(OUTPUT_DIR, "support_aware_joint_policy_solver_loto_eval.csv"), loto["evaluation_rows"]) 
+    write_csv(os.path.join(OUTPUT_DIR, "support_aware_joint_policy_solver_loto_calibration.csv"), loto["calibration_rows"]) 
+    write_csv(os.path.join(OUTPUT_DIR, "support_aware_joint_policy_solver_loco_eval.csv"), loco["evaluation_rows"]) 
+    write_csv(os.path.join(OUTPUT_DIR, "support_aware_joint_policy_solver_loco_calibration.csv"), loco["calibration_rows"]) 
 
-    write_csv(
-        os.path.join(OUTPUT_DIR, "support_aware_joint_policy_solver_trials.csv"),
-        [r.__dict__ for r in out_rows],
-    )
-    write_csv(os.path.join(OUTPUT_DIR, "support_aware_joint_policy_solver_summary.csv"), by_condition)
-    write_csv(os.path.join(OUTPUT_DIR, "support_aware_joint_policy_solver_cells.csv"), by_cell)
-
-    with open(os.path.join(OUTPUT_DIR, "support_aware_joint_policy_solver_summary.json"), "w", encoding="utf-8") as f:
+    with open(os.path.join(OUTPUT_DIR, "support_aware_joint_policy_solver_oos_summary.json"), "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2)
-
-    with open(os.path.join(OUTPUT_DIR, "support_aware_joint_policy_complementarity.json"), "w", encoding="utf-8") as f:
-        json.dump(complementarity, f, indent=2)
-
-    labels = [str(r["condition"]) for r in by_condition]
-    support_vals = [float(r["support_gated_alpha_error_mean"]) for r in by_condition]
-    joint_vals = [float(r["joint_alpha_error_mean"]) for r in by_condition]
-    policy_vals = [float(r["policy_alpha_error_mean"]) for r in by_condition]
-    build_simple_svg(
-        os.path.join(FIGURE_DIR, "support_aware_joint_policy_solver_overview.svg"),
-        "Support-aware joint policy solver: focused condition means",
-        labels,
-        support_vals,
-        joint_vals,
-        policy_vals,
-    )
 
     print(json.dumps(summary, indent=2))
 

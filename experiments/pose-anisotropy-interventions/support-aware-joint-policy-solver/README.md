@@ -1,69 +1,46 @@
-# Support-Aware Joint Policy Solver
+# Support-Aware Joint Policy Solver (Out-of-Sample Validation)
 
-This experiment implements the next solver iteration for the focused anisotropic
-inverse bottleneck slice without changing the forward model or latent control
-object.
+This folder now focuses on **disjoint validation**, not in-sample routing wins.
 
-The script is [run.py](run.py#L1).
+Script: [run.py](run.py#L1)
 
-## Solver design
+## Scope kept fixed
 
-This iteration keeps both existing candidate generators and changes only the
-solver policy:
+- Forward model: unchanged
+- Latent control object: unchanged
+- Focus slice: `sparse_full_noisy` + `sparse_partial_high_noise`, moderate anisotropy, low/mid/high skew
 
-- support-aware baseline candidate
-- joint pose-marginalized candidate
-- reliability-aware policy gate using observable signals:
-  - joint pose entropy
-  - support-vs-joint fit RMSE comparison
-  - condition-specific thresholds for sparse-full vs sparse-partial
+## Validation design
 
-The policy is intentionally conservative in `sparse_partial_high_noise` and more
-permissive in `sparse_full_noisy`.
+`run.py` performs two disjoint validations on the focused packet:
 
-## Inputs
+1. **Leave-one-trial-out (LOTO)**
+   - calibrate policy thresholds on 11 trials
+   - evaluate on 1 held-out trial
+   - repeat for all trials
 
-The script evaluates on the same-trial packet from the current joint-solver
-experiment:
+2. **Leave-one-cell-out (LOCO)**
+   - calibrate on 5 cells
+   - evaluate on 1 held-out cell
+   - repeat for all cells
 
-- `../joint-pose-marginalized-solver/outputs/joint_pose_marginalized_solver_trials.csv`
+Calibration outputs and held-out evaluations are written separately.
 
 ## Outputs
 
-- [support_aware_joint_policy_solver_summary.json](outputs/support_aware_joint_policy_solver_summary.json)
-- [support_aware_joint_policy_solver_summary.csv](outputs/support_aware_joint_policy_solver_summary.csv)
-- [support_aware_joint_policy_solver_cells.csv](outputs/support_aware_joint_policy_solver_cells.csv)
-- [support_aware_joint_policy_solver_trials.csv](outputs/support_aware_joint_policy_solver_trials.csv)
-- [support_aware_joint_policy_complementarity.json](outputs/support_aware_joint_policy_complementarity.json)
-- [support_aware_joint_policy_solver_overview.svg](outputs/figures/support_aware_joint_policy_solver_overview.svg)
+- `outputs/support_aware_joint_policy_solver_loto_calibration.csv`
+- `outputs/support_aware_joint_policy_solver_loto_eval.csv`
+- `outputs/support_aware_joint_policy_solver_loco_calibration.csv`
+- `outputs/support_aware_joint_policy_solver_loco_eval.csv`
+- `outputs/support_aware_joint_policy_solver_oos_summary.json`
 
-## Main result
+## Result
 
-On the focused same-trial packet, this policy solver improves over both:
+The out-of-sample policy does **not** beat the benchmark support-aware baseline:
 
-- the standalone joint solver mean (`0.1835` in issue context)
-- the same-trial support-aware baseline mean (`0.1714` in issue context)
+- benchmark support-aware overall: `0.1714`
+- LOTO policy overall: `0.1714`
+- LOCO policy overall: `0.1714`
 
-Generated packet result:
-
-- focused support-aware mean alpha error: `0.1714`
-- focused joint mean alpha error: `0.1835`
-- focused new policy mean alpha error: `0.1399`
-- focused oracle best-of-two mean alpha error: `0.1281`
-
-## Plain-language interpretation
-
-What changed:
-
-- the solver now routes between two existing inverse candidates using
-  reliability-aware gating instead of using either resolver alone.
-
-What happened:
-
-- the routing policy avoids many sparse-partial over-switches while keeping
-  selected joint wins, reducing overall focused alpha error.
-
-BGP read impact:
-
-- this **strengthens** the current BGP read that the unresolved bottleneck is a
-  solver-design and routing problem, not a control-object theory failure.
+So this iteration adds required disjoint validation, but does **not** resolve the
+focused bottleneck yet.

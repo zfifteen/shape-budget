@@ -1,0 +1,186 @@
+{
+  "source_packet": "../joint-pose-marginalized-solver/outputs/joint_pose_marginalized_solver_trials.csv",
+  "focused_conditions": [
+    "sparse_full_noisy",
+    "sparse_partial_high_noise"
+  ],
+  "focused_alpha_bin": "moderate",
+  "benchmark_support_overall_mean": 0.1714,
+  "benchmark_joint_overall_mean": 0.1835,
+  "validation": {
+    "leave_one_trial_out": {
+      "overall": {
+        "support_alpha_mean": 0.1713940930372718,
+        "joint_alpha_mean": 0.1835302813296511,
+        "policy_alpha_mean": 0.1713940930372718,
+        "oracle_two_alpha_mean": 0.1281032160699384,
+        "policy_minus_support": 0.0,
+        "policy_minus_joint": -0.012136188292379344,
+        "policy_choose_joint_fraction": 0.4166666666666667
+      },
+      "by_condition": [
+        {
+          "condition": "sparse_full_noisy",
+          "count": 6.0,
+          "support_alpha_mean": 0.12331280002327195,
+          "joint_alpha_mean": 0.1283654281963597,
+          "policy_alpha_mean": 0.12331280002327195,
+          "oracle_two_alpha_mean": 0.1230526539512054,
+          "policy_choose_joint_fraction": 0.6666666666666666
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "count": 6.0,
+          "support_alpha_mean": 0.21947538605127156,
+          "joint_alpha_mean": 0.23869513446294252,
+          "policy_alpha_mean": 0.21947538605127156,
+          "oracle_two_alpha_mean": 0.13315377818867138,
+          "policy_choose_joint_fraction": 0.16666666666666666
+        }
+      ],
+      "by_cell": [
+        {
+          "cell": "sparse_full_noisy::high_skew",
+          "count": 2.0,
+          "support_alpha_mean": 0.33095182069390233,
+          "joint_alpha_mean": 0.33017138247770267,
+          "policy_alpha_mean": 0.33095182069390233,
+          "oracle_two_alpha_mean": 0.33017138247770267,
+          "policy_choose_joint_fraction": 0.5
+        },
+        {
+          "cell": "sparse_full_noisy::low_skew",
+          "count": 2.0,
+          "support_alpha_mean": 0.02771139628995245,
+          "joint_alpha_mean": 0.04364971902541537,
+          "policy_alpha_mean": 0.02771139628995245,
+          "oracle_two_alpha_mean": 0.02771139628995245,
+          "policy_choose_joint_fraction": 0.5
+        },
+        {
+          "cell": "sparse_full_noisy::mid_skew",
+          "count": 2.0,
+          "support_alpha_mean": 0.011275183085961094,
+          "joint_alpha_mean": 0.011275183085961094,
+          "policy_alpha_mean": 0.011275183085961094,
+          "oracle_two_alpha_mean": 0.011275183085961094,
+          "policy_choose_joint_fraction": 1.0
+        },
+        {
+          "cell": "sparse_partial_high_noise::high_skew",
+          "count": 2.0,
+          "support_alpha_mean": 0.24837870802242434,
+          "joint_alpha_mean": 0.22127107711765037,
+          "policy_alpha_mean": 0.24837870802242434,
+          "oracle_two_alpha_mean": 0.059964320927081816,
+          "policy_choose_joint_fraction": 0.0
+        },
+        {
+          "cell": "sparse_partial_high_noise::low_skew",
+          "count": 2.0,
+          "support_alpha_mean": 0.10427158560378452,
+          "joint_alpha_mean": 0.1890384617435713,
+          "policy_alpha_mean": 0.10427158560378452,
+          "oracle_two_alpha_mean": 0.03372114911132651,
+          "policy_choose_joint_fraction": 0.0
+        },
+        {
+          "cell": "sparse_partial_high_noise::mid_skew",
+          "count": 2.0,
+          "support_alpha_mean": 0.30577586452760586,
+          "joint_alpha_mean": 0.30577586452760586,
+          "policy_alpha_mean": 0.30577586452760586,
+          "oracle_two_alpha_mean": 0.30577586452760586,
+          "policy_choose_joint_fraction": 0.5
+        }
+      ]
+    },
+    "leave_one_cell_out": {
+      "overall": {
+        "support_alpha_mean": 0.1713940930372718,
+        "joint_alpha_mean": 0.1835302813296511,
+        "policy_alpha_mean": 0.1713940930372718,
+        "oracle_two_alpha_mean": 0.12810321606993838,
+        "policy_minus_support": 0.0,
+        "policy_minus_joint": -0.012136188292379344,
+        "policy_choose_joint_fraction": 0.3333333333333333
+      },
+      "by_condition": [
+        {
+          "condition": "sparse_full_noisy",
+          "count": 6.0,
+          "support_alpha_mean": 0.12331280002327195,
+          "joint_alpha_mean": 0.1283654281963597,
+          "policy_alpha_mean": 0.12331280002327195,
+          "oracle_two_alpha_mean": 0.1230526539512054,
+          "policy_choose_joint_fraction": 0.5
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "count": 6.0,
+          "support_alpha_mean": 0.21947538605127156,
+          "joint_alpha_mean": 0.23869513446294252,
+          "policy_alpha_mean": 0.21947538605127156,
+          "oracle_two_alpha_mean": 0.13315377818867138,
+          "policy_choose_joint_fraction": 0.16666666666666666
+        }
+      ],
+      "by_cell": [
+        {
+          "cell": "sparse_full_noisy::high_skew",
+          "count": 2.0,
+          "support_alpha_mean": 0.33095182069390233,
+          "joint_alpha_mean": 0.33017138247770267,
+          "policy_alpha_mean": 0.33095182069390233,
+          "oracle_two_alpha_mean": 0.33017138247770267,
+          "policy_choose_joint_fraction": 0.0
+        },
+        {
+          "cell": "sparse_full_noisy::low_skew",
+          "count": 2.0,
+          "support_alpha_mean": 0.02771139628995245,
+          "joint_alpha_mean": 0.04364971902541537,
+          "policy_alpha_mean": 0.02771139628995245,
+          "oracle_two_alpha_mean": 0.02771139628995245,
+          "policy_choose_joint_fraction": 0.5
+        },
+        {
+          "cell": "sparse_full_noisy::mid_skew",
+          "count": 2.0,
+          "support_alpha_mean": 0.011275183085961094,
+          "joint_alpha_mean": 0.011275183085961094,
+          "policy_alpha_mean": 0.011275183085961094,
+          "oracle_two_alpha_mean": 0.011275183085961094,
+          "policy_choose_joint_fraction": 1.0
+        },
+        {
+          "cell": "sparse_partial_high_noise::high_skew",
+          "count": 2.0,
+          "support_alpha_mean": 0.24837870802242434,
+          "joint_alpha_mean": 0.22127107711765037,
+          "policy_alpha_mean": 0.24837870802242434,
+          "oracle_two_alpha_mean": 0.059964320927081816,
+          "policy_choose_joint_fraction": 0.0
+        },
+        {
+          "cell": "sparse_partial_high_noise::low_skew",
+          "count": 2.0,
+          "support_alpha_mean": 0.10427158560378452,
+          "joint_alpha_mean": 0.1890384617435713,
+          "policy_alpha_mean": 0.10427158560378452,
+          "oracle_two_alpha_mean": 0.03372114911132651,
+          "policy_choose_joint_fraction": 0.0
+        },
+        {
+          "cell": "sparse_partial_high_noise::mid_skew",
+          "count": 2.0,
+          "support_alpha_mean": 0.30577586452760586,
+          "joint_alpha_mean": 0.30577586452760586,
+          "policy_alpha_mean": 0.30577586452760586,
+          "oracle_two_alpha_mean": 0.30577586452760586,
+          "policy_choose_joint_fraction": 0.5
+        }
+      ]
+    }
+  }
+}

@@ -1,8 +1,0 @@
-{
-  "focused_support_gated_mean_alpha_error": 0.1713940930372718,
-  "focused_joint_mean_alpha_error": 0.1835302813296511,
-  "focused_policy_mean_alpha_error": 0.13986162215201473,
-  "focused_oracle_two_mean_alpha_error": 0.1281032160699384,
-  "policy_choose_joint_fraction": 0.5833333333333334,
-  "policy_oracle_alignment_fraction": 0.9166666666666666
-}
