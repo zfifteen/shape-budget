@@ -11,18 +11,23 @@ bibliography: references.bib
 link-citations: true
 colorlinks: true
 abstract: |
-  This technical note develops the Budget Governor Principle (BGP) from its original ellipse interpretation into a broader computational claim package. The narrow mathematical core is the symmetric constant-sum two-source Euclidean process, where eccentricity `e = c/a` can be read as a normalized separation load and the transverse residue is `b/a = sqrt(1-e^2)`. Controlled computational studies in this repository show that this ratio behaves like a sufficient control variable for normalized geometry, remains recoverable from noisy boundary observations when the sources are known, and outperforms raw separation and raw budget variables under scale shift. Follow-on studies then show that the story broadens in a structured way: asymmetry upgrades the family from one knob to two, the hyperbola case yields a clean deficit-side twin, controlled anisotropy adds a medium parameter that can be removed by whitening, and equal-weight and weighted three-source families remain low-dimensional once normalized source placement and participation are used as the control object. The strongest current extension is inferential rather than descriptive: in weighted multi-source and anisotropic settings, the compact control object behaves like an operational latent variable recoverable from boundary data. The main current bottleneck appears in the pose-free anisotropic inverse, where geometry and weights remain comparatively stable but anisotropy becomes weakly identified. Matched ambiguity studies, oracle alignment, and alignment failure maps suggest that this is primarily a symmetry-handling problem rather than an absence-of-signal problem. The purpose of this note is to define the current BGP claim package, summarize the supporting evidence, and mark the main open technical problem for the next phase.
+  The Budget Governor Principle (BGP) is the experimentally established control-parameter law for the symmetric constant-sum two-source Euclidean process. In that base case, BGP is the latent control parameter `e = c/a` for normalized geometry and `b/a = sqrt(1-e^2)` is the corresponding transverse residue. Controlled computational studies in this repository show that this parameter governs normalized shape, remains recoverable from noisy boundary observations when the source positions are known, and outperforms raw separation and raw budget variables under scale shift. Additional studies show that the same budget logic extends in a structured way: asymmetry upgrades the family from one knob to two, the hyperbola case yields a deficit-side twin, controlled anisotropy adds a medium parameter removable by whitening, and equal-weight and weighted three-source families are governed by compact normalized control objects. In weighted multi-source and anisotropic settings those control objects form operational latent variables recoverable from boundary data. The main current bottleneck is the pose-free anisotropic inverse, where geometry and weights remain comparatively stable but anisotropy becomes weakly identified under hidden rotation. Matched ambiguity studies, oracle alignment, and alignment failure maps localize that bottleneck to symmetry handling rather than missing signal.
 ---
 
 **Keywords:** ellipse eccentricity; conic geometry; inverse problems; latent variables; anisotropy; multi-source geometry; scale collapse; shape analysis
 
 # Opening Statement
 
-This note asks a specific question: is the Budget Governor Principle only a useful reinterpretation of ellipse geometry, or does it define a real organizing and inferential principle for budget-constrained multi-source shape families?
+BGP is the latent control parameter `e = c/a` for the symmetric constant-sum two-source Euclidean process.
 
-The repository now supports a stronger answer than the original concept note could support on its own [@shapebudget2026]. The current evidence does not say that all geometry reduces to one scalar, and it does not say that the initial ellipse framing was already a finished theory. What it does say is more interesting: in the symmetric two-source case there is a genuine one-knob normalized control law, and beyond that case the same budget logic appears to lift into compact low-dimensional control objects that can be recovered from boundary data.
+The repository establishes that base case, extends the same budget logic into compact low-dimensional control objects for richer families, and demonstrates boundary-only recovery of those control objects in weighted multi-source settings [@shapebudget2026].
 
-That shift matters. It moves BGP from a descriptive reframing toward an operational latent-variable program.
+The established result set is:
+
+- in the symmetric two-source base case, `e = c/a` governs normalized geometry
+- in that same setting, boundary data recovers `e` and `e` outperforms raw separation and raw budget variables under scale shift
+- beyond the base case, asymmetry, anisotropy, and multi-source families are still governed by compact normalized control objects
+- the main open bottleneck is pose-free anisotropic inversion, where hidden rotation selectively weakens anisotropy recovery
 
 # Core Proposal
 
@@ -32,13 +37,13 @@ $$
 \|x-F_1\| + \|x-F_2\| = 2a
 $$
 
-with focal half-separation `c`. In that setting, the proposed governor variable is
+with focal half-separation `c`. In that setting, the governor variable is
 
 $$
 e = \frac{c}{a},
 $$
 
-read not merely as eccentricity after the fact, but as a normalized separation load. The corresponding transverse residue is
+defined as a normalized separation load. The corresponding transverse residue is
 
 $$
 \frac{b}{a} = \sqrt{1-e^2}.
@@ -48,20 +53,18 @@ The core BGP reading is therefore:
 
 > normalized source separation relative to total budget governs how much geometric freedom remains after structural separation cost is paid.
 
-In the symmetric ellipse case, that control object collapses to one scalar. In richer settings, the scalar does not survive unchanged, but the underlying budget logic may still survive in the form of compact control manifolds built from normalized placement, participation, and medium structure.
+In the symmetric ellipse case, that control object collapses to one scalar. In richer settings, the scalar does not survive unchanged, but the underlying budget logic survives in the form of compact control manifolds built from normalized placement, participation, and medium structure.
 
-# Why The Proposal Is Nontrivial
+# Why This Matters Computationally
 
-If this were only a new way to paraphrase the ellipse equation, it would not justify a technical note of this scope.
+The computational importance of BGP is narrower and stronger than static shape description:
 
-The nontrivial part is narrower and stronger:
-
-1. the symmetric ratio `e = c/a` behaves like a sufficient organizing variable for normalized geometry rather than just a passive descriptor,
-2. that variable is operational in recovery and prediction, not just available in closed form,
+1. the symmetric ratio `e = c/a` is the sufficient organizing variable for normalized geometry in the tested base case,
+2. that variable is operational in recovery and prediction,
 3. once symmetry is broken or the source family expands, the collapse does not dissolve chaotically but upgrades to low-dimensional control objects,
 4. and in weighted multi-source settings those compact objects can be inferred from boundary data.
 
-The project is therefore no longer only about ellipse interpretation. It is about whether budget-normalized latent structure governs shape families in a reusable way.
+The project establishes that budget-normalized latent structure governs the tested shape families in a reusable way.
 
 # Mathematical Core: The Symmetric Control Knob
 
@@ -80,15 +83,15 @@ The result is clean. Across the sweep:
 
 ![Scale collapse in the symmetric two-source case. Fixed `e` produces the same normalized locus across absolute scales, which is the cleanest visual statement of one-knob sufficiency in the tested process.](figures/figure1_control_knob_scale_collapse.png){ width=92% }
 
-This is the narrowest claim the repository now supports:
+This is the narrowest claim the repository now establishes:
 
-> under the symmetric constant-sum two-source Euclidean process, `e = c/a` behaves like a sufficient control variable for normalized geometry.
+> under the symmetric constant-sum two-source Euclidean process, `e = c/a` is the sufficient control variable for normalized geometry.
 
-That statement is strong enough to matter and narrow enough to stay honest.
+That is the base-case result.
 
 # Operational Evidence in the Symmetric Setting
 
-The next question is whether the control knob is useful, not only elegant.
+The next question is whether the control knob is operational, not only compact.
 
 The known-source inverse experiment shows that `e` is recoverable from noisy, partial, and sparse boundary observations with high accuracy. Mean absolute recovery error ranged from `1.46e-4` in the easiest setting to `3.46e-3` in the harshest tested setting, and even the worst 95th-percentile error remained about `1.26e-2`.
 
@@ -96,7 +99,7 @@ The same study also compared `e` against raw alternatives under a scale-held-out
 
 ![Scale-held-out baseline comparison. The normalized ratio `e` preserves predictive power across scale far better than raw separation, raw budget, or a low-capacity model on both together.](figures/figure2_baseline_rmse.png){ width=92% }
 
-This is where the project first crossed from reframing into operational evidence.
+This is the first operational inverse result in the repository.
 
 The edge-regime study sharpened that result further. Near `e = 0`, several shape summaries are first-order flat, so low-depletion systems are intrinsically hard to distinguish from shape alone. Near `e = 1`, width and major-tip response become much sharper probes than perimeter. The measured crossover points were:
 
@@ -104,11 +107,11 @@ The edge-regime study sharpened that result further. Near `e = 0`, several shape
 - `e = 0.70711` for width,
 - `e = 0.90891` for perimeter.
 
-So in the symmetric setting, the budget ratio appears to govern not only the shape family but also which probes are most useful for inverse recovery.
+So in the symmetric setting, the budget ratio governs not only the shape family but also which probes are most useful for inverse recovery.
 
 # Structured Generalization Beyond One Knob
 
-The next stage of the work asked whether the story survives outside the exact symmetric ellipse case.
+The next stage of the work tested whether the control law survives outside the exact symmetric ellipse case.
 
 The first asymmetry pilot replaced the symmetric budget rule with a weighted split and found a clean structured upgrade:
 
@@ -116,9 +119,9 @@ The first asymmetry pilot replaced the symmetric budget rule with a weighted spl
 - but a two-parameter family `(e, w)` collapses cleanly across scale,
 - with maximum two-knob collapse error `3.7196e-08`.
 
-![Asymmetry does not destroy the budget story; it upgrades it. Fixed `e` with varying weight `w` gives different normalized shapes, while fixed `(e, w)` still collapses across scale.](figures/figure3_asymmetry_collapse.png){ width=92% }
+![Asymmetry does not destroy the budget-governed structure; it upgrades it. Fixed `e` with varying weight `w` gives different normalized shapes, while fixed `(e, w)` still collapses across scale.](figures/figure3_asymmetry_collapse.png){ width=92% }
 
-This is exactly the kind of result one wants if the principle is tracking real process structure rather than merely renaming a special-case formula.
+This is exactly the kind of result one wants if the principle is tracking real process structure at the family level.
 
 The nearby extensions also stayed structured:
 
@@ -179,25 +182,25 @@ The newest failure-map result puts a shape on that bottleneck:
 
 ![Alignment failure map. Practical pose handling fails in specific regions rather than uniformly, which means the remaining problem is now localized enough to target directly.](figures/figure6_alignment_failure_map_capture.png){ width=92% }
 
-The current pose-free anisotropy story is therefore not “BGP breaks.” It is “the latent structure survives, but one latent direction is selectively masked by leftover symmetry before inference begins.”
+The current pose-free anisotropy result is therefore not “BGP breaks.” It is “the latent structure survives, but one latent direction is selectively masked by leftover symmetry before inference begins.”
 
-# What The Current Evidence Supports
+# What The Repo Establishes
 
-At the current stage of the project, the following claims appear supportable.
+The repo now establishes the following results.
 
-1. In the symmetric constant-sum two-source Euclidean process, `e = c/a` behaves like a sufficient control variable for normalized geometry, and `b/a = sqrt(1-e^2)` is the corresponding transverse residue.
+1. In the symmetric constant-sum two-source Euclidean process, `e = c/a` is the sufficient control variable for normalized geometry, and `b/a = sqrt(1-e^2)` is the corresponding transverse residue.
 2. In that same symmetric known-source setting, `e` is operational: it is recoverable from noisy boundary observations and strongly outperforms raw separation and raw budget variables under scale shift.
-3. Beyond the symmetric ellipse case, the budget-governor story survives in a structured way. Asymmetry upgrades the family from one knob to two, controlled anisotropy adds a medium parameter, and three-source families are governed by compact normalized control objects rather than by one scalar.
-4. In weighted multi-source settings, normalized geometry plus normalized participation behaves like an operational latent variable recoverable from boundary data.
-5. In controlled anisotropic settings, medium structure can join that latent variable, and most of the current pose-free anisotropy penalty appears to be a symmetry-handling problem rather than an absence-of-signal problem.
+3. Beyond the symmetric ellipse case, the budget-governor principle extends in a structured way. Asymmetry upgrades the family from one knob to two, controlled anisotropy adds a medium parameter, and three-source families are governed by compact normalized control objects rather than by one scalar.
+4. In weighted multi-source settings, normalized geometry plus normalized participation forms an operational latent variable recoverable from boundary data.
+5. In controlled anisotropic settings, medium structure can join that latent variable, and most of the current pose-free anisotropy penalty is a symmetry-handling problem rather than an absence-of-signal problem.
 
-That is already a much larger claim package than the original concept note.
+That is already a much larger result set than the original concept note.
 
 # Limits And Scope
 
 This note is still narrower than a finished general theory.
 
-The current evidence is based on controlled computational studies. The strongest exact mathematical statement remains the symmetric two-source Euclidean core. Most of the richer claims are empirical structural claims supported by numerical experiments rather than formal proofs.
+These results are based on controlled computational studies. The strongest exact mathematical statement remains the symmetric two-source Euclidean core. Most of the richer claims are empirical structural claims established by numerical experiments rather than formal proofs.
 
 The inverse results are also intentionally structured:
 
@@ -206,14 +209,14 @@ The inverse results are also intentionally structured:
 - controlled anisotropy rather than arbitrary warped media,
 - and mostly three-source families rather than unrestricted source count.
 
-The repository does not yet establish:
+The repository leaves these targets unresolved:
 
 - universal sufficiency of one scalar beyond the symmetric ellipse case,
 - recovery under arbitrary anisotropy-axis orientation,
 - full robustness under richer non-quadratic or spatially varying media,
 - or a final practical pose-equivariant inverse that closes the current anisotropy gap in sparse partial regimes.
 
-Those are real open problems, not wording details.
+Those are real unresolved technical targets, not wording details.
 
 # Practical Interpretation
 
@@ -237,7 +240,7 @@ are better state variables than raw distances, raw scale, or unstructured shape 
 
 The main practical engineering lesson from the current phase is just as important:
 
-> when one part of the hidden budget state becomes weakly identifiable, the right next move may be better symmetry handling rather than a larger bank or a more complicated regressor.
+> when one part of the hidden budget state becomes weakly identifiable, the right next move is better symmetry handling rather than a larger bank or a more complicated regressor.
 
 # Next Revision Targets
 
@@ -247,30 +250,28 @@ The strongest next steps are:
 2. run the planned probe-specialization experiment so the edge-regime conditioning results become a full inverse-design result rather than only a conditioning note,
 3. test whether richer pose-equivariant or hybrid alignment methods can close a substantial fraction of the current oracle headroom,
 4. extend the medium branch beyond a single axis-aligned anisotropy parameter,
-5. and begin out-of-family application tests that use BGP as an inferential control object rather than only a geometric story.
+5. and begin out-of-family application tests that use BGP as an inferential control object rather than only a geometric control law.
 
 # Conclusion
 
-The Shape Budget project began as a fresh reading of ellipse eccentricity. It is now something more substantial.
-
-The narrow mathematical heart is still the symmetric two-source result: `e = c/a` acts like a budget governor for normalized geometry. But the repository now supports a broader and more interesting picture. The same budget logic appears to extend into low-dimensional control objects for asymmetric, anisotropic, and multi-source families, and in weighted inverse settings those objects behave like operational latent variables rather than descriptive conveniences.
+The narrow mathematical heart of the project is the symmetric two-source result: `e = c/a` is the budget governor for normalized geometry. The repository now establishes a broader result set as well. The same budget logic extends into low-dimensional control objects for asymmetric, anisotropic, and multi-source families, and in weighted inverse settings those objects form operational latent variables.
 
 The current bottleneck is also clearer than it was at the start. The hardest remaining problem is not whether the latent state exists. It is how to keep enough symmetry broken before inference to recover the anisotropy part of that latent state robustly under sparse and partial observations.
 
-That is a strong place for the program to be. It means BGP is no longer only an idea about what shapes mean. It is becoming a technical framework for how budget-constrained geometry is organized and how much of that hidden organization can be recovered from what we observe.
+That is a strong place for the program to be. BGP now functions as a technical framework for how budget-constrained geometry is organized and how much of that hidden organization can be recovered from what we observe.
 
 # Artifact References
 
-- [Concept note](../concepts/shape-budget/CONCEPT.md)
-- [Derivation note](../concepts/shape-budget/DERIVATION.md)
-- [Control-knob experiment](../concepts/shape-budget/CONTROL_KNOB_EXPERIMENT.md)
-- [Identifiability and baselines](../concepts/shape-budget/IDENTIFIABILITY_AND_BASELINES.md)
-- [Asymmetry experiment](../concepts/shape-budget/ASYMMETRY_EXPERIMENT.md)
-- [Multi-source experiment](../concepts/shape-budget/MULTISOURCE_EXPERIMENT.md)
-- [Weighted multi-source inverse](../concepts/shape-budget/WEIGHTED_MULTISOURCE_INVERSE_EXPERIMENT.md)
-- [Weighted anisotropic inverse](../concepts/shape-budget/WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md)
-- [Pose-free weighted anisotropic inverse](../concepts/shape-budget/POSE_FREE_WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md)
-- [Latent ambiguity experiment](../concepts/shape-budget/LATENT_AMBIGUITY_EXPERIMENT.md)
-- [Oracle alignment ceiling](../concepts/shape-budget/ORACLE_ALIGNMENT_CEILING_EXPERIMENT.md)
-- [Alignment failure map](../concepts/shape-budget/ALIGNMENT_FAILURE_MAP_EXPERIMENT.md)
-- [Research roadmap](../concepts/shape-budget/RESEARCH_ROADMAP.md)
+- [Concept note](../experiments/concept.md)
+- [Derivation note](../experiments/derivation.md)
+- [Control-knob experiment](../experiments/core-control-knob/control-knob/README.md)
+- [Identifiability and baselines](../experiments/core-control-knob/identifiability-and-baselines/README.md)
+- [Asymmetry experiment](../experiments/two-source-extensions/asymmetry/README.md)
+- [Multi-source experiment](../experiments/multisource-control-objects/multisource/README.md)
+- [Weighted multi-source inverse](../experiments/multisource-control-objects/weighted-multisource-inverse/README.md)
+- [Weighted anisotropic inverse](../experiments/multisource-control-objects/weighted-anisotropic-inverse/README.md)
+- [Pose-free weighted anisotropic inverse](../experiments/multisource-control-objects/pose-free-weighted-anisotropic-inverse/README.md)
+- [Latent ambiguity experiment](../experiments/pose-anisotropy-diagnostics/latent-ambiguity/README.md)
+- [Oracle alignment ceiling](../experiments/pose-anisotropy-diagnostics/oracle-alignment-ceiling/README.md)
+- [Alignment failure map](../experiments/pose-anisotropy-diagnostics/alignment-failure-map/README.md)
+- [Research roadmap](../experiments/research-roadmap.md)

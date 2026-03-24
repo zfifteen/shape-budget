@@ -1,0 +1,5 @@
+condition,tau1,tau2,router_order,oracle_tau1,oracle_tau2,oracle_order
+dense_low_noise,0.6000000000000001,1.0,width -> perimeter -> major_tip,0.6000000000000001,1.0,width -> perimeter -> major_tip
+dense_medium_noise,0.7,1.0,width -> perimeter -> major_tip,0.7,1.0,width -> perimeter -> major_tip
+sparse_medium_noise,0.7,1.0,width -> perimeter -> major_tip,0.7,1.0,width -> perimeter -> major_tip
+sparse_high_noise,0.8,1.0,width -> perimeter -> major_tip,0.1,1.0,perimeter -> width -> major_tip

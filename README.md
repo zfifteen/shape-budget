@@ -1,25 +1,18 @@
 # Shape Budget
 
-What if ellipse eccentricity is not just a way to describe a finished shape, but a readout of how much of a fixed geometric budget has already been spent?
+The Budget Governor Principle (BGP) is the latent control parameter `e = c / a` for the symmetric constant-sum two-source process.
 
-That is the starting idea in this repository.
+In that regime, `e` governs the normalized shape family, predicts normalized observables, and is recoverable from boundary data. This repository establishes that base case, extends the same budget logic into asymmetry, anisotropy, and multi-source control objects, and isolates the current open inverse bottleneck in the pose-free anisotropic setting.
 
-In the simplest picture, imagine two sources expanding outward while sharing a fixed total reach budget. If the sources start very close together, almost all of that budget is still available for wide, symmetric spread, so the resulting locus looks round. If the sources start far apart, much of the budget is already spent just bridging the gap between them, so the locus gets squeezed into a thinner, more elongated form.
+**BGP in one sentence:** normalized separation relative to total budget governs how much transverse freedom remains after structural separation cost is paid.
 
-This repository calls that intuition the **Shape Budget** idea, and its more mature version the **Budget Governor Principle (BGP)**:
+The project name is **Shape Budget**. The scientific claim developed here is the **Budget Governor Principle**.
 
-> normalized separation acts like a governor on how much shape freedom remains.
+## The Base Case
 
-The project began as a reframing of ellipse eccentricity. It has since grown into a larger research program about low-dimensional geometric control objects, inverse recovery, and when hidden budget structure can be recovered from boundary observations.
+Start with two offset sources that share a fixed total reach budget.
 
-## The Easy Version
-
-The easiest version of the idea is:
-
-- two sources are offset from each other
-- they share a fixed total reach budget
-- some of that budget is consumed by the separation itself
-- what remains shows up as width, spread, and curvature in the final shape
+Some of that budget is consumed by the separation itself. The remainder shows up as width, spread, and curvature in the final shape.
 
 In the symmetric two-source ellipse case, the key ratio is:
 
@@ -39,7 +32,7 @@ and the remaining normalized transverse spread is:
 b / a = sqrt(1 - e^2)
 ```
 
-So the repo’s core question is not only:
+So the core scientific question in this repo is not only:
 
 - “what shape is this?”
 
@@ -47,7 +40,7 @@ but also:
 
 - “how much of the available budget was already committed before the shape had room to spread?”
 
-## The Slightly More Technical Version
+## The Mathematical Base Case
 
 The clean mathematical base case is the constant-sum two-source Euclidean process:
 
@@ -55,9 +48,7 @@ The clean mathematical base case is the constant-sum two-source Euclidean proces
 |x - F1| + |x - F2| = 2a
 ```
 
-In standard geometry, that is just an ellipse.
-
-In this repo’s language:
+In this repo’s terminology:
 
 - `e = c / a` is the **allocation readout**
 - `b / a = sqrt(1 - e^2)` is the **transverse residue**
@@ -66,30 +57,30 @@ That is the first form of the Budget Governor Principle:
 
 > under the symmetric constant-sum two-source process, one normalized ratio governs the whole normalized shape family.
 
-The work in this repo then asks:
+The experiments in this repo then test:
 
 1. Is that ratio really a control variable, or just a renamed parameter?
 2. Does it stay useful when we add asymmetry, more sources, or anisotropy?
 3. Can the hidden control object be recovered from boundary data?
 4. Where does that recovery fail, and why?
 
-## Key Plot 1: The Basic Compression Story
+## Key Plot 1: Compression Under Fixed Total Budget
 
 ![Ellipse compression budget](plots/ellipse_compression_budget.png)
 
-This is the plain-language picture of the whole project.
+This figure shows the base mechanism.
 
 Each panel keeps the same total budget while changing only the normalized source separation. As `e` increases, more of the total budget is effectively pre-committed to bridging the gap between the two sources. The visible effect is not random: the family gets systematically narrower and more elongated.
 
-What this plot is trying to show is that eccentricity can be read causally, not just descriptively. The shape is what is left after the separation tax is paid.
+The figure shows that eccentricity tracks a structural budget split, not just a finished-shape label. The shape is the residue after the separation tax is paid.
 
 ## Key Plot 2: Same Governor, Same Normalized Shape
 
-![Control knob scale collapse](concepts/shape-budget/experiment_outputs/figures/control_knob_scale_collapse.png)
+![Control knob scale collapse](experiments/core-control-knob/control-knob/outputs/figures/control_knob_scale_collapse.png)
 
-This figure is the first serious hardening test of the idea.
+This figure is the first serious hardening test of the control-parameter claim.
 
-On the left, the same normalized separation ratio is realized at different absolute scales. On the right, after normalization, those shapes collapse onto each other almost exactly. That is the experimental basis for the claim that `e = c / a` behaves like a genuine control knob in the symmetric two-source case rather than just a label attached after the fact.
+On the left, the same normalized separation ratio is realized at different absolute scales. On the right, after normalization, those shapes collapse onto each other almost exactly. That is the experimental basis for the claim that `e = c / a` is the governing control knob in the symmetric two-source case.
 
 In other words:
 
@@ -100,7 +91,7 @@ That is the core one-knob result in this repo.
 
 ## What The Experiments Found
 
-The project now supports a more mature story than the original concept note alone.
+The project now establishes a broader result set than the original concept note alone.
 
 ### 1. In the symmetric two-source case, the control knob is real
 
@@ -115,7 +106,7 @@ The known-source inverse experiment then showed that `e` is also operational:
 - it can be recovered accurately from noisy, partial, and sparse boundary observations
 - it strongly outperforms raw separation `d`, raw budget `S`, or low-capacity models on `(d, S)` under scale shift
 
-### 2. The story broadens in a structured way
+### 2. The claim broadens in a structured way
 
 Once symmetry is broken, the original one-knob family does **not** survive unchanged.
 
@@ -168,7 +159,7 @@ What the repo found is surprisingly specific:
 
 That means the failure is selective, not uniform.
 
-The current interpretation is that this is mainly a **symmetry-handling** problem: hidden rotation can impersonate medium anisotropy much more easily than it can impersonate the underlying normalized geometry.
+The current diagnosis is that this is mainly a **symmetry-handling** problem: hidden rotation can impersonate medium anisotropy much more easily than it can impersonate the underlying normalized geometry.
 
 ## Key Plot 4: The Signal Is There, But Pose Handling Matters
 
@@ -198,48 +189,48 @@ That matters because it turns a vague problem into a targetable one. The next me
 
 If you want the shortest path through the project:
 
-1. Read the original idea in [CONCEPT.md](concepts/shape-budget/CONCEPT.md).
-2. Read the mathematical cleanup in [DERIVATION.md](concepts/shape-budget/DERIVATION.md).
+1. Read the original idea in [CONCEPT.md](experiments/concept.md).
+2. Read the mathematical cleanup in [DERIVATION.md](experiments/derivation.md).
 3. Read the higher-level synthesis in [technical_note.md](technical-note/technical_note.md).
 
 If you want the strongest evidence path:
 
-1. [CONTROL_KNOB_EXPERIMENT.md](concepts/shape-budget/CONTROL_KNOB_EXPERIMENT.md)
-2. [IDENTIFIABILITY_AND_BASELINES.md](concepts/shape-budget/IDENTIFIABILITY_AND_BASELINES.md)
-3. [ASYMMETRY_EXPERIMENT.md](concepts/shape-budget/ASYMMETRY_EXPERIMENT.md)
-4. [WEIGHTED_MULTISOURCE_INVERSE_EXPERIMENT.md](concepts/shape-budget/WEIGHTED_MULTISOURCE_INVERSE_EXPERIMENT.md)
-5. [WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md](concepts/shape-budget/WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md)
-6. [ORACLE_ALIGNMENT_CEILING_EXPERIMENT.md](concepts/shape-budget/ORACLE_ALIGNMENT_CEILING_EXPERIMENT.md)
-7. [ALIGNMENT_FAILURE_MAP_EXPERIMENT.md](concepts/shape-budget/ALIGNMENT_FAILURE_MAP_EXPERIMENT.md)
+1. [CONTROL_KNOB_EXPERIMENT.md](experiments/core-control-knob/control-knob/README.md)
+2. [IDENTIFIABILITY_AND_BASELINES.md](experiments/core-control-knob/identifiability-and-baselines/README.md)
+3. [ASYMMETRY_EXPERIMENT.md](experiments/two-source-extensions/asymmetry/README.md)
+4. [WEIGHTED_MULTISOURCE_INVERSE_EXPERIMENT.md](experiments/multisource-control-objects/weighted-multisource-inverse/README.md)
+5. [WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md](experiments/multisource-control-objects/weighted-anisotropic-inverse/README.md)
+6. [ORACLE_ALIGNMENT_CEILING_EXPERIMENT.md](experiments/pose-anisotropy-diagnostics/oracle-alignment-ceiling/README.md)
+7. [ALIGNMENT_FAILURE_MAP_EXPERIMENT.md](experiments/pose-anisotropy-diagnostics/alignment-failure-map/README.md)
 
-If you want the full research trajectory, see [RESEARCH_ROADMAP.md](concepts/shape-budget/RESEARCH_ROADMAP.md).
+If you want the full research trajectory, see [RESEARCH_ROADMAP.md](experiments/research-roadmap.md).
 
 ## Repo Tour
 
 ### Core idea and synthesis
 
-- [concepts/shape-budget/CONCEPT.md](concepts/shape-budget/CONCEPT.md)
-- [concepts/shape-budget/DERIVATION.md](concepts/shape-budget/DERIVATION.md)
+- [experiments/CONCEPT.md](experiments/concept.md)
+- [experiments/DERIVATION.md](experiments/derivation.md)
 - [technical-note/technical_note.md](technical-note/technical_note.md)
 
 ### Experiment notes
 
-- [concepts/shape-budget/CONTROL_KNOB_EXPERIMENT.md](concepts/shape-budget/CONTROL_KNOB_EXPERIMENT.md)
-- [concepts/shape-budget/IDENTIFIABILITY_AND_BASELINES.md](concepts/shape-budget/IDENTIFIABILITY_AND_BASELINES.md)
-- [concepts/shape-budget/ASYMMETRY_EXPERIMENT.md](concepts/shape-budget/ASYMMETRY_EXPERIMENT.md)
-- [concepts/shape-budget/MULTISOURCE_EXPERIMENT.md](concepts/shape-budget/MULTISOURCE_EXPERIMENT.md)
-- [concepts/shape-budget/WEIGHTED_MULTISOURCE_INVERSE_EXPERIMENT.md](concepts/shape-budget/WEIGHTED_MULTISOURCE_INVERSE_EXPERIMENT.md)
-- [concepts/shape-budget/WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md](concepts/shape-budget/WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md)
-- [concepts/shape-budget/POSE_FREE_WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md](concepts/shape-budget/POSE_FREE_WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md)
-- [concepts/shape-budget/ORACLE_ALIGNMENT_CEILING_EXPERIMENT.md](concepts/shape-budget/ORACLE_ALIGNMENT_CEILING_EXPERIMENT.md)
-- [concepts/shape-budget/ALIGNMENT_FAILURE_MAP_EXPERIMENT.md](concepts/shape-budget/ALIGNMENT_FAILURE_MAP_EXPERIMENT.md)
+- [experiments/CONTROL_KNOB_EXPERIMENT.md](experiments/core-control-knob/control-knob/README.md)
+- [experiments/IDENTIFIABILITY_AND_BASELINES.md](experiments/core-control-knob/identifiability-and-baselines/README.md)
+- [experiments/ASYMMETRY_EXPERIMENT.md](experiments/two-source-extensions/asymmetry/README.md)
+- [experiments/MULTISOURCE_EXPERIMENT.md](experiments/multisource-control-objects/multisource/README.md)
+- [experiments/WEIGHTED_MULTISOURCE_INVERSE_EXPERIMENT.md](experiments/multisource-control-objects/weighted-multisource-inverse/README.md)
+- [experiments/WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md](experiments/multisource-control-objects/weighted-anisotropic-inverse/README.md)
+- [experiments/POSE_FREE_WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md](experiments/multisource-control-objects/pose-free-weighted-anisotropic-inverse/README.md)
+- [experiments/ORACLE_ALIGNMENT_CEILING_EXPERIMENT.md](experiments/pose-anisotropy-diagnostics/oracle-alignment-ceiling/README.md)
+- [experiments/ALIGNMENT_FAILURE_MAP_EXPERIMENT.md](experiments/pose-anisotropy-diagnostics/alignment-failure-map/README.md)
 
 ### Scripts and plots
 
 - [generate_shape_budget_plots.py](generate_shape_budget_plots.py)
 - [generate_brainstorm_shape_budget_visuals.py](generate_brainstorm_shape_budget_visuals.py)
 - [plots](plots)
-- [concepts/shape-budget](concepts/shape-budget)
+- [experiments](experiments/README.md)
 
 ## Reproducing The Main Artifacts
 
@@ -250,12 +241,12 @@ python3 generate_shape_budget_plots.py
 python3 generate_brainstorm_shape_budget_visuals.py
 ```
 
-For the deeper experiment suite, each note in `concepts/shape-budget/` is paired with a `run_*.py` script in the same folder. For example:
+For the deeper experiment suite, each experiment lives in its own folder with a `README.md`, a `run.py`, and an `outputs/` directory. For example:
 
 ```bash
-python3 concepts/shape-budget/run_control_knob_experiment.py
-python3 concepts/shape-budget/run_identifiability_and_baselines_experiment.py
-python3 concepts/shape-budget/run_alignment_failure_map_experiment.py
+python3 experiments/core-control-knob/control-knob/run.py
+python3 experiments/core-control-knob/identifiability-and-baselines/run.py
+python3 experiments/pose-anisotropy-diagnostics/alignment-failure-map/run.py
 ```
 
 To build the technical note PDF:
@@ -267,17 +258,11 @@ cd technical-note
 
 ## Current Status
 
-The repo now supports a careful version of the Budget Governor Principle:
+The repo now establishes the Budget Governor Principle:
 
 - in the symmetric two-source Euclidean case, one normalized ratio really does govern normalized geometry
 - in richer cases, that same budget logic expands into compact low-dimensional control objects
-- in weighted inverse settings, those control objects behave like operational latent variables
-- the main open problem is robust symmetry handling in the pose-free anisotropic branch
+- in weighted inverse settings, those control objects are operational latent variables
+- the main unresolved technical problem is robust symmetry handling in the pose-free anisotropic branch
 
-So the project is no longer just:
-
-- “here is a neat way to think about ellipses”
-
-It is now closer to:
-
-- “here is a growing framework for budget-governed geometry and how much of its hidden structure can be recovered from what we observe”
+The repository establishes BGP as a framework for budget-governed geometry and for how much of its hidden structure can be recovered from observation.

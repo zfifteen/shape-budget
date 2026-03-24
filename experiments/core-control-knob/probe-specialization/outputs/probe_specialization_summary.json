@@ -1,0 +1,205 @@
+{
+  "ideal_relative_noise": 0.01,
+  "router_pilot_fraction": 0.25,
+  "audit": {
+    "compile_ok": true,
+    "inverse_audit": {
+      "max_width_inverse_error": 5.342948306008566e-16,
+      "max_perimeter_inverse_error": 3.316791286067655e-15,
+      "max_major_tip_inverse_error": 5.342948306008566e-16
+    },
+    "clean_strategy_audit": {
+      "max_perimeter_abs_error": 6.261188502758308e-05,
+      "max_width_abs_error": 5.342948306008566e-16,
+      "max_major_tip_abs_error": 0.0032440290116273474
+    },
+    "router_logic_audit": {
+      "toy_tau1": 0.4,
+      "toy_tau2": 0.75,
+      "toy_order": "perimeter -> width -> major_tip",
+      "toy_router_mean_abs_error": 0.013333333333333334
+    }
+  },
+  "test_conditions": [
+    {
+      "name": "dense_low_noise",
+      "total_points": 128,
+      "noise_sigma_over_a": 0.0025
+    },
+    {
+      "name": "dense_medium_noise",
+      "total_points": 96,
+      "noise_sigma_over_a": 0.01
+    },
+    {
+      "name": "sparse_medium_noise",
+      "total_points": 32,
+      "noise_sigma_over_a": 0.01
+    },
+    {
+      "name": "sparse_high_noise",
+      "total_points": 24,
+      "noise_sigma_over_a": 0.02
+    }
+  ],
+  "router_results": [
+    {
+      "condition": "dense_low_noise",
+      "method": "perimeter_only",
+      "mean_abs_error": 0.0036439930173974102
+    },
+    {
+      "condition": "dense_low_noise",
+      "method": "width_only",
+      "mean_abs_error": 0.0035106854014539165
+    },
+    {
+      "condition": "dense_low_noise",
+      "method": "major_tip_only",
+      "mean_abs_error": 0.15653523885460424
+    },
+    {
+      "condition": "dense_low_noise",
+      "method": "router",
+      "mean_abs_error": 0.0033849508605235208
+    },
+    {
+      "condition": "dense_low_noise",
+      "method": "phase_oracle",
+      "mean_abs_error": 0.0034066309369633774
+    },
+    {
+      "condition": "dense_low_noise",
+      "method": "trial_oracle",
+      "mean_abs_error": 0.0020612315146061625
+    },
+    {
+      "condition": "dense_medium_noise",
+      "method": "perimeter_only",
+      "mean_abs_error": 0.013873426497795103
+    },
+    {
+      "condition": "dense_medium_noise",
+      "method": "width_only",
+      "mean_abs_error": 0.012846510440525568
+    },
+    {
+      "condition": "dense_medium_noise",
+      "method": "major_tip_only",
+      "mean_abs_error": 0.41921031506895734
+    },
+    {
+      "condition": "dense_medium_noise",
+      "method": "router",
+      "mean_abs_error": 0.012331288717094924
+    },
+    {
+      "condition": "dense_medium_noise",
+      "method": "phase_oracle",
+      "mean_abs_error": 0.01232967009852719
+    },
+    {
+      "condition": "dense_medium_noise",
+      "method": "trial_oracle",
+      "mean_abs_error": 0.007873854338596805
+    },
+    {
+      "condition": "sparse_medium_noise",
+      "method": "perimeter_only",
+      "mean_abs_error": 0.01564353324760596
+    },
+    {
+      "condition": "sparse_medium_noise",
+      "method": "width_only",
+      "mean_abs_error": 0.01603332516570144
+    },
+    {
+      "condition": "sparse_medium_noise",
+      "method": "major_tip_only",
+      "mean_abs_error": 0.41310365857334
+    },
+    {
+      "condition": "sparse_medium_noise",
+      "method": "router",
+      "mean_abs_error": 0.015855387486857036
+    },
+    {
+      "condition": "sparse_medium_noise",
+      "method": "phase_oracle",
+      "mean_abs_error": 0.015855387486857036
+    },
+    {
+      "condition": "sparse_medium_noise",
+      "method": "trial_oracle",
+      "mean_abs_error": 0.00941194736076024
+    },
+    {
+      "condition": "sparse_high_noise",
+      "method": "perimeter_only",
+      "mean_abs_error": 0.030467856090752192
+    },
+    {
+      "condition": "sparse_high_noise",
+      "method": "width_only",
+      "mean_abs_error": 0.026529726806967125
+    },
+    {
+      "condition": "sparse_high_noise",
+      "method": "major_tip_only",
+      "mean_abs_error": 0.444534701454911
+    },
+    {
+      "condition": "sparse_high_noise",
+      "method": "router",
+      "mean_abs_error": 0.02628709452074617
+    },
+    {
+      "condition": "sparse_high_noise",
+      "method": "phase_oracle",
+      "mean_abs_error": 0.026529726806967125
+    },
+    {
+      "condition": "sparse_high_noise",
+      "method": "trial_oracle",
+      "mean_abs_error": 0.01711468918708472
+    }
+  ],
+  "router_thresholds": [
+    {
+      "condition": "dense_low_noise",
+      "tau1": 0.6000000000000001,
+      "tau2": 1.0,
+      "router_order": "width -> perimeter -> major_tip",
+      "oracle_tau1": 0.6000000000000001,
+      "oracle_tau2": 1.0,
+      "oracle_order": "width -> perimeter -> major_tip"
+    },
+    {
+      "condition": "dense_medium_noise",
+      "tau1": 0.7,
+      "tau2": 1.0,
+      "router_order": "width -> perimeter -> major_tip",
+      "oracle_tau1": 0.7,
+      "oracle_tau2": 1.0,
+      "oracle_order": "width -> perimeter -> major_tip"
+    },
+    {
+      "condition": "sparse_medium_noise",
+      "tau1": 0.7,
+      "tau2": 1.0,
+      "router_order": "width -> perimeter -> major_tip",
+      "oracle_tau1": 0.7,
+      "oracle_tau2": 1.0,
+      "oracle_order": "width -> perimeter -> major_tip"
+    },
+    {
+      "condition": "sparse_high_noise",
+      "tau1": 0.8,
+      "tau2": 1.0,
+      "router_order": "width -> perimeter -> major_tip",
+      "oracle_tau1": 0.1,
+      "oracle_tau2": 1.0,
+      "oracle_order": "perimeter -> width -> major_tip"
+    }
+  ]
+}
