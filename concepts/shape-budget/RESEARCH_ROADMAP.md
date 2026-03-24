@@ -26,14 +26,15 @@ What is already supported:
 - under a controlled quadratic anisotropy, raw geometry becomes a two-parameter family `(e, alpha)` and whitening restores the original one-knob collapse
 - in the equal-weight three-source constant-sum case, normalized geometry is organized by the normalized source triangle relative to budget, the induced allocation-share loop is scale-invariant, the equilateral slice is near one-parameter, and the broader family behaves like a low-dimensional roughly three-parameter manifold
 - in the weighted three-source constant-sum case, normalized geometry is organized by the normalized source triangle plus the weight simplex, fixed geometry-plus-weights collapses exactly across scale, varying weights breaks equal-weight sufficiency, the equilateral weighted slice is near two-parameter, and the broader family behaves like a low-dimensional roughly five-parameter manifold
+- in the weighted three-source canonical-pose inverse setting, a simple boundary-only reference-bank inverse recovers the normalized geometry and normalized weights with useful accuracy and consistently outperforms an equal-weight baseline
 
 What is not yet established:
 
-- whether the inverse story remains strong when the source positions are unknown
+- whether the inverse story remains strong when the source positions are unknown outside the weighted three-source canonical-pose setting
 - whether the same budget logic survives in richer warped media or once the source count increases further
 - whether the manifold conclusion remains equally strong under alternative shape encodings or outside the symmetric setting
 - how the conditioning map changes once symmetry or Euclidean distance is relaxed
-- whether the weighted inverse problem remains tractable when both positions and weights are unknown
+- whether the weighted inverse problem remains tractable once rotation is also unknown, the source count increases, or the medium is no longer Euclidean
 
 ## Priority Order
 
@@ -47,8 +48,9 @@ What is not yet established:
 | completed | Controlled anisotropy | Universality test | Completed: raw geometry upgrades to `(e, alpha)` and whitening restores exact one-knob collapse |
 | completed | Multi-source generalization | Higher-dimensional extension | Completed: fixed normalized source triangles give exact boundary and simplex-loop collapse across scale, the equilateral slice is near one-parameter, and the broader family is low-dimensional with about three principal directions |
 | completed | Weighted multi-source generalization | Higher-dimensional robustness | Completed: fixed geometry plus weights gives exact scale collapse, varying weights breaks equal-weight sufficiency, the equilateral weighted slice is near two-parameter, and the broader family is low-dimensional with about five principal directions |
+| completed | Weighted multi-source inverse | Inferential usefulness | Completed: in canonical pose, a boundary-only weighted reference-bank inverse recovers normalized geometry and weights with useful accuracy and beats an equal-weight baseline by about 1.9x to 5.5x |
 
-The original roadmap sequence is complete, and the first post-roadmap robustness extension is now complete as well. The experiments hardened the existing claim first and then broadened it in a controlled way.
+The original roadmap sequence is complete, and the post-roadmap multi-source robustness and inverse extensions are now complete as well. The experiments hardened the existing claim first and then broadened it in a controlled way.
 
 ---
 
