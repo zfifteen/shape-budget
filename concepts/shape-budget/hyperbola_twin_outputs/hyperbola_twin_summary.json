@@ -1,0 +1,16 @@
+{
+  "representation": {
+    "control_ratio": "lambda = a / c",
+    "hyperbolic_eccentricity_relation": "e_h = c / a = 1 / lambda",
+    "branch_window_u_max": 1.8
+  },
+  "max_equation_residual": 1.0658141036401503e-13,
+  "max_rms_equation_residual": 2.5084080847479082e-14,
+  "max_scale_collapse_error": 3.973642985026042e-08,
+  "mean_scale_collapse_error": 3.765526835831792e-12,
+  "scale_spread": {
+    "normalized_openness": 2.220446049250313e-16,
+    "asymptote_slope": 3.552713678800501e-15,
+    "normalized_vertex_curvature": 1.4210854715202004e-14
+  }
+}
