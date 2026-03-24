@@ -1,0 +1,145 @@
+{
+  "noise_model": {
+    "relative_measurement_noise_fraction": 0.01
+  },
+  "observables": {
+    "width_residue": {
+      "e_where_relative_condition_equals_1": 0.7071067811865475,
+      "reference_points": {
+        "0.001": {
+          "value": 0.999999499999875,
+          "relative_condition_number": 1.0000010000009997e-06,
+          "delta_e_for_1pct_relative_noise": 9.999990000000002
+        },
+        "0.01": {
+          "value": 0.9999499987499375,
+          "relative_condition_number": 0.0001000100010001,
+          "delta_e_for_1pct_relative_noise": 0.9999000000000001
+        },
+        "0.1": {
+          "value": 0.99498743710662,
+          "relative_condition_number": 0.010101010101010102,
+          "delta_e_for_1pct_relative_noise": 0.099
+        },
+        "0.9": {
+          "value": 0.4358898943540673,
+          "relative_condition_number": 4.263157894736844,
+          "delta_e_for_1pct_relative_noise": 0.0021111111111111105
+        },
+        "0.99": {
+          "value": 0.14106735979665894,
+          "relative_condition_number": 49.251256281406974,
+          "delta_e_for_1pct_relative_noise": 0.00020101010101010127
+        },
+        "0.999": {
+          "value": 0.04471017781221601,
+          "relative_condition_number": 499.250125062538,
+          "delta_e_for_1pct_relative_noise": 2.001001001000974e-05
+        }
+      },
+      "near_zero": {
+        "max_relative_condition_e_le_0_1": 0.009860184108004641,
+        "min_delta_e_for_1pct_noise_e_le_0_1": 0.10021364603099304,
+        "max_delta_e_for_1pct_noise_e_le_0_1": 9999.999999990001
+      },
+      "near_one": {
+        "max_relative_condition_e_ge_0_9": 499999.24998021673,
+        "min_delta_e_for_1pct_noise_e_ge_0_9": 2.000001000080633e-08,
+        "max_delta_e_for_1pct_noise_e_ge_0_9": 0.002084594935501768
+      }
+    },
+    "normalized_perimeter": {
+      "e_where_relative_condition_equals_1": 0.9089085575485414,
+      "reference_points": {
+        "0.001": {
+          "value": 0.9999997499999532,
+          "relative_condition_number": 5.000003124387806e-07,
+          "delta_e_for_1pct_relative_noise": 19.999987502456587
+        },
+        "0.01": {
+          "value": 0.9999749995312305,
+          "relative_condition_number": 5.00031252187269e-05,
+          "delta_e_for_1pct_relative_noise": 1.9998749990640292
+        },
+        "0.1": {
+          "value": 0.9974952928612609,
+          "relative_condition_number": 0.005031470408628048,
+          "delta_e_for_1pct_relative_noise": 0.19874905719115105
+        },
+        "0.9": {
+          "value": 0.7459255110255972,
+          "relative_condition_number": 0.9463641501945712,
+          "delta_e_for_1pct_relative_noise": 0.009510081291804653
+        },
+        "0.99": {
+          "value": 0.6547480354294815,
+          "relative_condition_number": 2.2636650214756626,
+          "delta_e_for_1pct_relative_noise": 0.004373438607778761
+        },
+        "0.999": {
+          "value": 0.6391626927305658,
+          "relative_condition_number": 3.47771058406251,
+          "delta_e_for_1pct_relative_noise": 0.0028725794624146427
+        }
+      },
+      "near_zero": {
+        "max_relative_condition_e_le_0_1": 0.004911952061535221,
+        "min_delta_e_for_1pct_noise_e_le_0_1": 0.20116747631514212,
+        "max_delta_e_for_1pct_noise_e_le_0_1": 20000.672185543313
+      },
+      "near_one": {
+        "max_relative_condition_e_ge_0_9": 6.947420585304661,
+        "min_delta_e_for_1pct_noise_e_ge_0_9": 0.0014393816924157727,
+        "max_delta_e_for_1pct_noise_e_ge_0_9": 0.009454196642212528
+      }
+    },
+    "major_tip_response": {
+      "e_where_relative_condition_equals_1": 0.5773502691896257,
+      "reference_points": {
+        "0.001": {
+          "value": 1.000001000001,
+          "relative_condition_number": 2.0000020000020002e-06,
+          "delta_e_for_1pct_relative_noise": 4.999995
+        },
+        "0.01": {
+          "value": 1.000100010001,
+          "relative_condition_number": 0.00020002000200020003,
+          "delta_e_for_1pct_relative_noise": 0.49995000000000006
+        },
+        "0.1": {
+          "value": 1.0101010101010102,
+          "relative_condition_number": 0.020202020202020204,
+          "delta_e_for_1pct_relative_noise": 0.0495
+        },
+        "0.9": {
+          "value": 5.263157894736843,
+          "relative_condition_number": 8.526315789473687,
+          "delta_e_for_1pct_relative_noise": 0.0010555555555555552
+        },
+        "0.99": {
+          "value": 50.25125628140696,
+          "relative_condition_number": 98.50251256281393,
+          "delta_e_for_1pct_relative_noise": 0.00010050505050505065
+        },
+        "0.999": {
+          "value": 500.250125062538,
+          "relative_condition_number": 998.5002501250759,
+          "delta_e_for_1pct_relative_noise": 1.000500500500487e-05
+        }
+      },
+      "near_zero": {
+        "max_relative_condition_e_le_0_1": 0.019720368216009282,
+        "min_delta_e_for_1pct_noise_e_le_0_1": 0.05010682301549653,
+        "max_delta_e_for_1pct_noise_e_le_0_1": 4999.9999999950005
+      },
+      "near_one": {
+        "max_relative_condition_e_ge_0_9": 999998.4999604336,
+        "min_delta_e_for_1pct_noise_e_ge_0_9": 1.0000005000403165e-08,
+        "max_delta_e_for_1pct_noise_e_ge_0_9": 0.0010422974677508838
+      }
+    }
+  },
+  "redundancies": {
+    "minor_tip_response_equals_width_residue_under_current_normalization_max_abs_difference": 0.0
+  }
+}
