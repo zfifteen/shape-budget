@@ -1,0 +1,126 @@
+{
+  "summary": {
+    "reference_bank_size": 300,
+    "top_k_seeds": 3.0,
+    "trials_per_cell": 2.0,
+    "anneal_factors": [
+      3.0,
+      1.0,
+      0.5
+    ],
+    "audits": {
+      "local_non_degradation": {
+        "audit_cases": 6.0,
+        "max_final_minus_seed_score": 0.0
+      }
+    },
+    "focus_summary": {
+      "best_joint_vs_support_gated_alpha_ratio": 0.9606387152360152,
+      "worst_joint_vs_support_gated_alpha_ratio": 0.9194799321950368,
+      "best_cell_joint_vs_support_gated_alpha_ratio": 1.1225086950264214,
+      "worst_cell_joint_vs_support_gated_alpha_ratio": 0.5515892620054634,
+      "lowest_joint_pose_entropy_mean": 0.3366616642899638,
+      "highest_joint_pose_entropy_mean": 0.7656227306161092
+    }
+  },
+  "by_condition": [
+    {
+      "condition": "sparse_full_noisy",
+      "marginalized_alpha_error_mean": 0.1941510582408892,
+      "support_gated_alpha_error_mean": 0.12331280002327195,
+      "joint_alpha_error_mean": 0.1283654281963597,
+      "oracle_pose_alpha_error_mean": 0.01747297893366469,
+      "joint_vs_support_gated_alpha_ratio": 0.9606387152360152,
+      "joint_fraction_of_support_to_oracle_gap_closed": -0.04773844212009811,
+      "joint_seed_rank_mean": 1.8333333333333333,
+      "joint_pose_entropy_mean": 0.4908581597139814,
+      "support_gated_choose_family_fraction": 1.0
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "marginalized_alpha_error_mean": 0.2202579047739935,
+      "support_gated_alpha_error_mean": 0.21947538605127156,
+      "joint_alpha_error_mean": 0.23869513446294252,
+      "oracle_pose_alpha_error_mean": 0.034840472094735585,
+      "joint_vs_support_gated_alpha_ratio": 0.9194799321950368,
+      "joint_fraction_of_support_to_oracle_gap_closed": -0.10409595888346115,
+      "joint_seed_rank_mean": 1.6666666666666667,
+      "joint_pose_entropy_mean": 0.7013004526724199,
+      "support_gated_choose_family_fraction": 0.0
+    }
+  ],
+  "by_cell": [
+    {
+      "condition": "sparse_full_noisy",
+      "alpha_strength_bin": "moderate",
+      "geometry_skew_bin": "low_skew",
+      "count": 2,
+      "marginalized_alpha_error_mean": 0.03497439541578473,
+      "support_gated_alpha_error_mean": 0.02771139628995245,
+      "joint_alpha_error_mean": 0.04364971902541537,
+      "oracle_pose_alpha_error_mean": 0.021707178523123594,
+      "joint_vs_support_gated_alpha_ratio": 0.6348585262099233,
+      "joint_pose_entropy_mean": 0.47516627881055895
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "alpha_strength_bin": "moderate",
+      "geometry_skew_bin": "mid_skew",
+      "count": 2,
+      "marginalized_alpha_error_mean": 0.2165269586129806,
+      "support_gated_alpha_error_mean": 0.011275183085961094,
+      "joint_alpha_error_mean": 0.011275183085961094,
+      "oracle_pose_alpha_error_mean": 0.023672253953306854,
+      "joint_vs_support_gated_alpha_ratio": 1.0,
+      "joint_pose_entropy_mean": 0.3366616642899638
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "alpha_strength_bin": "moderate",
+      "geometry_skew_bin": "high_skew",
+      "count": 2,
+      "marginalized_alpha_error_mean": 0.33095182069390233,
+      "support_gated_alpha_error_mean": 0.33095182069390233,
+      "joint_alpha_error_mean": 0.33017138247770267,
+      "oracle_pose_alpha_error_mean": 0.007039504324563628,
+      "joint_vs_support_gated_alpha_ratio": 1.002363736706504,
+      "joint_pose_entropy_mean": 0.6607465360414214
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "alpha_strength_bin": "moderate",
+      "geometry_skew_bin": "low_skew",
+      "count": 2,
+      "marginalized_alpha_error_mean": 0.09077411052267215,
+      "support_gated_alpha_error_mean": 0.10427158560378452,
+      "joint_alpha_error_mean": 0.1890384617435713,
+      "oracle_pose_alpha_error_mean": 0.05055618021964603,
+      "joint_vs_support_gated_alpha_ratio": 0.5515892620054634,
+      "joint_pose_entropy_mean": 0.7656227306161092
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "alpha_strength_bin": "moderate",
+      "geometry_skew_bin": "mid_skew",
+      "count": 2,
+      "marginalized_alpha_error_mean": 0.30577586452760586,
+      "support_gated_alpha_error_mean": 0.30577586452760586,
+      "joint_alpha_error_mean": 0.30577586452760586,
+      "oracle_pose_alpha_error_mean": 0.03897958446280014,
+      "joint_vs_support_gated_alpha_ratio": 1.0,
+      "joint_pose_entropy_mean": 0.696467846971548
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "alpha_strength_bin": "moderate",
+      "geometry_skew_bin": "high_skew",
+      "count": 2,
+      "marginalized_alpha_error_mean": 0.2642237392717025,
+      "support_gated_alpha_error_mean": 0.24837870802242434,
+      "joint_alpha_error_mean": 0.22127107711765037,
+      "oracle_pose_alpha_error_mean": 0.014985651601760575,
+      "joint_vs_support_gated_alpha_ratio": 1.1225086950264214,
+      "joint_pose_entropy_mean": 0.6418107804296029
+    }
+  ]
+}

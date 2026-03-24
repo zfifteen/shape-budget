@@ -1,0 +1,23 @@
+{
+  "summary": {
+    "support_gated_alpha_error_mean": 0.1713940930372718,
+    "joint_alpha_error_mean": 0.1835302813296511,
+    "oracle_combo_alpha_error_mean": 0.12810321606993838
+  },
+  "by_condition": [
+    {
+      "condition": "sparse_full_noisy",
+      "support_gated_alpha_error_mean": 0.12331280002327195,
+      "joint_alpha_error_mean": 0.1283654281963597,
+      "oracle_combo_alpha_error_mean": 0.1230526539512054,
+      "joint_win_fraction": 0.16666666666666666
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "support_gated_alpha_error_mean": 0.21947538605127156,
+      "joint_alpha_error_mean": 0.23869513446294252,
+      "oracle_combo_alpha_error_mean": 0.13315377818867138,
+      "joint_win_fraction": 0.3333333333333333
+    }
+  ]
+}

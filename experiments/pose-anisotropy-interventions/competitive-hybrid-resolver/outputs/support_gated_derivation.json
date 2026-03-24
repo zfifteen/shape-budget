@@ -1,0 +1,27 @@
+{
+  "summary": {
+    "support_gated_alpha_error_mean": 0.12525264859429333,
+    "hybrid_alpha_error_mean": 0.15024694733439223,
+    "oracle_combo_alpha_error_mean": 0.11930358934315927
+  },
+  "by_condition": [
+    {
+      "condition": "sparse_full_noisy",
+      "support_gated_alpha_error_mean": 0.07746349461193806,
+      "support_gated_choose_family_fraction": 0.8333333333333334,
+      "conditioned_alpha_error_mean": 0.15653753047953442,
+      "family_alpha_error_mean": 0.11012928931367431,
+      "hybrid_alpha_error_mean": 0.07746349461193806,
+      "oracle_combo_alpha_error_mean": 0.07717427444746629
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "support_gated_alpha_error_mean": 0.17304180257664858,
+      "support_gated_choose_family_fraction": 0.0,
+      "conditioned_alpha_error_mean": 0.17304180257664858,
+      "family_alpha_error_mean": 0.2253915111679575,
+      "hybrid_alpha_error_mean": 0.22303040005684638,
+      "oracle_combo_alpha_error_mean": 0.16143290423885226
+    }
+  ]
+}
