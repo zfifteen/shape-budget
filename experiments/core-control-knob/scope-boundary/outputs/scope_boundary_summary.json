@@ -1,0 +1,56 @@
+{
+  "audit": {
+    "required_input_files": 13,
+    "loaded_input_files": 13,
+    "minimum_wrong_to_right_gap_factor": 538737.7607729163,
+    "minimum_support_selectivity": 4.876575019720263,
+    "minimum_posefree_alpha_over_geometry_penalty": 3.8510040770871803
+  },
+  "compact_scope": {
+    "one_knob_branch_count": 2,
+    "expanded_compact_branch_count": 4,
+    "largest_established_dimension": 5,
+    "smallest_compact_collapse_error": 2.3332837228305747e-13,
+    "largest_compact_collapse_error": 7.947285970052084e-08
+  },
+  "negative_controls": {
+    "asymmetry": {
+      "wrong_floor": 0.020038824637657396,
+      "wrong_ceiling": 1.145022003120344,
+      "corrected_error": 3.71958791396172e-08,
+      "recovered_error": null,
+      "wrong_to_right_gap_factor": 538737.7607729163
+    },
+    "raw anisotropy": {
+      "wrong_floor": 0.05693833002551881,
+      "wrong_ceiling": 1.4924781587188451,
+      "corrected_error": 7.947285970052084e-08,
+      "recovered_error": 3.973642985026043e-08,
+      "wrong_to_right_gap_factor": 1432899.9922761216
+    },
+    "weighted three-source": {
+      "wrong_floor": 0.01948234006965454,
+      "wrong_ceiling": 0.10094681593719383,
+      "corrected_error": 2.4475716268756817e-12,
+      "recovered_error": null,
+      "wrong_to_right_gap_factor": 7959865139.68692
+    }
+  },
+  "operational_scope": {
+    "minimum_scale_generalization_advantage_over_d_and_S": 83.4280732816384,
+    "maximum_scale_generalization_advantage_over_d_and_S": 2947.773271343362,
+    "minimum_support_fit_improvement_factor": 3.931653736225667,
+    "maximum_support_fit_improvement_factor": 16.759986811457413,
+    "probe_router_wins": 3,
+    "probe_router_total_regimes": 4,
+    "probe_router_factor_min": 0.9866383436275722,
+    "probe_router_factor_max": 1.0417816608832124
+  },
+  "bottleneck": {
+    "minimum_support_selectivity": 4.876575019720263,
+    "maximum_support_selectivity": 11.960775666242712,
+    "minimum_posefree_fit_improvement_factor": 3.7803557929262843,
+    "minimum_posefree_alpha_over_geometry_penalty": 3.8510040770871803,
+    "maximum_posefree_alpha_over_geometry_penalty": 15.686850637714862
+  }
+}

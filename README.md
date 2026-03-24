@@ -117,6 +117,13 @@ That is a good thing, not a bad one, because the failure is structured:
 - controlled anisotropy upgrades the raw family to `(e, alpha)`
 - three-source families are governed by compact normalized source-placement objects rather than by one scalar
 
+A newer scope-boundary synthesis now makes that ladder explicit:
+
+- exact one-knob scope holds in the symmetric ellipse and hyperbola-twin branches
+- asymmetry and raw anisotropy require `2`-parameter control objects
+- equal-weight and weighted three-source branches require about `3` and `5` control dimensions
+- explicit wrong-compression controls show that the universal-one-scalar claim is false in the tested richer branches
+
 So the current view is not:
 
 - “everything is one knob forever”
@@ -202,6 +209,9 @@ If you want the strongest evidence path:
 5. [WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md](experiments/multisource-control-objects/weighted-anisotropic-inverse/README.md)
 6. [ORACLE_ALIGNMENT_CEILING_EXPERIMENT.md](experiments/pose-anisotropy-diagnostics/oracle-alignment-ceiling/README.md)
 7. [ALIGNMENT_FAILURE_MAP_EXPERIMENT.md](experiments/pose-anisotropy-diagnostics/alignment-failure-map/README.md)
+8. [REPRESENTATION_INDEPENDENCE_EXPERIMENT.md](experiments/core-control-knob/representation-independence/README.md)
+9. [PROBE_SPECIALIZATION_EXPERIMENT.md](experiments/core-control-knob/probe-specialization/README.md)
+10. [SCOPE_BOUNDARY_EXPERIMENT.md](experiments/core-control-knob/scope-boundary/README.md)
 
 If you want the full research trajectory, see [RESEARCH_ROADMAP.md](experiments/research-roadmap.md).
 
@@ -217,6 +227,9 @@ If you want the full research trajectory, see [RESEARCH_ROADMAP.md](experiments/
 
 - [experiments/CONTROL_KNOB_EXPERIMENT.md](experiments/core-control-knob/control-knob/README.md)
 - [experiments/IDENTIFIABILITY_AND_BASELINES.md](experiments/core-control-knob/identifiability-and-baselines/README.md)
+- [experiments/REPRESENTATION_INDEPENDENCE_EXPERIMENT.md](experiments/core-control-knob/representation-independence/README.md)
+- [experiments/PROBE_SPECIALIZATION_EXPERIMENT.md](experiments/core-control-knob/probe-specialization/README.md)
+- [experiments/SCOPE_BOUNDARY_EXPERIMENT.md](experiments/core-control-knob/scope-boundary/README.md)
 - [experiments/ASYMMETRY_EXPERIMENT.md](experiments/two-source-extensions/asymmetry/README.md)
 - [experiments/MULTISOURCE_EXPERIMENT.md](experiments/multisource-control-objects/multisource/README.md)
 - [experiments/WEIGHTED_MULTISOURCE_INVERSE_EXPERIMENT.md](experiments/multisource-control-objects/weighted-multisource-inverse/README.md)
@@ -261,7 +274,9 @@ cd technical-note
 The repo now establishes the Budget Governor Principle:
 
 - in the symmetric two-source Euclidean case, one normalized ratio really does govern normalized geometry
-- in richer cases, that same budget logic expands into compact low-dimensional control objects
+- that exact one-knob scope also holds in the hyperbola twin
+- in richer positive branches, that same budget logic expands into explicit compact control objects of size `2`, `2`, `3`, and `5` rather than staying one-scalar
+- explicit wrong-compression controls now show that the universal-one-scalar version is false in the tested richer branches
 - in weighted inverse settings, those control objects are operational latent variables
 - the main unresolved technical problem is robust symmetry handling in the pose-free anisotropic branch
 

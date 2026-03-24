@@ -193,6 +193,15 @@ The result was useful and disciplined rather than maximal:
 
 So BGP now has partial support as an experimental-control principle.
 
-That means the next theory-hardening priority should move to:
+That scope-boundary step has now also been completed.
 
-> `SCOPE_BOUNDARY_EXPERIMENT`
+The result was the disciplined one the triage needed:
+
+- exact one-knob scope is established in the symmetric ellipse base case and the hyperbola twin
+- asymmetry and raw anisotropy explicitly falsify universal one-scalar compression, but compact corrected control objects restore collapse
+- equal-weight three-source is about three-parameter and weighted three-source about five-parameter
+- the pose-free anisotropic bottleneck is now localized as a selective `alpha` fragility, not a general loss of compact budget structure
+
+So the triage decision now becomes:
+
+> the theory-hardening sequence is complete. The next immediate priority can return to branch-aware bottleneck cleanup or outward harder-scope tests, but it no longer needs to treat universal-scope ambiguity as the main blocker.

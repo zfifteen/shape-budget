@@ -1,0 +1,4 @@
+branch,wrong_compression,wrong_floor,wrong_ceiling,corrected_compression,corrected_error,recovered_reduced_compression,recovered_error,wrong_to_right_gap_factor
+asymmetry,e only,0.020038824637657396,1.145022003120344,"fixed (e, w)",3.71958791396172e-08,,,538737.7607729163
+raw anisotropy,e only in raw coordinates,0.05693833002551881,1.4924781587188451,"fixed (e, alpha)",7.947285970052084e-08,whitened e only,3.973642985026043e-08,1432899.9922761216
+weighted three-source,fixed geometry only,0.01948234006965454,0.10094681593719383,fixed geometry + weights,2.4475716268756817e-12,,,7959865139.68692
