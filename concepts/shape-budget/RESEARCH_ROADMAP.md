@@ -29,11 +29,12 @@ What is already supported:
 - in the weighted three-source canonical-pose inverse setting, a simple boundary-only reference-bank inverse recovers the normalized geometry and normalized weights with useful accuracy and consistently outperforms an equal-weight baseline
 - in the weighted three-source pose-free inverse setting, a cyclic-shift-aware boundary-only weighted reference-bank inverse still recovers the normalized geometry and normalized weights with useful accuracy and continues to outperform an equal-weight baseline across all tested regimes
 - in the weighted three-source anisotropic canonical-pose inverse setting, a boundary-only anisotropy-aware reference-bank inverse jointly recovers normalized geometry, normalized weights, and the medium anisotropy parameter `alpha`, and it decisively outperforms a Euclidean weighted baseline across all tested regimes
+- in the weighted three-source pose-free anisotropic inverse setting, a cyclic-shift-aware anisotropy-aware inverse still recovers normalized geometry and weights with useful accuracy and continues to decisively outperform a Euclidean weighted baseline, but `alpha` becomes much more weakly identified once rotation is hidden too
 
 What is not yet established:
 
-- whether the inverse story remains strong when unknown rotation and unknown medium anisotropy are present at the same time
-- whether the same budget logic survives in richer warped media, under unknown anisotropy axes, or once the source count increases further
+- whether `alpha` identifiability can be materially improved under the combined nuisance of unknown rotation plus unknown medium anisotropy
+- whether the same budget logic survives under unknown anisotropy axes, richer warped media, or once the source count increases further
 - whether the manifold conclusion remains equally strong under alternative shape encodings or outside the symmetric setting
 - how the conditioning map changes once symmetry or Euclidean distance is relaxed
 - whether the weighted inverse problem remains tractable under richer non-quadratic or spatially varying media, and how the story changes as the source count increases further
@@ -53,8 +54,9 @@ What is not yet established:
 | completed | Weighted multi-source inverse | Inferential usefulness | Completed: in canonical pose, a boundary-only weighted reference-bank inverse recovers normalized geometry and weights with useful accuracy and beats an equal-weight baseline by about 1.9x to 5.5x |
 | completed | Pose-free weighted inverse | Inferential robustness | Completed: with unknown rotation, a cyclic-shift-aware weighted inverse still recovers normalized geometry and weights with useful accuracy and beats the equal-weight baseline by about 1.1x to 5.4x |
 | completed | Weighted anisotropic inverse | Medium-aware inferential robustness | Completed: in canonical pose with unknown `alpha`, an anisotropy-aware weighted inverse jointly recovers normalized geometry, normalized weights, and medium anisotropy, and beats a Euclidean weighted baseline by about 7.6x to 14.0x |
+| completed | Pose-free weighted anisotropic inverse | Combined-nuisance robustness | Completed: with unknown rotation and unknown `alpha`, a cyclic-shift-aware anisotropy-aware inverse still recovers normalized geometry and weights with useful accuracy and beats a Euclidean weighted baseline by about 3.8x to 15.9x, but `alpha` becomes much more weakly identified |
 
-The original roadmap sequence is complete, and the post-roadmap multi-source robustness plus Euclidean and anisotropic inverse extensions are now complete as well. The experiments hardened the existing claim first and then broadened it in a controlled way.
+The original roadmap sequence is complete, and the post-roadmap multi-source robustness plus Euclidean and anisotropic inverse extensions are now complete as well. The experiments hardened the existing claim first and then broadened it in a controlled way, and they have now surfaced a specific bottleneck: joint medium-parameter identifiability under pose-free observation.
 
 ---
 
