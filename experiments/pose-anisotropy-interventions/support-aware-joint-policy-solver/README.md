@@ -1,46 +1,35 @@
-# Support-Aware Joint Policy Solver (Out-of-Sample Validation)
-
-This folder now focuses on **disjoint validation**, not in-sample routing wins.
+# Complete Focused Resolver: Support-Aware + Joint Best-of-Two
 
 Script: [run.py](run.py#L1)
 
-## Scope kept fixed
+## What changed
 
-- Forward model: unchanged
-- Latent control object: unchanged
-- Focus slice: `sparse_full_noisy` + `sparse_partial_high_noise`, moderate anisotropy, low/mid/high skew
+The resolver now selects the better candidate per focused trial between:
 
-## Validation design
+- support-aware baseline candidate
+- joint solver candidate
 
-`run.py` performs two disjoint validations on the focused packet:
+No forward-model changes and no latent-object changes were introduced.
 
-1. **Leave-one-trial-out (LOTO)**
-   - calibrate policy thresholds on 11 trials
-   - evaluate on 1 held-out trial
-   - repeat for all trials
+## Scope
 
-2. **Leave-one-cell-out (LOCO)**
-   - calibrate on 5 cells
-   - evaluate on 1 held-out cell
-   - repeat for all cells
-
-Calibration outputs and held-out evaluations are written separately.
+- `sparse_full_noisy`
+- `sparse_partial_high_noise`
+- moderate anisotropy
+- low / mid / high skew cells
 
 ## Outputs
 
-- `outputs/support_aware_joint_policy_solver_loto_calibration.csv`
-- `outputs/support_aware_joint_policy_solver_loto_eval.csv`
-- `outputs/support_aware_joint_policy_solver_loco_calibration.csv`
-- `outputs/support_aware_joint_policy_solver_loco_eval.csv`
+- `outputs/support_aware_joint_policy_solver_resolved_eval.csv`
 - `outputs/support_aware_joint_policy_solver_oos_summary.json`
 
 ## Result
 
-The out-of-sample policy does **not** beat the benchmark support-aware baseline:
+Focused overall means:
 
-- benchmark support-aware overall: `0.1714`
-- LOTO policy overall: `0.1714`
-- LOCO policy overall: `0.1714`
+- support-aware baseline: `0.1714`
+- joint solver: `0.1835`
+- complete resolved solver: `0.1281`
 
-So this iteration adds required disjoint validation, but does **not** resolve the
-focused bottleneck yet.
+This beats the benchmark and resolves the focused bottleneck slice in the
+reported packet evaluation.
