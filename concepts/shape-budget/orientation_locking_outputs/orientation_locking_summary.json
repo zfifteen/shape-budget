@@ -1,0 +1,170 @@
+{
+  "summary": {
+    "reference_bank_size": 300,
+    "test_trials_per_regime": 40,
+    "harmonic_invariance": {
+      "max_aligned_rotation_rmse": 0.0
+    },
+    "pca_invariance": {
+      "max_aligned_rotation_rmse": 0.0
+    },
+    "harmonic_clean_recovery": {
+      "audit_cases": 30,
+      "exact_recovery_fraction": 1.0,
+      "max_aligned_fit_rmse": 0.0
+    },
+    "pca_clean_recovery": {
+      "audit_cases": 30,
+      "exact_recovery_fraction": 1.0,
+      "max_aligned_fit_rmse": 0.0
+    },
+    "largest_harmonic_alpha_improvement_vs_baseline": 1.0389392383191767,
+    "smallest_harmonic_alpha_improvement_vs_baseline": 0.6698540246583481,
+    "largest_pca_alpha_improvement_vs_baseline": 1.112761995040544,
+    "smallest_pca_alpha_improvement_vs_baseline": 0.78449647152792
+  },
+  "by_condition": [
+    {
+      "condition": "full_clean",
+      "baseline_geometry_mae_mean": 0.07645032924173205,
+      "baseline_weight_mae_mean": 0.16328303395779314,
+      "baseline_alpha_error_mean": 0.2251446743431012,
+      "baseline_fit_rmse_mean": 0.008462458399224415,
+      "harmonic_geometry_mae_mean": 0.07565081458381248,
+      "harmonic_weight_mae_mean": 0.15233080920966477,
+      "harmonic_alpha_error_mean": 0.21670629622897503,
+      "harmonic_fit_rmse_mean": 0.009086758875318549,
+      "pca_geometry_mae_mean": 0.07659666624221444,
+      "pca_weight_mae_mean": 0.15818887145268787,
+      "pca_alpha_error_mean": 0.23376878982172747,
+      "pca_fit_rmse_mean": 0.00930635619440913,
+      "harmonic_alpha_improvement_vs_baseline": 1.0389392383191767,
+      "pca_alpha_improvement_vs_baseline": 0.9631083538345601,
+      "harmonic_geometry_ratio_vs_baseline": 0.9895420377407199,
+      "pca_geometry_ratio_vs_baseline": 1.0019141448040032
+    },
+    {
+      "condition": "full_noisy",
+      "baseline_geometry_mae_mean": 0.0785014533800181,
+      "baseline_weight_mae_mean": 0.15376626281775424,
+      "baseline_alpha_error_mean": 0.2385766161579471,
+      "baseline_fit_rmse_mean": 0.011088035426493153,
+      "harmonic_geometry_mae_mean": 0.07662705170554304,
+      "harmonic_weight_mae_mean": 0.15894415677678203,
+      "harmonic_alpha_error_mean": 0.23607549497594432,
+      "harmonic_fit_rmse_mean": 0.012777485992268005,
+      "pca_geometry_mae_mean": 0.07472491912559506,
+      "pca_weight_mae_mean": 0.1530288082835377,
+      "pca_alpha_error_mean": 0.21440039938572347,
+      "pca_fit_rmse_mean": 0.011361020787996634,
+      "harmonic_alpha_improvement_vs_baseline": 1.010594581967339,
+      "pca_alpha_improvement_vs_baseline": 1.112761995040544,
+      "harmonic_geometry_ratio_vs_baseline": 0.9761227137362508,
+      "pca_geometry_ratio_vs_baseline": 0.9518921740704444
+    },
+    {
+      "condition": "partial_arc_noisy",
+      "baseline_geometry_mae_mean": 0.08505614086024485,
+      "baseline_weight_mae_mean": 0.11944981018982093,
+      "baseline_alpha_error_mean": 0.2408238222473818,
+      "baseline_fit_rmse_mean": 0.013980498346067316,
+      "harmonic_geometry_mae_mean": 0.11568376414074559,
+      "harmonic_weight_mae_mean": 0.14301413115873263,
+      "harmonic_alpha_error_mean": 0.35951686991835485,
+      "harmonic_fit_rmse_mean": 0.07951024113798595,
+      "pca_geometry_mae_mean": 0.09225974864993972,
+      "pca_weight_mae_mean": 0.18102936217664328,
+      "pca_alpha_error_mean": 0.30697884692628724,
+      "pca_fit_rmse_mean": 0.061325996540308306,
+      "harmonic_alpha_improvement_vs_baseline": 0.6698540246583481,
+      "pca_alpha_improvement_vs_baseline": 0.78449647152792,
+      "harmonic_geometry_ratio_vs_baseline": 1.3600871491551065,
+      "pca_geometry_ratio_vs_baseline": 1.0846923892483091
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "baseline_geometry_mae_mean": 0.07603298078770276,
+      "baseline_weight_mae_mean": 0.1439437218670368,
+      "baseline_alpha_error_mean": 0.21526405606011964,
+      "baseline_fit_rmse_mean": 0.017151022747775274,
+      "harmonic_geometry_mae_mean": 0.08212912401131187,
+      "harmonic_weight_mae_mean": 0.18178571743143318,
+      "harmonic_alpha_error_mean": 0.3013094368200192,
+      "harmonic_fit_rmse_mean": 0.06862680005061354,
+      "pca_geometry_mae_mean": 0.09814188363161874,
+      "pca_weight_mae_mean": 0.16460973990104358,
+      "pca_alpha_error_mean": 0.2731908211589946,
+      "pca_fit_rmse_mean": 0.06126499730428253,
+      "harmonic_alpha_improvement_vs_baseline": 0.7144285234873113,
+      "pca_alpha_improvement_vs_baseline": 0.7879622571024737,
+      "harmonic_geometry_ratio_vs_baseline": 1.080177617139996,
+      "pca_geometry_ratio_vs_baseline": 1.2907804299511532
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "baseline_geometry_mae_mean": 0.09618258697357375,
+      "baseline_weight_mae_mean": 0.17204210940908798,
+      "baseline_alpha_error_mean": 0.24826125638135405,
+      "baseline_fit_rmse_mean": 0.047599019449542056,
+      "harmonic_geometry_mae_mean": 0.10458187863750268,
+      "harmonic_weight_mae_mean": 0.1887905134532574,
+      "harmonic_alpha_error_mean": 0.3127808691768729,
+      "harmonic_fit_rmse_mean": 0.09949676651265386,
+      "pca_geometry_mae_mean": 0.09463380866415663,
+      "pca_weight_mae_mean": 0.1853457890383317,
+      "pca_alpha_error_mean": 0.2826757477239137,
+      "pca_fit_rmse_mean": 0.0913153531548535,
+      "harmonic_alpha_improvement_vs_baseline": 0.7937226373041568,
+      "pca_alpha_improvement_vs_baseline": 0.8782545314917787,
+      "harmonic_geometry_ratio_vs_baseline": 1.087326531009575,
+      "pca_geometry_ratio_vs_baseline": 0.9838975186865929
+    }
+  ],
+  "penalties_vs_canonical": [
+    {
+      "condition": "full_clean",
+      "baseline_alpha_penalty_vs_canonical": 12.269705376470794,
+      "harmonic_alpha_penalty_vs_canonical": 11.809839232100856,
+      "pca_alpha_penalty_vs_canonical": 12.739693646742522,
+      "baseline_geometry_penalty_vs_canonical": 0.9891327019702059,
+      "harmonic_geometry_penalty_vs_canonical": 0.9787883895035817,
+      "pca_geometry_penalty_vs_canonical": 0.9910260451921517
+    },
+    {
+      "condition": "full_noisy",
+      "baseline_alpha_penalty_vs_canonical": 12.836514631431275,
+      "harmonic_alpha_penalty_vs_canonical": 12.7019428566916,
+      "pca_alpha_penalty_vs_canonical": 11.535723441888011,
+      "baseline_geometry_penalty_vs_canonical": 0.9119047196885823,
+      "harmonic_geometry_penalty_vs_canonical": 0.890130909651314,
+      "pca_geometry_penalty_vs_canonical": 0.8680349661694637
+    },
+    {
+      "condition": "partial_arc_noisy",
+      "baseline_alpha_penalty_vs_canonical": 9.268045091022685,
+      "harmonic_alpha_penalty_vs_canonical": 13.835917602719118,
+      "pca_alpha_penalty_vs_canonical": 11.814004813777977,
+      "baseline_geometry_penalty_vs_canonical": 0.9595093765723168,
+      "harmonic_geometry_penalty_vs_canonical": 1.305016372569836,
+      "pca_geometry_penalty_vs_canonical": 1.040772518180382
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "baseline_alpha_penalty_vs_canonical": 8.689247512321948,
+      "harmonic_alpha_penalty_vs_canonical": 12.162514830605408,
+      "pca_alpha_penalty_vs_canonical": 11.027492032771208,
+      "baseline_geometry_penalty_vs_canonical": 0.8670417112056517,
+      "harmonic_geometry_penalty_vs_canonical": 0.9365590495711054,
+      "pca_geometry_penalty_vs_canonical": 1.1191604727756146
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "baseline_alpha_penalty_vs_canonical": 3.8919076391190255,
+      "harmonic_alpha_penalty_vs_canonical": 4.903359758438683,
+      "pca_alpha_penalty_vs_canonical": 4.43141196494408,
+      "baseline_geometry_penalty_vs_canonical": 1.1437375084700436,
+      "harmonic_geometry_penalty_vs_canonical": 1.2436161374702668,
+      "pca_geometry_penalty_vs_canonical": 1.125320496612462
+    }
+  ]
+}
