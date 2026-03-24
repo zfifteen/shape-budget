@@ -30,10 +30,13 @@ What is already supported:
 - in the weighted three-source pose-free inverse setting, a cyclic-shift-aware boundary-only weighted reference-bank inverse still recovers the normalized geometry and normalized weights with useful accuracy and continues to outperform an equal-weight baseline across all tested regimes
 - in the weighted three-source anisotropic canonical-pose inverse setting, a boundary-only anisotropy-aware reference-bank inverse jointly recovers normalized geometry, normalized weights, and the medium anisotropy parameter `alpha`, and it decisively outperforms a Euclidean weighted baseline across all tested regimes
 - in the weighted three-source pose-free anisotropic inverse setting, a cyclic-shift-aware anisotropy-aware inverse still recovers normalized geometry and weights with useful accuracy and continues to decisively outperform a Euclidean weighted baseline, but `alpha` becomes much more weakly identified once rotation is hidden too
+- a pilot direct-alpha-refinement pass under the same pose-free anisotropic setting improves fit and sometimes improves `alpha`, but it does not rescue `alpha` uniformly, which suggests the bottleneck is not only coarse search resolution
+- a matched canonical-versus-pose-free ambiguity profile now shows that hidden rotation broadens the near-optimal latent family mainly in `alpha`, with pose-free top-10 `alpha` spans about `3.7x` to `5.6x` larger and pose-free best-`alpha` errors about `11.4x` to `31.0x` larger, while geometry dispersion stays nearly unchanged
 
 What is not yet established:
 
 - whether `alpha` identifiability can be materially improved under the combined nuisance of unknown rotation plus unknown medium anisotropy
+- whether the pose-free `alpha` bottleneck can be materially reduced by a better representation, uncertainty estimate, or joint local refinement beyond alpha-only search
 - whether the same budget logic survives under unknown anisotropy axes, richer warped media, or once the source count increases further
 - whether the manifold conclusion remains equally strong under alternative shape encodings or outside the symmetric setting
 - how the conditioning map changes once symmetry or Euclidean distance is relaxed
@@ -55,8 +58,9 @@ What is not yet established:
 | completed | Pose-free weighted inverse | Inferential robustness | Completed: with unknown rotation, a cyclic-shift-aware weighted inverse still recovers normalized geometry and weights with useful accuracy and beats the equal-weight baseline by about 1.1x to 5.4x |
 | completed | Weighted anisotropic inverse | Medium-aware inferential robustness | Completed: in canonical pose with unknown `alpha`, an anisotropy-aware weighted inverse jointly recovers normalized geometry, normalized weights, and medium anisotropy, and beats a Euclidean weighted baseline by about 7.6x to 14.0x |
 | completed | Pose-free weighted anisotropic inverse | Combined-nuisance robustness | Completed: with unknown rotation and unknown `alpha`, a cyclic-shift-aware anisotropy-aware inverse still recovers normalized geometry and weights with useful accuracy and beats a Euclidean weighted baseline by about 3.8x to 15.9x, but `alpha` becomes much more weakly identified |
+| completed | Matched latent ambiguity profiling | Bottleneck diagnosis | Completed: matched canonical-versus-pose-free trials show that hidden rotation broadens the near-optimal latent family mainly in `alpha`, with `alpha` span ratios of about 3.7x to 5.6x and near-tied `alpha`-diverse families becoming common in the harder pose-free regimes |
 
-The original roadmap sequence is complete, and the post-roadmap multi-source robustness plus Euclidean and anisotropic inverse extensions are now complete as well. The experiments hardened the existing claim first and then broadened it in a controlled way, and they have now surfaced a specific bottleneck: joint medium-parameter identifiability under pose-free observation.
+The original roadmap sequence is complete, and the post-roadmap multi-source robustness plus Euclidean and anisotropic inverse extensions are now complete as well. The experiments hardened the existing claim first and then broadened it in a controlled way, and they have now surfaced a specific bottleneck: under pose-free observation, the latent family broadens mainly along the medium-anisotropy direction rather than along normalized geometry.
 
 ---
 

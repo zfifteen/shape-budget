@@ -1,0 +1,166 @@
+{
+  "summary": {
+    "reference_bank_size": 300,
+    "euclidean_baseline_bank_size": 150,
+    "test_trials_per_regime": 10,
+    "top_k_candidates": 2,
+    "coarse_alpha_grid_size": 17,
+    "fine_alpha_grid_size": 9,
+    "best_baseline_alpha_mae_mean": 0.10211846116866596,
+    "worst_baseline_alpha_mae_mean": 0.290745041264556,
+    "best_refined_alpha_mae_mean": 0.10676144797485523,
+    "worst_refined_alpha_mae_mean": 0.2313523064216553,
+    "smallest_alpha_improvement_factor": 0.8626542268557023,
+    "largest_alpha_improvement_factor": 1.6448648023683563,
+    "smallest_fit_improvement_over_baseline": 0.8122823793412944,
+    "largest_fit_improvement_over_baseline": 1.5584223362145713,
+    "smallest_fit_improvement_over_euclidean": 2.8957322402940675,
+    "largest_fit_improvement_over_euclidean": 18.940863396202435
+  },
+  "baseline_by_condition": [
+    {
+      "condition": "full_clean",
+      "geometry_mae_mean": 0.08453480929779833,
+      "geometry_mae_p95": 0.15042204151101754,
+      "weight_mae_mean": 0.14930596088354933,
+      "weight_mae_p95": 0.36607427522441427,
+      "alpha_mae_mean": 0.1874586011573234,
+      "alpha_mae_p95": 0.7856477416454271,
+      "fit_rmse_mean": 0.007013468057229065
+    },
+    {
+      "condition": "full_noisy",
+      "geometry_mae_mean": 0.08863466413901686,
+      "geometry_mae_p95": 0.16999572787825595,
+      "weight_mae_mean": 0.16214588570162924,
+      "weight_mae_p95": 0.29041793909331126,
+      "alpha_mae_mean": 0.290745041264556,
+      "alpha_mae_p95": 0.7992320751440719,
+      "fit_rmse_mean": 0.008248413906044201
+    },
+    {
+      "condition": "partial_arc_noisy",
+      "geometry_mae_mean": 0.061814022019271955,
+      "geometry_mae_p95": 0.12277150831956014,
+      "weight_mae_mean": 0.1362807527352178,
+      "weight_mae_p95": 0.24512430681844036,
+      "alpha_mae_mean": 0.10211846116866596,
+      "alpha_mae_p95": 0.46046908770756984,
+      "fit_rmse_mean": 0.011485883324204648
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_mae_mean": 0.07885474598986966,
+      "geometry_mae_p95": 0.13183337736992537,
+      "weight_mae_mean": 0.18986343941417755,
+      "weight_mae_p95": 0.2953630097958697,
+      "alpha_mae_mean": 0.19957704502745657,
+      "alpha_mae_p95": 0.7774114688256974,
+      "fit_rmse_mean": 0.013016604391523467
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_mae_mean": 0.08779929821379714,
+      "geometry_mae_p95": 0.1467095521716788,
+      "weight_mae_mean": 0.1599596058123009,
+      "weight_mae_p95": 0.3141369083851131,
+      "alpha_mae_mean": 0.1562213034467127,
+      "alpha_mae_p95": 0.5450002539362317,
+      "fit_rmse_mean": 0.05001568118095949
+    }
+  ],
+  "refined_by_condition": [
+    {
+      "condition": "full_clean",
+      "geometry_mae_mean": 0.07020590982592152,
+      "geometry_mae_p95": 0.13788341179530164,
+      "weight_mae_mean": 0.15961590605176748,
+      "weight_mae_p95": 0.36607427522441427,
+      "alpha_mae_mean": 0.21503496912691844,
+      "alpha_mae_p95": 0.94428180645354,
+      "fit_rmse_mean": 0.004500364178727618
+    },
+    {
+      "condition": "full_noisy",
+      "geometry_mae_mean": 0.07602806043481462,
+      "geometry_mae_p95": 0.13073069450614153,
+      "weight_mae_mean": 0.17416932762108633,
+      "weight_mae_p95": 0.3137366384747723,
+      "alpha_mae_mean": 0.17675923324879175,
+      "alpha_mae_p95": 0.7824594139253211,
+      "fit_rmse_mean": 0.006139662783499851
+    },
+    {
+      "condition": "partial_arc_noisy",
+      "geometry_mae_mean": 0.0639550280970712,
+      "geometry_mae_p95": 0.12277150831956014,
+      "weight_mae_mean": 0.12584800320371442,
+      "weight_mae_p95": 0.24512430681844036,
+      "alpha_mae_mean": 0.10676144797485523,
+      "alpha_mae_p95": 0.49035849514385715,
+      "fit_rmse_mean": 0.014140259122103468
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_mae_mean": 0.08506187995266434,
+      "geometry_mae_p95": 0.1387543238109398,
+      "weight_mae_mean": 0.17353693154539504,
+      "weight_mae_p95": 0.253690260755619,
+      "alpha_mae_mean": 0.2313523064216553,
+      "alpha_mae_p95": 0.7774114688256974,
+      "fit_rmse_mean": 0.012280325354601909
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_mae_mean": 0.10289951850318461,
+      "geometry_mae_p95": 0.19672939439239123,
+      "weight_mae_mean": 0.12868875538070101,
+      "weight_mae_p95": 0.20698070731683857,
+      "alpha_mae_mean": 0.1329400746393104,
+      "alpha_mae_p95": 0.5465558263279289,
+      "fit_rmse_mean": 0.04262589772784209
+    }
+  ],
+  "comparison_by_condition": [
+    {
+      "condition": "full_clean",
+      "geometry_improvement_factor": 1.2040981949725587,
+      "weight_improvement_factor": 0.9354077834518925,
+      "alpha_improvement_factor": 0.8717586814760401,
+      "fit_improvement_factor_vs_baseline": 1.5584223362145713,
+      "fit_improvement_factor_vs_euclidean": 18.940863396202435
+    },
+    {
+      "condition": "full_noisy",
+      "geometry_improvement_factor": 1.1658151428841323,
+      "weight_improvement_factor": 0.9309669384174539,
+      "alpha_improvement_factor": 1.6448648023683563,
+      "fit_improvement_factor_vs_baseline": 1.3434636716875643,
+      "fit_improvement_factor_vs_euclidean": 18.33926067026627
+    },
+    {
+      "condition": "partial_arc_noisy",
+      "geometry_improvement_factor": 0.966523256395891,
+      "weight_improvement_factor": 1.0828996032190956,
+      "alpha_improvement_factor": 0.9565106422377972,
+      "fit_improvement_factor_vs_baseline": 0.8122823793412944,
+      "fit_improvement_factor_vs_euclidean": 8.462044816858088
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_improvement_factor": 0.9270280181175298,
+      "weight_improvement_factor": 1.094080883667761,
+      "alpha_improvement_factor": 0.8626542268557023,
+      "fit_improvement_factor_vs_baseline": 1.0599559877821678,
+      "fit_improvement_factor_vs_euclidean": 6.059001426407592
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_improvement_factor": 0.8532527604692326,
+      "weight_improvement_factor": 1.2429959815765648,
+      "alpha_improvement_factor": 1.1751257389509395,
+      "fit_improvement_factor_vs_baseline": 1.1733637025148351,
+      "fit_improvement_factor_vs_euclidean": 2.8957322402940675
+    }
+  ]
+}
