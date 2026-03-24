@@ -109,7 +109,7 @@ This balanced design matters because the question is specifically about the hard
 
 The result is mixed, but meaningfully so.
 
-> Candidate-conditioned local `shift + alpha` search improves `alpha` recovery over observation-only shift marginalization in `4` of `5` regimes overall, with its strongest gains in the partial and sparse-partial regimes. But it does not uniformly rescue the targeted moderate sparse band. In particular, one moderate-anisotropy sparse-full mid-skew slice gets much worse. So the orbit-alias story is supported, but not completed, by this intervention.
+> Candidate-conditioned local `shift + alpha` search improves `alpha` recovery over observation-only shift marginalization in `4` of `5` regimes overall, with its strongest gains in the partial and sparse-partial regimes. But it does not uniformly rescue the targeted moderate sparse band. In particular, the sparse-full moderate mid-skew slice gets much worse, and the neighboring sparse-full moderate high-skew slice also fails sharply. So the orbit-alias story is supported, but not completed, by this intervention.
 
 The summary file is [candidate_conditioned_alignment_summary.json](/Users/velocityworks/IdeaProjects/shape-budget/concepts/shape-budget/candidate_conditioned_alignment_outputs/candidate_conditioned_alignment_summary.json).
 
@@ -203,7 +203,13 @@ This branch splits.
   - extra oracle-gain capture: `-2.0818`
   - alpha improvement factor: `0.3925`
 
-So the candidate-conditioned intervention helps in `3` of the `4` sparse moderate low-to-mid-skew target cells, but it fails badly in one of them, and that one failure is strong enough to flip the combined summary negative.
+The neighboring `high_skew` moderate sparse-full cell also fails badly:
+
+- `sparse_full_noisy`, `moderate`, `high_skew`
+  - extra oracle-gain capture: `-2.1331`
+  - alpha improvement factor: `0.4503`
+
+So the candidate-conditioned intervention helps in `3` of the `4` sparse moderate low-to-mid-skew target cells, but it fails badly in one of them, and the sparse-full moderate family is worse than the original targeted slice alone suggested.
 
 That is the central outcome of the experiment.
 
@@ -223,7 +229,7 @@ What it does not support:
 
 So the strongest careful reading is:
 
-> candidate-conditioned local disentanglement does target a real part of the alpha bottleneck, but the orbit-proximity story is not yet complete. There is at least one additional difficulty inside the sparse-full moderate mid-skew region that this intervention does not reach.
+> candidate-conditioned local disentanglement does target a real part of the alpha bottleneck, but the orbit-proximity story is not yet complete. There is at least one additional difficulty inside the sparse-full moderate region, especially around the mid-skew slice and its nearby family members, that this intervention does not reach.
 
 One plausible interpretation is:
 
@@ -239,7 +245,7 @@ This experiment does show:
 - candidate-conditioned local `shift + alpha` search is a real lever, not a null intervention
 - the lever is strongest in `partial_arc_noisy` and `sparse_partial_high_noise`
 - the intervention can recover substantially more oracle headroom than observation-only marginalization in several hard cells
-- the moderate sparse band is not uniform; some cells improve strongly and at least one important cell gets much worse
+- the moderate sparse band is not uniform; some cells improve strongly and the sparse-full moderate family still contains sharply failing cells
 
 This experiment does not yet show:
 
