@@ -1,0 +1,149 @@
+{
+  "summary": {
+    "focus_conditions": [
+      "sparse_full_noisy",
+      "sparse_partial_high_noise"
+    ],
+    "focus_alpha_bin": "moderate",
+    "trials_per_cell": 4.0,
+    "top_k_seeds": 3.0,
+    "audits": {
+      "alias_index_joint_shift_invariance": {
+        "audit_cases": 20.0,
+        "max_joint_shift_delta": 1.3322676295501878e-15
+      },
+      "leave_one_out_router_logic": {
+        "toy_accuracy": 1.0,
+        "toy_mean_routed_alpha_error": 0.1
+      }
+    },
+    "overall_raw_router_alpha_error_mean": 0.16922735709694656,
+    "overall_support_router_alpha_error_mean": 0.20375799642207534,
+    "overall_conditioned_alpha_error_mean": 0.1647896665280915,
+    "overall_family_alpha_error_mean": 0.16776040024081587,
+    "overall_oracle_router_alpha_error_mean": 0.11930358934315927,
+    "overall_raw_router_accuracy_mean": 0.4166666666666667,
+    "overall_support_router_accuracy_mean": 0.375,
+    "overall_family_better_fraction": 0.4583333333333333
+  },
+  "by_condition": [
+    {
+      "condition": "sparse_full_noisy",
+      "conditioned_alpha_error_mean": 0.15653753047953442,
+      "family_alpha_error_mean": 0.11012928931367431,
+      "raw_router_alpha_error_mean": 0.11036181281220221,
+      "support_router_alpha_error_mean": 0.18607526667854715,
+      "oracle_router_alpha_error_mean": 0.07717427444746629,
+      "raw_router_accuracy_mean": 0.4166666666666667,
+      "support_router_accuracy_mean": 0.3333333333333333,
+      "family_better_fraction": 0.5833333333333334,
+      "raw_router_choose_family_fraction": 0.8333333333333334,
+      "support_router_choose_family_fraction": 0.75
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "conditioned_alpha_error_mean": 0.17304180257664858,
+      "family_alpha_error_mean": 0.2253915111679575,
+      "raw_router_alpha_error_mean": 0.22809290138169083,
+      "support_router_alpha_error_mean": 0.22144072616560348,
+      "oracle_router_alpha_error_mean": 0.16143290423885226,
+      "raw_router_accuracy_mean": 0.4166666666666667,
+      "support_router_accuracy_mean": 0.4166666666666667,
+      "family_better_fraction": 0.3333333333333333,
+      "raw_router_choose_family_fraction": 0.5833333333333334,
+      "support_router_choose_family_fraction": 0.4166666666666667
+    }
+  ],
+  "by_cell": [
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_skew_bin": "low_skew",
+      "count": 4,
+      "conditioned_alpha_error_mean": 0.10732996574158396,
+      "family_alpha_error_mean": 0.10433781175566195,
+      "raw_router_alpha_error_mean": 0.10433781175566198,
+      "support_router_alpha_error_mean": 0.10433781175566195,
+      "oracle_router_alpha_error_mean": 0.10369846617866779,
+      "raw_router_accuracy_mean": 0.25,
+      "support_router_accuracy_mean": 0.5,
+      "family_better_fraction": 0.5,
+      "raw_ratio_index_mean": 4.308426731329305,
+      "support_alias_index_mean": 0.09541667766622497
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_skew_bin": "mid_skew",
+      "count": 4,
+      "conditioned_alpha_error_mean": 0.2246791769481836,
+      "family_alpha_error_mean": 0.20883521262628377,
+      "raw_router_alpha_error_mean": 0.20883521262628377,
+      "support_router_alpha_error_mean": 0.3128010554177115,
+      "oracle_router_alpha_error_mean": 0.11488000082342248,
+      "raw_router_accuracy_mean": 0.5,
+      "support_router_accuracy_mean": 0.25,
+      "family_better_fraction": 0.5,
+      "raw_ratio_index_mean": 0.46602822688788537,
+      "support_alias_index_mean": 0.037820286237132426
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_skew_bin": "high_skew",
+      "count": 4,
+      "conditioned_alpha_error_mean": 0.13760344874883573,
+      "family_alpha_error_mean": 0.01721484355907721,
+      "raw_router_alpha_error_mean": 0.01791241405466093,
+      "support_router_alpha_error_mean": 0.14108693286226803,
+      "oracle_router_alpha_error_mean": 0.012944356340308605,
+      "raw_router_accuracy_mean": 0.5,
+      "support_router_accuracy_mean": 0.25,
+      "family_better_fraction": 0.75,
+      "raw_ratio_index_mean": 0.6667808679565691,
+      "support_alias_index_mean": 0.36477860872975165
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_skew_bin": "low_skew",
+      "count": 4,
+      "conditioned_alpha_error_mean": 0.20105792822523863,
+      "family_alpha_error_mean": 0.24743334410100734,
+      "raw_router_alpha_error_mean": 0.269529060788125,
+      "support_router_alpha_error_mean": 0.24743334410100734,
+      "oracle_router_alpha_error_mean": 0.17896221153812095,
+      "raw_router_accuracy_mean": 0.5,
+      "support_router_accuracy_mean": 0.5,
+      "family_better_fraction": 0.25,
+      "raw_ratio_index_mean": 0.25539944236764867,
+      "support_alias_index_mean": 0.8907195288029309
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_skew_bin": "mid_skew",
+      "count": 4,
+      "conditioned_alpha_error_mean": 0.2021888771028087,
+      "family_alpha_error_mean": 0.2162996860639532,
+      "raw_router_alpha_error_mean": 0.19879968606395315,
+      "support_router_alpha_error_mean": 0.2021888771028087,
+      "oracle_router_alpha_error_mean": 0.19879968606395315,
+      "raw_router_accuracy_mean": 0.5,
+      "support_router_accuracy_mean": 0.5,
+      "family_better_fraction": 0.25,
+      "raw_ratio_index_mean": 1.0367397696233938,
+      "support_alias_index_mean": 2.04690227091542
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_skew_bin": "high_skew",
+      "count": 4,
+      "conditioned_alpha_error_mean": 0.11587860240189843,
+      "family_alpha_error_mean": 0.21244150333891196,
+      "raw_router_alpha_error_mean": 0.21594995729299438,
+      "support_router_alpha_error_mean": 0.21469995729299443,
+      "oracle_router_alpha_error_mean": 0.10653681511448265,
+      "raw_router_accuracy_mean": 0.25,
+      "support_router_accuracy_mean": 0.25,
+      "family_better_fraction": 0.5,
+      "raw_ratio_index_mean": 2.1107141965758323,
+      "support_alias_index_mean": 12.002517678249237
+    }
+  ]
+}
