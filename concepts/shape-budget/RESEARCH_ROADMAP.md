@@ -24,11 +24,12 @@ What is already supported:
 - the circular edge is first-order flat across the tested normalized observables, while the degenerate edge splits them into sharp and moderate probes of `e`
 - the fixed-difference twin yields a hyperbola family with clean one-knob collapse under `lambda = a / c`
 - under a controlled quadratic anisotropy, raw geometry becomes a two-parameter family `(e, alpha)` and whitening restores the original one-knob collapse
+- in the equal-weight three-source constant-sum case, normalized geometry is organized by the normalized source triangle relative to budget, the induced allocation-share loop is scale-invariant, the equilateral slice is near one-parameter, and the broader family behaves like a low-dimensional roughly three-parameter manifold
 
 What is not yet established:
 
 - whether the inverse story remains strong when the source positions are unknown
-- whether the same budget logic survives in richer warped media or once the source count increases
+- whether the same budget logic survives in richer warped media, with unequal multi-source weights, or once the source count increases further
 - whether the manifold conclusion remains equally strong under alternative shape encodings or outside the symmetric setting
 - how the conditioning map changes once symmetry or Euclidean distance is relaxed
 
@@ -42,9 +43,9 @@ What is not yet established:
 | completed | Edge-regime stability | Conditioning map | Completed: near-circular geometry is first-order flat, while high-e geometry separates into sharp width and curvature probes versus a smoother perimeter probe |
 | completed | Hyperbola flip | Theory extension | Completed: the fixed-difference twin produces a hyperbola family with one-knob collapse under `lambda = a / c` |
 | completed | Controlled anisotropy | Universality test | Completed: raw geometry upgrades to `(e, alpha)` and whitening restores exact one-knob collapse |
-| next | Multi-source generalization | Higher-dimensional extension | A low-dimensional allocation space organizes normalized geometry better than raw coordinates alone |
+| completed | Multi-source generalization | Higher-dimensional extension | Completed: fixed normalized source triangles give exact boundary and simplex-loop collapse across scale, the equilateral slice is near one-parameter, and the broader family is low-dimensional with about three principal directions |
 
-This order is deliberate. The completed experiments harden the evidence for the existing claim. The remaining ones either stress-test its limits or broaden the theory.
+The original roadmap sequence is now complete. The completed experiments hardened the existing claim first and then broadened it in a controlled way.
 
 ---
 

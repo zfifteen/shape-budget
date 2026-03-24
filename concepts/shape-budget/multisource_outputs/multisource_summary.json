@@ -1,0 +1,13 @@
+{
+  "max_equation_residual": 1.7763568394002505e-15,
+  "mean_equation_residual": 3.7716149388493656e-16,
+  "max_boundary_collapse_error": 2.3332837228305747e-13,
+  "mean_boundary_collapse_error": 5.890369740822445e-14,
+  "max_simplex_loop_error": 1.5454288800535842e-13,
+  "mean_simplex_loop_error": 2.907090900061752e-14,
+  "equilateral_pc1_explained_variance_ratio": 0.995670300974838,
+  "equilateral_pc2_cumulative_explained_variance_ratio": 0.99941509901497,
+  "random_pc1_explained_variance_ratio": 0.5395766146345473,
+  "random_pc3_cumulative_explained_variance_ratio": 0.9900625301713757,
+  "random_pc5_cumulative_explained_variance_ratio": 0.9992608192500576
+}
