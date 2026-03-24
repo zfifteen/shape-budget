@@ -1,0 +1,19 @@
+{
+  "max_equation_residual": 1.7763568394002505e-15,
+  "mean_equation_residual": 4.043386295113428e-16,
+  "max_boundary_collapse_error": 2.4475716268756817e-12,
+  "mean_boundary_collapse_error": 5.425236067633654e-13,
+  "max_simplex_loop_error": 2.045849602675898e-13,
+  "mean_simplex_loop_error": 3.187762043460281e-14,
+  "min_fixed_geometry_boundary_family_distance": 0.01948234006965454,
+  "max_fixed_geometry_boundary_family_distance": 0.10094681593719383,
+  "min_fixed_geometry_simplex_family_distance": 0.17685037817789942,
+  "max_fixed_geometry_simplex_family_distance": 0.6689549323269027,
+  "equilateral_weighted_pc1_explained_variance_ratio": 0.4993828817277238,
+  "equilateral_weighted_pc2_cumulative_explained_variance_ratio": 0.9987657634554472,
+  "equilateral_weighted_pc3_cumulative_explained_variance_ratio": 0.9992748606867531,
+  "random_weighted_pc1_explained_variance_ratio": 0.6924222096445072,
+  "random_weighted_pc3_cumulative_explained_variance_ratio": 0.9974967801213295,
+  "random_weighted_pc5_cumulative_explained_variance_ratio": 0.9999638847702222,
+  "random_weighted_pc7_cumulative_explained_variance_ratio": 0.9999988170721734
+}
