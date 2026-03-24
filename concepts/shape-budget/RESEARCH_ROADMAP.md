@@ -28,14 +28,15 @@ What is already supported:
 - in the weighted three-source constant-sum case, normalized geometry is organized by the normalized source triangle plus the weight simplex, fixed geometry-plus-weights collapses exactly across scale, varying weights breaks equal-weight sufficiency, the equilateral weighted slice is near two-parameter, and the broader family behaves like a low-dimensional roughly five-parameter manifold
 - in the weighted three-source canonical-pose inverse setting, a simple boundary-only reference-bank inverse recovers the normalized geometry and normalized weights with useful accuracy and consistently outperforms an equal-weight baseline
 - in the weighted three-source pose-free inverse setting, a cyclic-shift-aware boundary-only weighted reference-bank inverse still recovers the normalized geometry and normalized weights with useful accuracy and continues to outperform an equal-weight baseline across all tested regimes
+- in the weighted three-source anisotropic canonical-pose inverse setting, a boundary-only anisotropy-aware reference-bank inverse jointly recovers normalized geometry, normalized weights, and the medium anisotropy parameter `alpha`, and it decisively outperforms a Euclidean weighted baseline across all tested regimes
 
 What is not yet established:
 
-- whether the inverse story remains strong when the source positions are unknown outside the weighted three-source canonical-pose setting
-- whether the same budget logic survives in richer warped media or once the source count increases further
+- whether the inverse story remains strong when unknown rotation and unknown medium anisotropy are present at the same time
+- whether the same budget logic survives in richer warped media, under unknown anisotropy axes, or once the source count increases further
 - whether the manifold conclusion remains equally strong under alternative shape encodings or outside the symmetric setting
 - how the conditioning map changes once symmetry or Euclidean distance is relaxed
-- whether the weighted inverse problem remains tractable once the medium is no longer Euclidean or anisotropy is added on top of unknown pose, and how the story changes as the source count increases further
+- whether the weighted inverse problem remains tractable under richer non-quadratic or spatially varying media, and how the story changes as the source count increases further
 
 ## Priority Order
 
@@ -51,8 +52,9 @@ What is not yet established:
 | completed | Weighted multi-source generalization | Higher-dimensional robustness | Completed: fixed geometry plus weights gives exact scale collapse, varying weights breaks equal-weight sufficiency, the equilateral weighted slice is near two-parameter, and the broader family is low-dimensional with about five principal directions |
 | completed | Weighted multi-source inverse | Inferential usefulness | Completed: in canonical pose, a boundary-only weighted reference-bank inverse recovers normalized geometry and weights with useful accuracy and beats an equal-weight baseline by about 1.9x to 5.5x |
 | completed | Pose-free weighted inverse | Inferential robustness | Completed: with unknown rotation, a cyclic-shift-aware weighted inverse still recovers normalized geometry and weights with useful accuracy and beats the equal-weight baseline by about 1.1x to 5.4x |
+| completed | Weighted anisotropic inverse | Medium-aware inferential robustness | Completed: in canonical pose with unknown `alpha`, an anisotropy-aware weighted inverse jointly recovers normalized geometry, normalized weights, and medium anisotropy, and beats a Euclidean weighted baseline by about 7.6x to 14.0x |
 
-The original roadmap sequence is complete, and the post-roadmap multi-source robustness plus canonical-pose and pose-free inverse extensions are now complete as well. The experiments hardened the existing claim first and then broadened it in a controlled way.
+The original roadmap sequence is complete, and the post-roadmap multi-source robustness plus Euclidean and anisotropic inverse extensions are now complete as well. The experiments hardened the existing claim first and then broadened it in a controlled way.
 
 ---
 

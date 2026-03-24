@@ -1,0 +1,79 @@
+{
+  "summary": {
+    "reference_bank_size": 300,
+    "euclidean_baseline_bank_size": 150,
+    "test_trials_per_regime": 40,
+    "best_geometry_mae_mean": 0.0772902655927302,
+    "worst_geometry_mae_mean": 0.08864545041143149,
+    "best_weight_mae_mean": 0.08125929911329108,
+    "worst_weight_mae_mean": 0.1333935197105712,
+    "best_alpha_mae_mean": 0.018349639818968567,
+    "worst_alpha_mae_mean": 0.06378909249695108,
+    "best_anisotropic_fit_rmse_mean": 0.009954019970732903,
+    "worst_anisotropic_fit_rmse_mean": 0.03127143490563486,
+    "smallest_fit_improvement_factor_mean": 7.610376969611859,
+    "largest_fit_improvement_factor_mean": 14.036094138520431
+  },
+  "by_condition": [
+    {
+      "condition": "full_clean",
+      "geometry_mae_mean": 0.0772902655927302,
+      "geometry_mae_p95": 0.1669599204814524,
+      "weight_mae_mean": 0.11398526664837291,
+      "weight_mae_p95": 0.2195195571537082,
+      "alpha_mae_mean": 0.018349639818968567,
+      "alpha_mae_p95": 0.048566563781225834,
+      "anisotropic_fit_rmse_mean": 0.009954019970732903,
+      "euclidean_baseline_fit_rmse_mean": 0.11466143567228866,
+      "fit_improvement_factor_mean": 14.036094138520431
+    },
+    {
+      "condition": "full_noisy",
+      "geometry_mae_mean": 0.08608514868398372,
+      "geometry_mae_p95": 0.1887580918764752,
+      "weight_mae_mean": 0.08125929911329108,
+      "weight_mae_p95": 0.16604723685880055,
+      "alpha_mae_mean": 0.01858577838362544,
+      "alpha_mae_p95": 0.043336711911803175,
+      "anisotropic_fit_rmse_mean": 0.011077084614136532,
+      "euclidean_baseline_fit_rmse_mean": 0.11079071044079496,
+      "fit_improvement_factor_mean": 13.862122610559833
+    },
+    {
+      "condition": "partial_arc_noisy",
+      "geometry_mae_mean": 0.08864545041143149,
+      "geometry_mae_p95": 0.22389199395828213,
+      "weight_mae_mean": 0.10578714981997461,
+      "weight_mae_p95": 0.24638915505121547,
+      "alpha_mae_mean": 0.025984317068186387,
+      "alpha_mae_p95": 0.05935422746182924,
+      "anisotropic_fit_rmse_mean": 0.013933121491151968,
+      "euclidean_baseline_fit_rmse_mean": 0.10921396972455491,
+      "fit_improvement_factor_mean": 10.779889556889671
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_mae_mean": 0.08769241410770914,
+      "geometry_mae_p95": 0.2268273081520077,
+      "weight_mae_mean": 0.10281005090046946,
+      "weight_mae_p95": 0.2653459090404147,
+      "alpha_mae_mean": 0.024773613106872656,
+      "alpha_mae_p95": 0.06676134906346784,
+      "anisotropic_fit_rmse_mean": 0.01371950715150246,
+      "euclidean_baseline_fit_rmse_mean": 0.10874477541360998,
+      "fit_improvement_factor_mean": 9.760323572313698
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_mae_mean": 0.08409498356160008,
+      "geometry_mae_p95": 0.16924309406975677,
+      "weight_mae_mean": 0.1333935197105712,
+      "weight_mae_p95": 0.27969068840379024,
+      "alpha_mae_mean": 0.06378909249695108,
+      "alpha_mae_p95": 0.18268423057160763,
+      "anisotropic_fit_rmse_mean": 0.03127143490563486,
+      "euclidean_baseline_fit_rmse_mean": 0.12776989624420712,
+      "fit_improvement_factor_mean": 7.610376969611859
+    }
+  ]
+}
