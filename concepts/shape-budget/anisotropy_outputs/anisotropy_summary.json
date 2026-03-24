@@ -1,0 +1,14 @@
+{
+  "representation": {
+    "metric": "d_alpha((x,y),(u,v)) = sqrt((x-u)^2 + alpha^2 (y-v)^2)",
+    "whitening_transform": "(x, y) -> (x, alpha y)"
+  },
+  "max_equation_residual": 6.217248937900877e-15,
+  "max_rms_equation_residual": 1.2391004158634482e-15,
+  "max_raw_scale_collapse_error": 7.947285970052084e-08,
+  "mean_raw_scale_collapse_error": 1.9925492716361127e-11,
+  "min_raw_family_distance_fixed_e": 0.05693833002551881,
+  "max_raw_family_distance_fixed_e": 1.4924781587188451,
+  "max_whitened_collapse_error": 3.973642985026043e-08,
+  "mean_whitened_collapse_error": 1.5095083519632547e-11
+}

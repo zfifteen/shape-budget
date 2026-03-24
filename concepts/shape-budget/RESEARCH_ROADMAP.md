@@ -23,11 +23,12 @@ What is already supported:
 - in a radial-signature boundary representation, the symmetric normalized family behaves like a one-dimensional curved manifold ordered by `e`
 - the circular edge is first-order flat across the tested normalized observables, while the degenerate edge splits them into sharp and moderate probes of `e`
 - the fixed-difference twin yields a hyperbola family with clean one-knob collapse under `lambda = a / c`
+- under a controlled quadratic anisotropy, raw geometry becomes a two-parameter family `(e, alpha)` and whitening restores the original one-knob collapse
 
 What is not yet established:
 
 - whether the inverse story remains strong when the source positions are unknown
-- whether the same budget logic survives once distance itself is warped or the source count increases
+- whether the same budget logic survives in richer warped media or once the source count increases
 - whether the manifold conclusion remains equally strong under alternative shape encodings or outside the symmetric setting
 - how the conditioning map changes once symmetry or Euclidean distance is relaxed
 
@@ -40,8 +41,8 @@ What is not yet established:
 | completed | Manifold-dimension test | One-dimensionality confirmation | Completed: PC1 explains about 98.9 percent of radial-signature variance, 1D Isomap recovers the family ordering perfectly, and scale overlays collapse in embedding space |
 | completed | Edge-regime stability | Conditioning map | Completed: near-circular geometry is first-order flat, while high-e geometry separates into sharp width and curvature probes versus a smoother perimeter probe |
 | completed | Hyperbola flip | Theory extension | Completed: the fixed-difference twin produces a hyperbola family with one-knob collapse under `lambda = a / c` |
-| next | Controlled anisotropy | Universality test | Collapse survives after adding one directional descriptor or a whitened coordinate transform |
-| later | Multi-source generalization | Higher-dimensional extension | A low-dimensional allocation space organizes normalized geometry better than raw coordinates alone |
+| completed | Controlled anisotropy | Universality test | Completed: raw geometry upgrades to `(e, alpha)` and whitening restores exact one-knob collapse |
+| next | Multi-source generalization | Higher-dimensional extension | A low-dimensional allocation space organizes normalized geometry better than raw coordinates alone |
 
 This order is deliberate. The completed experiments harden the evidence for the existing claim. The remaining ones either stress-test its limits or broaden the theory.
 
@@ -343,7 +344,7 @@ My recommendation is the first path.
 
 The project now has enough evidence to justify the phrase “control knob” inside the symmetric two-source Euclidean model, enough inverse/predictive evidence to say that the knob is operational in the known-source setting, enough boundary-space evidence to say that the normalized family itself is organized by a one-dimensional manifold, and enough conditioning evidence to say where the resulting observables are informative versus flat.
 
-It also now has a clean matched twin on the fixed-difference side, which suggests the budget logic is organizing a small family of classical two-source geometries rather than only one isolated conic.
+It also now has a clean matched twin on the fixed-difference side and a controlled anisotropy result, which suggests the budget logic is organizing a small low-dimensional family of classical two-source geometries rather than only one isolated conic.
 
 The next scientific question is not whether the phrase is evocative. It is:
 
@@ -369,6 +370,7 @@ The asymmetry pilot and the identifiability/baseline experiment now both push in
 - the symmetric family is one-dimensional in a natural nonlinear boundary-space sense, not only in a few chosen observables
 - the edge behavior is now mapped: near-circular geometry is low-information, while near-degenerate geometry separates observables by sharpness
 - the nearby deficit-spending twin does not break the program; it extends it into a second one-knob family with a flipped bounded ratio
+- a simple directional warp does not break the program either; it adds one descriptor in raw space and disappears under whitening
 
 ## Risk Register
 
