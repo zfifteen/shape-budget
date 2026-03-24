@@ -33,12 +33,14 @@ What is already supported:
 - a pilot direct-alpha-refinement pass under the same pose-free anisotropic setting improves fit and sometimes improves `alpha`, but it does not rescue `alpha` uniformly, which suggests the bottleneck is not only coarse search resolution
 - a matched canonical-versus-pose-free ambiguity profile now shows that hidden rotation broadens the near-optimal latent family mainly in `alpha`, with pose-free top-10 `alpha` spans about `3.7x` to `5.6x` larger and pose-free best-`alpha` errors about `11.4x` to `31.0x` larger, while geometry dispersion stays nearly unchanged
 - a genuinely pose-invariant low-order spectral encoding has now been tested and audited cleanly; it generally does not improve `alpha` and often makes it much worse under partial support, which means the pose-free `alpha` bottleneck is not merely a shift-search artifact and naive invariant compression is too lossy
+- a soft shift-marginalized pose score has now been tested and audited cleanly; it modestly improves `alpha` in most noisy regimes, tightens the top-10 `alpha` envelope in every regime, and gives its strongest gains in the hardest sparse partial setting, which means the hard best-shift pose rule was part of the bottleneck
 
 What is not yet established:
 
 - whether `alpha` identifiability can be materially improved under the combined nuisance of unknown rotation plus unknown medium anisotropy
 - whether the pose-free `alpha` bottleneck can be materially reduced by a better representation, uncertainty estimate, or joint local refinement beyond alpha-only search
 - whether a richer pose-equivariant or hybrid coarse-to-fine representation can improve `alpha` without discarding as much shape information as the low-order spectral invariant
+- whether adaptive or candidate-conditioned shift marginalization plus local refinement can push the current modest `alpha` gains into a stronger inferential improvement
 - whether the same budget logic survives under unknown anisotropy axes, richer warped media, or once the source count increases further
 - whether the manifold conclusion remains equally strong under alternative shape encodings or outside the symmetric setting
 - how the conditioning map changes once symmetry or Euclidean distance is relaxed
@@ -62,8 +64,9 @@ What is not yet established:
 | completed | Pose-free weighted anisotropic inverse | Combined-nuisance robustness | Completed: with unknown rotation and unknown `alpha`, a cyclic-shift-aware anisotropy-aware inverse still recovers normalized geometry and weights with useful accuracy and beats a Euclidean weighted baseline by about 3.8x to 15.9x, but `alpha` becomes much more weakly identified |
 | completed | Matched latent ambiguity profiling | Bottleneck diagnosis | Completed: matched canonical-versus-pose-free trials show that hidden rotation broadens the near-optimal latent family mainly in `alpha`, with `alpha` span ratios of about 3.7x to 5.6x and near-tied `alpha`-diverse families becoming common in the harder pose-free regimes |
 | completed | Rotation-invariant spectral representation test | Representation diagnosis | Completed: a clean low-order pose-invariant spectral encoding generally failed to improve `alpha`, often worsened fit and ambiguity under partial support, and showed severe conditioning issues in the hardest partial regimes |
+| completed | Shift-marginalized pose scoring | Pose-mechanism diagnosis | Completed: soft shift-marginalization modestly improves `alpha` in most noisy regimes, tightens the top-10 `alpha` envelope in every regime, and gives its strongest gains in the hardest sparse partial setting |
 
-The original roadmap sequence is complete, and the post-roadmap multi-source robustness plus Euclidean and anisotropic inverse extensions are now complete as well. The experiments hardened the existing claim first and then broadened it in a controlled way, and they have now surfaced a specific bottleneck: under pose-free observation, the latent family broadens mainly along the medium-anisotropy direction rather than along normalized geometry, and naive invariant compression is not enough to fix that.
+The original roadmap sequence is complete, and the post-roadmap multi-source robustness plus Euclidean and anisotropic inverse extensions are now complete as well. The experiments hardened the existing claim first and then broadened it in a controlled way, and they have now surfaced a specific bottleneck: under pose-free observation, the latent family broadens mainly along the medium-anisotropy direction rather than along normalized geometry. Naive invariant compression does not fix that, but softer shift-marginalized pose handling does recover a real part of the lost signal.
 
 ---
 
