@@ -20,12 +20,13 @@ What is already supported:
 - the first asymmetry pilot breaks one-knob sufficiency but preserves a clean two-parameter collapse under `(e, w)`
 - `e` is recoverable from noisy, partial, and sparse boundary observations when the source positions are known
 - `e` strongly outperforms raw `d`, raw `S`, and low-capacity models on `(d, S)` under a scale-held-out predictive test
+- in a radial-signature boundary representation, the symmetric normalized family behaves like a one-dimensional curved manifold ordered by `e`
 
 What is not yet established:
 
 - whether the inverse story remains strong when the source positions are unknown
 - whether the same budget logic survives in nearby families such as hyperbolas, anisotropic media, or multi-source systems
-- whether the symmetric family is best understood as a genuinely one-dimensional manifold in boundary space
+- whether the manifold conclusion remains equally strong under alternative shape encodings or outside the symmetric setting
 - how conditioning changes near the degenerate edges `e -> 0` and `e -> 1`
 
 ## Priority Order
@@ -34,13 +35,13 @@ What is not yet established:
 |---|---|---|---|
 | completed | Unequal growth / unequal budget split | Robustness test | Completed: one-knob sufficiency fails under asymmetry, but normalized geometry collapses cleanly under `(e, w)` |
 | completed | Identifiability and baseline comparison | Operational usefulness | Completed: `e` recovers reliably in the known-source setting and outperforms raw baselines across scale |
-| next | Manifold-dimension test | One-dimensionality confirmation | One dominant dimension explains nearly all variation in the symmetric normalized boundary family |
+| completed | Manifold-dimension test | One-dimensionality confirmation | Completed: PC1 explains about 98.9 percent of radial-signature variance, 1D Isomap recovers the family ordering perfectly, and scale overlays collapse in embedding space |
 | next | Hyperbola flip | Theory extension | Parallel normalized control parameter emerges with clean scale collapse in the fixed-difference family |
 | next | Controlled anisotropy | Universality test | Collapse survives after adding one directional descriptor or a whitened coordinate transform |
 | later | Multi-source generalization | Higher-dimensional extension | A low-dimensional allocation space organizes normalized geometry better than raw coordinates alone |
-| later | Edge-regime stability | Conditioning map | Clear sensitivity map of width, perimeter, and curvature responses near `e -> 0` and `e -> 1` |
+| next | Edge-regime stability | Conditioning map | Clear sensitivity map of width, perimeter, and curvature responses near `e -> 0` and `e -> 1` |
 
-This order is deliberate. The first two experiments harden the evidence for the existing claim. The later ones broaden the theory.
+This order is deliberate. The completed experiments harden the evidence for the existing claim. The remaining ones either stress-test its limits or broaden the theory.
 
 ---
 
@@ -324,9 +325,9 @@ Clear map of which downstream quantities are robust and which become unstable ne
 
 If the goal is to harden the evidence as efficiently as possible, I would do:
 
-1. Manifold-dimension test
-2. Edge-regime stability
-3. Hyperbola flip
+1. Edge-regime stability
+2. Hyperbola flip
+3. Controlled anisotropy
 
 If the goal is instead to broaden the concept as quickly as possible, I would do:
 
@@ -338,7 +339,7 @@ My recommendation is the first path.
 
 ## Bottom Line
 
-The project now has enough evidence to justify the phrase “control knob” inside the symmetric two-source Euclidean model, and enough inverse/predictive evidence to say that the knob is operational in the known-source setting.
+The project now has enough evidence to justify the phrase “control knob” inside the symmetric two-source Euclidean model, enough inverse/predictive evidence to say that the knob is operational in the known-source setting, and enough boundary-space evidence to say that the normalized family itself is organized by a one-dimensional manifold.
 
 The next scientific question is not whether the phrase is evocative. It is:
 
@@ -361,6 +362,7 @@ The asymmetry pilot and the identifiability/baseline experiment now both push in
 
 - asymmetry did not destroy the program; it promoted the family from one control dimension to two
 - the symmetric control variable is recoverable and predictive, not just algebraically available
+- the symmetric family is one-dimensional in a natural nonlinear boundary-space sense, not only in a few chosen observables
 
 ## Risk Register
 
@@ -368,5 +370,7 @@ The asymmetry pilot and the identifiability/baseline experiment now both push in
   Mitigation: keep future inverse experiments explicit about which latent quantities are assumed known.
 - Risk: symmetric observables can be deceptively redundant because several normalized quantities collapse to the same function of `e`.
   Mitigation: include boundary-space or manifold-level tests, not only scalar observables.
+- Risk: the manifold result could be overstated if it depends too strongly on one convenient shape encoding.
+  Mitigation: treat the current radial-signature result as strong evidence in a natural representation, and replicate later with support-function or signed-distance encodings if needed.
 - Risk: extension work outruns conditioning analysis near the degenerate edge.
   Mitigation: run the edge-regime stability experiment before making strong claims about robustness near `e -> 1`.

@@ -1,0 +1,25 @@
+{
+  "representation": {
+    "shape_encoding": "normalized radial signature",
+    "angle_count": 360,
+    "process_sample_count": 800
+  },
+  "manifold_metrics": {
+    "pc1_explained_variance_ratio": 0.9890752216796184,
+    "pc2_cumulative_explained_variance_ratio": 0.9997580615398839,
+    "pc3_cumulative_explained_variance_ratio": 0.9999934844756453,
+    "one_pc_mean_relative_error": 0.016545332825218275,
+    "one_pc_max_relative_error": 0.1971207944989105,
+    "two_pc_mean_relative_error": 0.0024512255843737256,
+    "two_pc_max_relative_error": 0.034533709167159664,
+    "three_pc_mean_relative_error": 0.00040338540202962983,
+    "three_pc_max_relative_error": 0.005650083938136488,
+    "five_pc_mean_relative_error": 1.2793700102043471e-05,
+    "five_pc_max_relative_error": 0.00012229252779099396,
+    "abs_isomap_spearman_rho_with_e": 0.9999999999999999,
+    "max_within_e_scale_spread_pc12": 1.522110102264731e-12,
+    "mean_within_e_scale_spread_pc12": 2.5539547099568895e-13,
+    "min_between_neighbor_distance_pc12": 0.01817007424683282,
+    "mean_between_neighbor_distance_pc12": 0.2842280160279013
+  }
+}
