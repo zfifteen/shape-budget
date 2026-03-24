@@ -25,9 +25,29 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+canonical_sources, normalize_weights, weighted_boundary_curve = load_symbols(
+    "run_weighted_multisource_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource/run.py",
+    "canonical_sources",
+    "normalize_weights",
+    "weighted_boundary_curve",
+)
+
+GEOMETRY_BOUNDS, OBSERVATION_REGIMES, boundary_signature_from_curve, observe_signature, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "GEOMETRY_BOUNDS",
+    "OBSERVATION_REGIMES",
+    "boundary_signature_from_curve",
+    "observe_signature",
+    "write_csv",
+)
 
 import csv
 import json
@@ -37,16 +57,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_weighted_multisource_experiment import canonical_sources, normalize_weights, weighted_boundary_curve
-from run_weighted_multisource_inverse_experiment import (
-    GEOMETRY_BOUNDS,
-    OBSERVATION_REGIMES,
-    boundary_signature_from_curve,
-    observe_signature,
-    write_csv,
-)
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -59,12 +69,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 REFERENCE_BANK_SIZE = 300
 EUCLIDEAN_BASELINE_BANK_SIZE = 150
@@ -73,7 +81,6 @@ CURVE_SAMPLE_COUNT = 96
 SIGNATURE_ANGLE_COUNT = 64
 ALPHA_MIN = 0.60
 ALPHA_MAX = 1.80
-
 
 @dataclass
 class TrialRow:
@@ -105,7 +112,6 @@ class TrialRow:
     euclidean_baseline_fit_rmse: float
     fit_improvement_factor: float
 
-
 def sample_anisotropic_parameters(rng: np.random.Generator) -> tuple[float, float, float, float, float, float]:
     rho = float(rng.uniform(GEOMETRY_BOUNDS["rho_min"], GEOMETRY_BOUNDS["rho_max"]))
     t = float(rng.uniform(GEOMETRY_BOUNDS["t_min"], GEOMETRY_BOUNDS["t_max"]))
@@ -114,14 +120,12 @@ def sample_anisotropic_parameters(rng: np.random.Generator) -> tuple[float, floa
     alpha = float(rng.uniform(ALPHA_MIN, ALPHA_MAX))
     return rho, t, h, float(weights[0]), float(weights[1]), alpha
 
-
 def sample_euclidean_parameters(rng: np.random.Generator) -> tuple[float, float, float, float, float, float]:
     rho = float(rng.uniform(GEOMETRY_BOUNDS["rho_min"], GEOMETRY_BOUNDS["rho_max"]))
     t = float(rng.uniform(GEOMETRY_BOUNDS["t_min"], GEOMETRY_BOUNDS["t_max"]))
     h = float(rng.uniform(GEOMETRY_BOUNDS["h_min"], GEOMETRY_BOUNDS["h_max"]))
     weights = rng.dirichlet(np.array([2.0, 2.0, 2.0]))
     return rho, t, h, float(weights[0]), float(weights[1]), 1.0
-
 
 def anisotropic_forward_signature(params: tuple[float, float, float, float, float, float]) -> np.ndarray:
     rho, t, h, w1, w2, alpha = params
@@ -136,7 +140,6 @@ def anisotropic_forward_signature(params: tuple[float, float, float, float, floa
     curve_raw[:, 1] /= alpha
     return boundary_signature_from_curve(curve_raw, angle_count=SIGNATURE_ANGLE_COUNT)
 
-
 def control_invariants(params: tuple[float, float, float, float, float, float]) -> tuple[np.ndarray, np.ndarray, float]:
     rho, t, h, w1, w2, alpha = params
     points = canonical_sources(rho, t, h, S=1.0)
@@ -144,7 +147,6 @@ def control_invariants(params: tuple[float, float, float, float, float, float]) 
     d13 = np.linalg.norm(points[0] - points[2])
     d23 = np.linalg.norm(points[1] - points[2])
     return np.array([d12, d13, d23]), np.array([w1, w2, 1.0 - w1 - w2]), float(alpha)
-
 
 def symmetry_aware_errors(
     true_params: tuple[float, float, float, float, float, float],
@@ -170,7 +172,6 @@ def symmetry_aware_errors(
 
     return geom_mae, weight_mae, float(abs(true_alpha - pred_alpha))
 
-
 def build_reference_bank(
     sample_size: int,
     rng: np.random.Generator,
@@ -186,7 +187,6 @@ def build_reference_bank(
         signatures.append(anisotropic_forward_signature(params))
     return params_list, np.array(signatures)
 
-
 def nearest_neighbor_prediction(
     observed_signature: np.ndarray,
     mask: np.ndarray,
@@ -197,7 +197,6 @@ def nearest_neighbor_prediction(
     mse = np.mean(residual * residual, axis=1)
     idx = int(np.argmin(mse))
     return bank_params[idx], bank_signatures[idx]
-
 
 def aggregate_trials(rows: list[TrialRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
@@ -225,7 +224,6 @@ def aggregate_trials(rows: list[TrialRow]) -> list[dict[str, float | str]]:
             }
         )
     return summary
-
 
 def plot_error_heatmap(path: str, summary_rows: list[dict[str, float | str]]) -> None:
     conditions = [str(item["condition"]) for item in summary_rows]
@@ -257,7 +255,6 @@ def plot_error_heatmap(path: str, summary_rows: list[dict[str, float | str]]) ->
     fig.suptitle("Weighted Anisotropic Inverse A: Recovery Error Across Regimes", fontsize=15, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_baselines_and_alpha(
     path: str,
@@ -311,7 +308,6 @@ def plot_baselines_and_alpha(
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_example_recoveries(path: str, rows: list[TrialRow]) -> None:
     chosen_conditions = ["full_clean", "partial_arc_noisy", "sparse_partial_high_noise"]
     fig, axes = plt.subplots(len(chosen_conditions), 1, figsize=(10.2, 9.4), constrained_layout=False)
@@ -345,7 +341,6 @@ def plot_example_recoveries(path: str, rows: list[TrialRow]) -> None:
     fig.suptitle("Weighted Anisotropic Inverse C: Representative Signature Recoveries", fontsize=15, fontweight="bold", y=0.98)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -437,7 +432,6 @@ def main() -> None:
         json.dump({"summary": summary, "by_condition": summary_rows}, handle, indent=2)
 
     print(json.dumps({"summary": summary, "by_condition": summary_rows}, indent=2))
-
 
 if __name__ == "__main__":
     main()

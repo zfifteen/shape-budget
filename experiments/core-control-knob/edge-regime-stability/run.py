@@ -12,13 +12,6 @@ It measures both:
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
-
 import csv
 import json
 import math
@@ -29,7 +22,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from scipy.special import ellipe, ellipk
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -42,14 +34,12 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
 
 RELATIVE_NOISE_FRACTION = 0.01
-
 
 @dataclass
 class EdgeMetricRow:
@@ -61,18 +51,14 @@ class EdgeMetricRow:
     relative_condition_number: float
     delta_e_for_1pct_relative_noise: float
 
-
 def width_residue(e: np.ndarray) -> np.ndarray:
     return np.sqrt(np.maximum(1.0 - e**2, 0.0))
-
 
 def d_width_residue(e: np.ndarray) -> np.ndarray:
     return -e / np.sqrt(np.maximum(1.0 - e**2, 1e-300))
 
-
 def normalized_perimeter(e: np.ndarray) -> np.ndarray:
     return (2.0 / math.pi) * ellipe(e**2)
-
 
 def d_normalized_perimeter(e: np.ndarray) -> np.ndarray:
     out = np.zeros_like(e)
@@ -82,22 +68,17 @@ def d_normalized_perimeter(e: np.ndarray) -> np.ndarray:
     out[nonzero] = (2.0 / math.pi) * (ellipe(m) - ellipk(m)) / ez
     return out
 
-
 def major_tip_response(e: np.ndarray) -> np.ndarray:
     return 1.0 / np.maximum(1.0 - e**2, 1e-300)
-
 
 def d_major_tip_response(e: np.ndarray) -> np.ndarray:
     return 2.0 * e / np.maximum((1.0 - e**2) ** 2, 1e-300)
 
-
 def minor_tip_response(e: np.ndarray) -> np.ndarray:
     return width_residue(e)
 
-
 def d_minor_tip_response(e: np.ndarray) -> np.ndarray:
     return d_width_residue(e)
-
 
 OBSERVABLES = {
     "width_residue": {
@@ -120,7 +101,6 @@ OBSERVABLES = {
     },
 }
 
-
 def build_e_grid() -> np.ndarray:
     low = np.geomspace(1e-6, 1e-2, 140, endpoint=False)
     mid = np.linspace(1e-2, 0.99, 320, endpoint=False)
@@ -128,14 +108,11 @@ def build_e_grid() -> np.ndarray:
     grid = np.unique(np.round(np.concatenate([low, mid, high]), 12))
     return np.sort(grid)
 
-
 def relative_condition_number(e: np.ndarray, value: np.ndarray, derivative: np.ndarray) -> np.ndarray:
     return np.abs((e / np.maximum(np.abs(value), 1e-300)) * derivative)
 
-
 def delta_e_for_relative_noise(value: np.ndarray, derivative: np.ndarray, noise_fraction: float) -> np.ndarray:
     return noise_fraction * np.abs(value / np.maximum(np.abs(derivative), 1e-300))
-
 
 def find_condition_crossing(observable_name: str, target: float = 1.0) -> float:
     func = OBSERVABLES[observable_name]["func"]
@@ -152,7 +129,6 @@ def find_condition_crossing(observable_name: str, target: float = 1.0) -> float:
         else:
             hi = mid
     return 0.5 * (lo + hi)
-
 
 def metric_rows(e_grid: np.ndarray) -> list[EdgeMetricRow]:
     rows: list[EdgeMetricRow] = []
@@ -175,7 +151,6 @@ def metric_rows(e_grid: np.ndarray) -> list[EdgeMetricRow]:
             )
     return rows
 
-
 def write_csv(path: str, rows: list[dict[str, float | str]]) -> None:
     if not rows:
         return
@@ -183,7 +158,6 @@ def write_csv(path: str, rows: list[dict[str, float | str]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
-
 
 def plot_conditioning_overview(path: str, e_grid: np.ndarray) -> None:
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(14.2, 5.8), constrained_layout=False)
@@ -213,7 +187,6 @@ def plot_conditioning_overview(path: str, e_grid: np.ndarray) -> None:
     fig.suptitle("Experiment 7A: Edge-Regime Conditioning Overview", fontsize=15, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_edge_zooms(path: str) -> None:
     e_zero = np.geomspace(1e-6, 2e-1, 220)
@@ -280,7 +253,6 @@ def plot_edge_zooms(path: str) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_reference_heatmap(path: str, reference_e: list[float]) -> None:
     observable_order = ["width_residue", "normalized_perimeter", "major_tip_response"]
     matrix = np.zeros((len(observable_order), len(reference_e)))
@@ -313,7 +285,6 @@ def plot_reference_heatmap(path: str, reference_e: list[float]) -> None:
     ax.set_ylabel("observable")
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def summarize(rows: list[EdgeMetricRow], reference_e: list[float]) -> dict[str, object]:
     by_observable: dict[str, dict[str, object]] = {}
@@ -359,7 +330,6 @@ def summarize(rows: list[EdgeMetricRow], reference_e: list[float]) -> dict[str, 
         },
     }
 
-
 def main() -> None:
     e_grid = build_e_grid()
     rows = metric_rows(e_grid)
@@ -376,7 +346,6 @@ def main() -> None:
 
     print("Edge-regime stability experiment complete.")
     print(json.dumps(summary, indent=2))
-
 
 if __name__ == "__main__":
     main()

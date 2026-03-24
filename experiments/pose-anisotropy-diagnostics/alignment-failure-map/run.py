@@ -11,9 +11,61 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+oracle_align_observation, = load_symbols(
+    "run_oracle_alignment_ceiling_experiment",
+    ROOT / "experiments/pose-anisotropy-diagnostics/oracle-alignment-ceiling/run.py",
+    "oracle_align_observation",
+)
+
+align_by_shift_search, audit_alignment_invariance, audit_clean_recovery, build_aligned_bank, harmonic_alignment_score, nearest_neighbor_aligned, principal_axis_score, rmse = load_symbols(
+    "run_orientation_locking_experiment",
+    ROOT / "experiments/pose-anisotropy-diagnostics/orientation-locking/run.py",
+    "align_by_shift_search",
+    "audit_alignment_invariance",
+    "audit_clean_recovery",
+    "build_aligned_bank",
+    "harmonic_alignment_score",
+    "nearest_neighbor_aligned",
+    "principal_axis_score",
+    "rmse",
+)
+
+nearest_neighbor_pose_free, = load_symbols(
+    "run_pose_free_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-anisotropic-inverse/run.py",
+    "nearest_neighbor_pose_free",
+)
+
+build_shift_stack, observe_pose_free_signature = load_symbols(
+    "run_pose_free_weighted_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-inverse/run.py",
+    "build_shift_stack",
+    "observe_pose_free_signature",
+)
+
+REFERENCE_BANK_SIZE, anisotropic_forward_signature, build_reference_bank, sample_anisotropic_parameters, symmetry_aware_errors = load_symbols(
+    "run_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-anisotropic-inverse/run.py",
+    "REFERENCE_BANK_SIZE",
+    "anisotropic_forward_signature",
+    "build_reference_bank",
+    "sample_anisotropic_parameters",
+    "symmetry_aware_errors",
+)
+
+OBSERVATION_REGIMES, SIGNATURE_ANGLE_COUNT, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "OBSERVATION_REGIMES",
+    "SIGNATURE_ANGLE_COUNT",
+    "write_csv",
+)
 
 import json
 import math
@@ -23,29 +75,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_oracle_alignment_ceiling_experiment import oracle_align_observation
-from run_orientation_locking_experiment import (
-    align_by_shift_search,
-    audit_alignment_invariance,
-    audit_clean_recovery,
-    build_aligned_bank,
-    harmonic_alignment_score,
-    nearest_neighbor_aligned,
-    principal_axis_score,
-    rmse,
-)
-from run_pose_free_weighted_anisotropic_inverse_experiment import nearest_neighbor_pose_free
-from run_pose_free_weighted_inverse_experiment import build_shift_stack, observe_pose_free_signature
-from run_weighted_anisotropic_inverse_experiment import (
-    REFERENCE_BANK_SIZE,
-    anisotropic_forward_signature,
-    build_reference_bank,
-    sample_anisotropic_parameters,
-    symmetry_aware_errors,
-)
-from run_weighted_multisource_inverse_experiment import OBSERVATION_REGIMES, SIGNATURE_ANGLE_COUNT, write_csv
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -58,12 +87,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 MAP_TRIALS_PER_REGIME = 60
 
@@ -72,7 +99,6 @@ ALPHA_STRENGTH_BIN_LABELS = ["weak", "moderate", "strong"]
 
 GEOMETRY_SKEW_BIN_EDGES = [0.0, 0.20, 0.45, float("inf")]
 GEOMETRY_SKEW_BIN_LABELS = ["low_skew", "mid_skew", "high_skew"]
-
 
 @dataclass
 class TrialRow:
@@ -103,21 +129,17 @@ class TrialRow:
     oracle_alpha_error: float
     oracle_fit_rmse: float
 
-
 def alpha_strength(alpha: float) -> float:
     return float(abs(math.log(alpha)))
 
-
 def geometry_skew_from_t(t: float) -> float:
     return float(abs(t))
-
 
 def assign_bin(value: float, edges: list[float], labels: list[str]) -> str:
     for lo, hi, label in zip(edges[:-1], edges[1:], labels):
         if lo <= value < hi:
             return label
     return labels[-1]
-
 
 def aggregate(rows: list[TrialRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
@@ -172,7 +194,6 @@ def aggregate(rows: list[TrialRow]) -> list[dict[str, float | str]]:
                 )
     return summary
 
-
 def grid_matrix(
     summary_rows: list[dict[str, float | str]],
     condition: str,
@@ -186,7 +207,6 @@ def grid_matrix(
         j = GEOMETRY_SKEW_BIN_LABELS.index(str(row["geometry_skew_bin"]))
         matrix[i, j] = float(row[metric])
     return matrix
-
 
 def plot_capture_maps(path: str, summary_rows: list[dict[str, float | str]], metric: str, title: str, cmap: str, cbar_label: str) -> None:
     conditions = [str(regime["name"]) for regime in OBSERVATION_REGIMES]
@@ -220,7 +240,6 @@ def plot_capture_maps(path: str, summary_rows: list[dict[str, float | str]], met
     fig.suptitle(title, fontsize=16, fontweight="bold", y=0.96)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -372,7 +391,6 @@ def main() -> None:
         json.dump({"summary": summary, "by_condition": summary_rows}, handle, indent=2)
 
     print(json.dumps({"summary": summary, "by_condition": summary_rows}, indent=2))
-
 
 if __name__ == "__main__":
     main()

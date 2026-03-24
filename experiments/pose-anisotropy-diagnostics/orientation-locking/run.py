@@ -11,9 +11,44 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+nearest_neighbor_pose_free, = load_symbols(
+    "run_pose_free_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-anisotropic-inverse/run.py",
+    "nearest_neighbor_pose_free",
+)
+
+build_shift_stack, observe_pose_free_signature = load_symbols(
+    "run_pose_free_weighted_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-inverse/run.py",
+    "build_shift_stack",
+    "observe_pose_free_signature",
+)
+
+CANONICAL_ANISO_OUTPUT_DIR, REFERENCE_BANK_SIZE, TEST_TRIALS_PER_REGIME, anisotropic_forward_signature, build_reference_bank, sample_anisotropic_parameters, symmetry_aware_errors = load_symbols(
+    "run_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-anisotropic-inverse/run.py",
+    "OUTPUT_DIR",
+    "REFERENCE_BANK_SIZE",
+    "TEST_TRIALS_PER_REGIME",
+    "anisotropic_forward_signature",
+    "build_reference_bank",
+    "sample_anisotropic_parameters",
+    "symmetry_aware_errors",
+)
+
+OBSERVATION_REGIMES, SIGNATURE_ANGLE_COUNT, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "OBSERVATION_REGIMES",
+    "SIGNATURE_ANGLE_COUNT",
+    "write_csv",
+)
 
 import json
 import math
@@ -23,20 +58,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_pose_free_weighted_anisotropic_inverse_experiment import nearest_neighbor_pose_free
-from run_pose_free_weighted_inverse_experiment import build_shift_stack, observe_pose_free_signature
-from run_weighted_anisotropic_inverse_experiment import (
-    OUTPUT_DIR as CANONICAL_ANISO_OUTPUT_DIR,
-    REFERENCE_BANK_SIZE,
-    TEST_TRIALS_PER_REGIME,
-    anisotropic_forward_signature,
-    build_reference_bank,
-    sample_anisotropic_parameters,
-    symmetry_aware_errors,
-)
-from run_weighted_multisource_inverse_experiment import OBSERVATION_REGIMES, SIGNATURE_ANGLE_COUNT, write_csv
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -49,18 +70,15 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
 
-
 HARMONIC_TIEBREAK_WEIGHT = 0.25
 PCA_TIEBREAK_WEIGHT = 0.12
 AUDIT_ROTATION_CASES = 30
 AUDIT_RECOVERY_CASES = 30
-
 
 @dataclass
 class TrialRow:
@@ -89,13 +107,11 @@ class TrialRow:
     pca_fit_rmse: float
     pca_alignment_shift: int
 
-
 def load_canonical_anisotropic_summary() -> dict[str, dict[str, float]]:
     path = os.path.join(CANONICAL_ANISO_OUTPUT_DIR, "weighted_anisotropic_inverse_summary.json")
     with open(path, "r", encoding="utf-8") as handle:
         data = json.load(handle)
     return {item["condition"]: item for item in data["by_condition"]}
-
 
 def masked_fourier_coeff(signature: np.ndarray, mask: np.ndarray, order: int) -> complex:
     idx = np.flatnonzero(mask)
@@ -105,12 +121,10 @@ def masked_fourier_coeff(signature: np.ndarray, mask: np.ndarray, order: int) ->
     values = signature[idx]
     return complex(np.mean(values * np.exp(-1j * order * angles)))
 
-
 def harmonic_alignment_score(signature: np.ndarray, mask: np.ndarray) -> float:
     c2 = masked_fourier_coeff(signature, mask, 2)
     c3 = masked_fourier_coeff(signature, mask, 3)
     return float(np.real(c2) + HARMONIC_TIEBREAK_WEIGHT * np.real(c3))
-
 
 def principal_axis_score(signature: np.ndarray, mask: np.ndarray) -> float:
     idx = np.flatnonzero(mask)
@@ -134,7 +148,6 @@ def principal_axis_score(signature: np.ndarray, mask: np.ndarray) -> float:
         skew_x = float(np.mean(x**3) / (x_std**3))
     return axis_anisotropy + PCA_TIEBREAK_WEIGHT * skew_x
 
-
 def align_by_shift_search(
     signature: np.ndarray,
     mask: np.ndarray,
@@ -157,7 +170,6 @@ def align_by_shift_search(
 
     return best_signature, best_mask, best_shift, best_score
 
-
 def nearest_neighbor_aligned(
     observed_signature: np.ndarray,
     mask: np.ndarray,
@@ -169,10 +181,8 @@ def nearest_neighbor_aligned(
     idx = int(np.argmin(mse))
     return bank_params[idx], bank_signatures[idx]
 
-
 def rmse(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.sqrt(np.mean((a - b) ** 2)))
-
 
 def build_aligned_bank(
     bank_signatures: np.ndarray,
@@ -184,7 +194,6 @@ def build_aligned_bank(
         aligned_signature, _, _, _ = align_by_shift_search(signature, full_mask, scorer)
         aligned.append(aligned_signature)
     return np.array(aligned)
-
 
 def audit_alignment_invariance(
     bank_signatures: np.ndarray,
@@ -202,7 +211,6 @@ def audit_alignment_invariance(
         aligned_rot, _, _, _ = align_by_shift_search(rotated, full_mask, scorer)
         max_rmse = max(max_rmse, rmse(aligned_base, aligned_rot))
     return {"max_aligned_rotation_rmse": float(max_rmse)}
-
 
 def audit_clean_recovery(
     bank_params: list[tuple[float, float, float, float, float, float]],
@@ -229,7 +237,6 @@ def audit_clean_recovery(
         "exact_recovery_fraction": float(exact_count / AUDIT_RECOVERY_CASES),
         "max_aligned_fit_rmse": float(max_fit_rmse),
     }
-
 
 def aggregate(rows: list[TrialRow]) -> list[dict[str, float | str]]:
     summary = []
@@ -271,7 +278,6 @@ def aggregate(rows: list[TrialRow]) -> list[dict[str, float | str]]:
         )
     return summary
 
-
 def compare_to_canonical(summary_rows: list[dict[str, float | str]]) -> list[dict[str, float | str]]:
     canonical = load_canonical_anisotropic_summary()
     rows: list[dict[str, float | str]] = []
@@ -290,7 +296,6 @@ def compare_to_canonical(summary_rows: list[dict[str, float | str]]) -> list[dic
             }
         )
     return rows
-
 
 def plot_alpha_and_geometry(path: str, summary_rows: list[dict[str, float | str]]) -> None:
     conditions = [str(item["condition"]) for item in summary_rows]
@@ -324,7 +329,6 @@ def plot_alpha_and_geometry(path: str, summary_rows: list[dict[str, float | str]
     fig.suptitle("Orientation Locking A: Alpha Versus Geometry", fontsize=16, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_penalties(path: str, penalty_rows: list[dict[str, float | str]]) -> None:
     conditions = [str(item["condition"]) for item in penalty_rows]
@@ -364,7 +368,6 @@ def plot_penalties(path: str, penalty_rows: list[dict[str, float | str]]) -> Non
     fig.suptitle("Orientation Locking B: Penalty Relative To Canonical", fontsize=16, fontweight="bold", y=0.95)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -498,7 +501,6 @@ def main() -> None:
             indent=2,
         )
     )
-
 
 if __name__ == "__main__":
     main()

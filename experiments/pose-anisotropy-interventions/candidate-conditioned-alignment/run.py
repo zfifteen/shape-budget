@@ -22,9 +22,64 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+oracle_align_observation, = load_symbols(
+    "run_oracle_alignment_ceiling_experiment",
+    ROOT / "experiments/pose-anisotropy-diagnostics/oracle-alignment-ceiling/run.py",
+    "oracle_align_observation",
+)
+
+nearest_neighbor_aligned, rmse = load_symbols(
+    "run_orientation_locking_experiment",
+    ROOT / "experiments/pose-anisotropy-diagnostics/orientation-locking/run.py",
+    "nearest_neighbor_aligned",
+    "rmse",
+)
+
+nearest_neighbor_pose_free, = load_symbols(
+    "run_pose_free_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-anisotropic-inverse/run.py",
+    "nearest_neighbor_pose_free",
+)
+
+build_shift_stack, observe_pose_free_signature = load_symbols(
+    "run_pose_free_weighted_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-inverse/run.py",
+    "build_shift_stack",
+    "observe_pose_free_signature",
+)
+
+marginalized_candidate_scores, shift_error_matrix, softmin_temperature = load_symbols(
+    "run_shift_marginalized_pose_experiment",
+    ROOT / "experiments/pose-anisotropy-interventions/shift-marginalized-pose/run.py",
+    "marginalized_candidate_scores",
+    "shift_error_matrix",
+    "softmin_temperature",
+)
+
+ALPHA_MAX, ALPHA_MIN, REFERENCE_BANK_SIZE, anisotropic_forward_signature, build_reference_bank, sample_anisotropic_parameters, symmetry_aware_errors = load_symbols(
+    "run_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-anisotropic-inverse/run.py",
+    "ALPHA_MAX",
+    "ALPHA_MIN",
+    "REFERENCE_BANK_SIZE",
+    "anisotropic_forward_signature",
+    "build_reference_bank",
+    "sample_anisotropic_parameters",
+    "symmetry_aware_errors",
+)
+
+OBSERVATION_REGIMES, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "OBSERVATION_REGIMES",
+    "write_csv",
+)
 
 import json
 import math
@@ -34,27 +89,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_oracle_alignment_ceiling_experiment import oracle_align_observation
-from run_orientation_locking_experiment import nearest_neighbor_aligned, rmse
-from run_pose_free_weighted_anisotropic_inverse_experiment import nearest_neighbor_pose_free
-from run_pose_free_weighted_inverse_experiment import build_shift_stack, observe_pose_free_signature
-from run_shift_marginalized_pose_experiment import (
-    marginalized_candidate_scores,
-    shift_error_matrix,
-    softmin_temperature,
-)
-from run_weighted_anisotropic_inverse_experiment import (
-    ALPHA_MAX,
-    ALPHA_MIN,
-    REFERENCE_BANK_SIZE,
-    anisotropic_forward_signature,
-    build_reference_bank,
-    sample_anisotropic_parameters,
-    symmetry_aware_errors,
-)
-from run_weighted_multisource_inverse_experiment import OBSERVATION_REGIMES, write_csv
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -67,12 +101,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 TOP_K_SEEDS = 3
 TRIALS_PER_CELL = 4
@@ -89,7 +121,6 @@ COARSE_ALPHA_RADIUS = 0.22
 COARSE_ALPHA_POINTS = 9
 FINE_ALPHA_RADIUS = 0.07
 FINE_ALPHA_POINTS = 7
-
 
 @dataclass
 class TrialRow:
@@ -119,21 +150,17 @@ class TrialRow:
     oracle_alpha_error: float
     oracle_fit_rmse: float
 
-
 def alpha_strength(alpha: float) -> float:
     return float(abs(math.log(alpha)))
 
-
 def geometry_skew_from_t(t: float) -> float:
     return float(abs(t))
-
 
 def assign_bin(value: float, edges: list[float], labels: list[str]) -> str:
     for lo, hi, label in zip(edges[:-1], edges[1:], labels):
         if lo <= value < hi:
             return label
     return labels[-1]
-
 
 def sample_conditioned_parameters(
     rng: np.random.Generator,
@@ -149,14 +176,12 @@ def sample_conditioned_parameters(
         return params
     raise RuntimeError(f"Failed to sample parameters for bins alpha={alpha_bin}, skew={skew_bin}")
 
-
 def unique_centered_grid(center: float, radius: float, lower: float, upper: float, count: int, extra_values: list[float] | None = None) -> np.ndarray:
     values = np.linspace(max(lower, center - radius), min(upper, center + radius), count)
     if extra_values:
         values = np.concatenate([values, np.array(extra_values, dtype=float)])
     values = np.clip(values, lower, upper)
     return np.unique(values)
-
 
 def evaluate_candidate_alpha(
     observed_signature: np.ndarray,
@@ -174,7 +199,6 @@ def evaluate_candidate_alpha(
     stable = np.exp(-(mse - minima) / temperature)
     marginalized = minima - temperature * math.log(float(np.mean(stable)))
     return float(marginalized), shift_stack[best_shift], best_shift
-
 
 def candidate_conditioned_search(
     observed_signature: np.ndarray,
@@ -230,11 +254,9 @@ def candidate_conditioned_search(
 
     return best_params, best_signature, best_shift, float(best_score)
 
-
 def top_k_indices(scores: np.ndarray, k: int) -> list[int]:
     order = np.argsort(scores)
     return [int(idx) for idx in order[:k]]
-
 
 def aggregate_by_condition(rows: list[TrialRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
@@ -288,7 +310,6 @@ def aggregate_by_condition(rows: list[TrialRow]) -> list[dict[str, float | str]]
             }
         )
     return summary
-
 
 def aggregate_by_cell(rows: list[TrialRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
@@ -344,7 +365,6 @@ def aggregate_by_cell(rows: list[TrialRow]) -> list[dict[str, float | str]]:
                 )
     return summary
 
-
 def summarize_hard_cells(cell_rows: list[dict[str, float | str]]) -> dict[str, float]:
     subset = [
         row
@@ -370,7 +390,6 @@ def summarize_hard_cells(cell_rows: list[dict[str, float | str]]) -> dict[str, f
         "conditioned_minus_marginalized_oracle_gain_mean": mean("conditioned_minus_marginalized_oracle_gain"),
         "conditioned_vs_marginalized_alpha_ratio_mean": mean("conditioned_vs_marginalized_alpha_ratio"),
     }
-
 
 def plot_overview(path: str, summary_rows: list[dict[str, float | str]]) -> None:
     conditions = [str(item["condition"]) for item in summary_rows]
@@ -404,7 +423,6 @@ def plot_overview(path: str, summary_rows: list[dict[str, float | str]]) -> None
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def cell_matrix(
     cell_rows: list[dict[str, float | str]],
     condition: str,
@@ -418,7 +436,6 @@ def cell_matrix(
         j = GEOMETRY_SKEW_BIN_LABELS.index(str(row["geometry_skew_bin"]))
         matrix[i, j] = float(row[metric])
     return matrix
-
 
 def plot_hard_cell_maps(path: str, cell_rows: list[dict[str, float | str]]) -> None:
     conditions = ["sparse_full_noisy", "sparse_partial_high_noise"]
@@ -478,7 +495,6 @@ def plot_hard_cell_maps(path: str, cell_rows: list[dict[str, float | str]]) -> N
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def audit_seed_preservation(
     rng: np.random.Generator,
 ) -> dict[str, float]:
@@ -497,7 +513,6 @@ def audit_seed_preservation(
         "audit_cases": float(SEED_AUDIT_CASES),
         "max_refined_minus_seed_score": float(max_score_delta),
     }
-
 
 def audit_candidate_family_clean_recovery(
     rng: np.random.Generator,
@@ -526,7 +541,6 @@ def audit_candidate_family_clean_recovery(
         "max_alpha_error_after_family_refinement": float(max_alpha_error),
         "exact_rotated_signature_recovery_fraction": float(exact_shift_fraction / FAMILY_AUDIT_CASES),
     }
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -663,7 +677,6 @@ def main() -> None:
         json.dump({"summary": summary, "by_condition": by_condition, "by_cell": by_cell}, handle, indent=2)
 
     print(json.dumps({"summary": summary, "by_condition": by_condition, "by_cell": by_cell}, indent=2))
-
 
 if __name__ == "__main__":
     main()

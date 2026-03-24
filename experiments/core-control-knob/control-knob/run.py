@@ -15,13 +15,6 @@ Outputs are written to ./outputs/
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
-
 import csv
 import json
 import math
@@ -34,7 +27,6 @@ import numpy as np
 import seaborn as sns
 from matplotlib.patches import Ellipse
 
-
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
     {
@@ -46,12 +38,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 @dataclass
 class ExperimentRow:
@@ -67,19 +57,16 @@ class ExperimentRow:
     max_equation_residual: float
     rms_equation_residual: float
 
-
 def ellipse_parameters(a: float, e: float) -> tuple[float, float, float]:
     c = e * a
     b = math.sqrt(max(a * a - c * c, 0.0))
     return a, b, c
-
 
 def normalized_radii_family(a: float, c: float, sample_count: int = 500) -> np.ndarray:
     if c == 0.0:
         return np.full(sample_count, a)
     s = np.linspace(-1.0, 1.0, sample_count)
     return a + c * s
-
 
 def constant_sum_locus_points(a: float, e: float, sample_count: int = 500) -> np.ndarray:
     a, b, c = ellipse_parameters(a, e)
@@ -102,14 +89,11 @@ def constant_sum_locus_points(a: float, e: float, sample_count: int = 500) -> np
     lower[:, 1] *= -1.0
     return np.vstack([upper, lower])
 
-
 def ellipse_equation_residual(points: np.ndarray, a: float, b: float) -> np.ndarray:
     return (points[:, 0] ** 2) / (a * a) + (points[:, 1] ** 2) / (b * b) - 1.0
 
-
 def approximate_perimeter(a: float, b: float) -> float:
     return math.pi * (3.0 * (a + b) - math.sqrt((3.0 * a + b) * (a + 3.0 * b)))
-
 
 def make_rows(e_values: np.ndarray, a_values: list[float]) -> list[ExperimentRow]:
     rows: list[ExperimentRow] = []
@@ -135,7 +119,6 @@ def make_rows(e_values: np.ndarray, a_values: list[float]) -> list[ExperimentRow
             )
     return rows
 
-
 def scale_collapse_errors(e_values: np.ndarray, a_values: list[float], sample_count: int = 500) -> list[dict[str, float]]:
     rows: list[dict[str, float]] = []
     for e in e_values:
@@ -157,7 +140,6 @@ def scale_collapse_errors(e_values: np.ndarray, a_values: list[float], sample_co
             )
     return rows
 
-
 def write_csv(path: str, rows: list[dict[str, float]]) -> None:
     if not rows:
         return
@@ -165,7 +147,6 @@ def write_csv(path: str, rows: list[dict[str, float]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
-
 
 def plot_process_reconstruction(path: str) -> None:
     fig, axes = plt.subplots(2, 2, figsize=(12.5, 10.5), constrained_layout=False)
@@ -200,7 +181,6 @@ def plot_process_reconstruction(path: str) -> None:
     fig.suptitle("Experiment 1: Process Reconstruction", fontsize=16, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_scale_collapse(path: str) -> None:
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(14.5, 6.6), constrained_layout=False)
@@ -246,7 +226,6 @@ def plot_scale_collapse(path: str) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_response_curves(path: str) -> None:
     e = np.linspace(0.0, 0.995, 500)
     residue = np.sqrt(1.0 - e**2)
@@ -277,7 +256,6 @@ def plot_response_curves(path: str) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_phase_map(path: str) -> None:
     d_vals = np.linspace(0.0, 10.0, 450)
     s_vals = np.linspace(0.2, 10.0, 450)
@@ -305,7 +283,6 @@ def plot_phase_map(path: str) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def summarize(rows: list[ExperimentRow], collapse_rows: list[dict[str, float]]) -> dict[str, float]:
     max_equation_residual = max(row.max_equation_residual for row in rows)
     rms_equation_residual = max(row.rms_equation_residual for row in rows)
@@ -319,7 +296,6 @@ def summarize(rows: list[ExperimentRow], collapse_rows: list[dict[str, float]]) 
         "max_scale_collapse_error": float(max_collapse_error),
         "mean_scale_collapse_error": mean_collapse_error,
     }
-
 
 def main() -> None:
     e_values = np.round(np.linspace(0.05, 0.95, 19), 4)
@@ -348,7 +324,6 @@ def main() -> None:
     print(f"Metric rows: {len(metric_rows)}")
     print(f"Collapse rows: {len(collapse_rows)}")
     print(json.dumps(summary, indent=2))
-
 
 if __name__ == "__main__":
     main()

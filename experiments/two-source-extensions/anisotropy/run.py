@@ -16,13 +16,6 @@ This is a controlled anisotropy test:
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
-
 import csv
 import json
 import math
@@ -33,7 +26,6 @@ from itertools import combinations, product
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -46,12 +38,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 @dataclass
 class AnisotropyRow:
@@ -67,12 +57,10 @@ class AnisotropyRow:
     max_equation_residual: float
     rms_equation_residual: float
 
-
 def ellipse_parameters(a: float, e: float) -> tuple[float, float, float]:
     c = e * a
     b = math.sqrt(max(a * a - c * c, 0.0))
     return a, b, c
-
 
 def constant_sum_anisotropic_points(a: float, e: float, alpha: float, sample_count: int = 500) -> np.ndarray:
     a, b, c = ellipse_parameters(a, e)
@@ -94,16 +82,13 @@ def constant_sum_anisotropic_points(a: float, e: float, alpha: float, sample_cou
     lower[:, 1] *= -1.0
     return np.vstack([upper, lower])
 
-
 def anisotropic_equation_residual(points: np.ndarray, a: float, b: float, alpha: float) -> np.ndarray:
     return (points[:, 0] ** 2) / (a * a) + (alpha * points[:, 1]) ** 2 / (b * b) - 1.0
-
 
 def whiten_points(points: np.ndarray, alpha: float) -> np.ndarray:
     out = points.copy()
     out[:, 1] *= alpha
     return out
-
 
 def make_rows(e_values: np.ndarray, alpha_values: list[float], a_values: list[float]) -> list[AnisotropyRow]:
     rows: list[AnisotropyRow] = []
@@ -128,7 +113,6 @@ def make_rows(e_values: np.ndarray, alpha_values: list[float], a_values: list[fl
         )
     return rows
 
-
 def raw_scale_collapse(e_values: np.ndarray, alpha_values: list[float], a_values: list[float], sample_count: int = 500) -> list[dict[str, float]]:
     rows: list[dict[str, float]] = []
     for e, alpha in product(e_values, alpha_values):
@@ -150,7 +134,6 @@ def raw_scale_collapse(e_values: np.ndarray, alpha_values: list[float], a_values
             )
     return rows
 
-
 def raw_family_distances(e_values: np.ndarray, alpha_values: list[float], a: float = 1.0, sample_count: int = 500) -> list[dict[str, float]]:
     rows: list[dict[str, float]] = []
     for e in e_values:
@@ -171,7 +154,6 @@ def raw_family_distances(e_values: np.ndarray, alpha_values: list[float], a: flo
                 }
             )
     return rows
-
 
 def whitened_collapse(e_values: np.ndarray, alpha_values: list[float], a_values: list[float], sample_count: int = 500) -> list[dict[str, float]]:
     rows: list[dict[str, float]] = []
@@ -196,7 +178,6 @@ def whitened_collapse(e_values: np.ndarray, alpha_values: list[float], a_values:
             )
     return rows
 
-
 def write_csv(path: str, rows: list[dict[str, float]]) -> None:
     if not rows:
         return
@@ -204,7 +185,6 @@ def write_csv(path: str, rows: list[dict[str, float]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
-
 
 def plot_process_reconstruction(path: str) -> None:
     fig, axes = plt.subplots(2, 2, figsize=(12.8, 10.5), constrained_layout=False)
@@ -241,7 +221,6 @@ def plot_process_reconstruction(path: str) -> None:
     fig.suptitle("Experiment 4A: Anisotropic Process Reconstruction", fontsize=16, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_whitening_recovery(path: str) -> None:
     fig, axes = plt.subplots(1, 3, figsize=(16.0, 5.4), constrained_layout=False)
@@ -289,7 +268,6 @@ def plot_whitening_recovery(path: str) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_response_surfaces(path: str) -> None:
     e = np.linspace(0.05, 0.95, 260)
     alpha_values = [0.50, 0.75, 1.00, 1.50, 2.00]
@@ -325,7 +303,6 @@ def plot_response_surfaces(path: str) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_parameter_map(path: str) -> None:
     e = np.linspace(0.02, 0.98, 260)
     alpha = np.linspace(0.40, 2.10, 240)
@@ -355,7 +332,6 @@ def plot_parameter_map(path: str) -> None:
     fig.suptitle("Experiment 4D: Two-Parameter Raw Geometry Under Controlled Anisotropy", fontsize=16, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     e_values = np.round(np.linspace(0.10, 0.90, 17), 4)
@@ -397,7 +373,6 @@ def main() -> None:
 
     print("Controlled anisotropy experiment complete.")
     print(json.dumps(summary, indent=2))
-
 
 if __name__ == "__main__":
     main()

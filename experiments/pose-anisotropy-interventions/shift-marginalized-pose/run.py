@@ -17,9 +17,37 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+build_shift_stack, observe_pose_free_signature = load_symbols(
+    "run_pose_free_weighted_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-inverse/run.py",
+    "build_shift_stack",
+    "observe_pose_free_signature",
+)
+
+REFERENCE_BANK_SIZE, TEST_TRIALS_PER_REGIME, anisotropic_forward_signature, build_reference_bank, control_invariants, sample_anisotropic_parameters, symmetry_aware_errors = load_symbols(
+    "run_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-anisotropic-inverse/run.py",
+    "REFERENCE_BANK_SIZE",
+    "TEST_TRIALS_PER_REGIME",
+    "anisotropic_forward_signature",
+    "build_reference_bank",
+    "control_invariants",
+    "sample_anisotropic_parameters",
+    "symmetry_aware_errors",
+)
+
+OBSERVATION_REGIMES, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "OBSERVATION_REGIMES",
+    "write_csv",
+)
 
 import json
 import math
@@ -29,19 +57,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_pose_free_weighted_inverse_experiment import build_shift_stack, observe_pose_free_signature
-from run_weighted_anisotropic_inverse_experiment import (
-    REFERENCE_BANK_SIZE,
-    TEST_TRIALS_PER_REGIME,
-    anisotropic_forward_signature,
-    build_reference_bank,
-    control_invariants,
-    sample_anisotropic_parameters,
-    symmetry_aware_errors,
-)
-from run_weighted_multisource_inverse_experiment import OBSERVATION_REGIMES, write_csv
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -54,18 +69,15 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
 
-
 TOP_K_ENVELOPE = 10
 ALPHA_DIVERSE_THRESHOLD = 0.20
 MIN_NEAR_TIE_DELTA = 5.0e-5
 MIN_SOFTMIN_TEMPERATURE = 1.0e-4
-
 
 @dataclass
 class TrialRow:
@@ -101,7 +113,6 @@ class TrialRow:
     geometry_ratio_marginalized_over_baseline: float
     weight_ratio_marginalized_over_baseline: float
 
-
 def canonicalize_candidate(
     params: tuple[float, float, float, float, float, float],
 ) -> tuple[np.ndarray, np.ndarray, float]:
@@ -115,16 +126,13 @@ def canonicalize_candidate(
         return swapped_geometry, swapped_weights, alpha
     return geometry, weights, alpha
 
-
 def near_tie_gap_threshold(regime: dict[str, float | str | int]) -> float:
     sigma = float(regime["noise_sigma"])
     return max(sigma * sigma, MIN_NEAR_TIE_DELTA)
 
-
 def softmin_temperature(regime: dict[str, float | str | int]) -> float:
     sigma = float(regime["noise_sigma"])
     return max(sigma * sigma, MIN_SOFTMIN_TEMPERATURE)
-
 
 def ambiguity_metrics(
     scores: np.ndarray,
@@ -171,7 +179,6 @@ def ambiguity_metrics(
         "near_tie_diverse": near_tie_diverse,
     }
 
-
 def shift_error_matrix(
     observed_signature: np.ndarray,
     mask: np.ndarray,
@@ -180,7 +187,6 @@ def shift_error_matrix(
     masked_bank = shifted_bank[:, :, mask]
     residual = masked_bank - observed_signature[mask][None, None, :]
     return np.mean(residual * residual, axis=2)
-
 
 def baseline_candidate_scores(
     observed_signature: np.ndarray,
@@ -191,7 +197,6 @@ def baseline_candidate_scores(
     best_shift = np.argmin(mse, axis=1)
     best_score = np.min(mse, axis=1)
     return best_score, best_shift
-
 
 def marginalized_candidate_scores(
     observed_signature: np.ndarray,
@@ -205,7 +210,6 @@ def marginalized_candidate_scores(
     stable = np.exp(-(mse - minima) / temperature)
     marginalized = minima[:, 0] - temperature * np.log(np.mean(stable, axis=1))
     return marginalized, best_shift
-
 
 def summarize_trials(rows: list[TrialRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
@@ -263,7 +267,6 @@ def summarize_trials(rows: list[TrialRow]) -> list[dict[str, float | str]]:
         )
     return summary
 
-
 def plot_overview(path: str, summary_rows: list[dict[str, float | str]]) -> None:
     conditions = [str(item["condition"]) for item in summary_rows]
     x = np.arange(len(conditions))
@@ -299,7 +302,6 @@ def plot_overview(path: str, summary_rows: list[dict[str, float | str]]) -> None
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_trial_scatter(path: str, rows: list[TrialRow]) -> None:
     chosen_conditions = ["full_noisy", "partial_arc_noisy", "sparse_partial_high_noise"]
     fig, axes = plt.subplots(1, len(chosen_conditions), figsize=(15.4, 5.0), constrained_layout=False)
@@ -331,7 +333,6 @@ def plot_trial_scatter(path: str, rows: list[TrialRow]) -> None:
     fig.suptitle("Shift-Marginalized Pose Experiment B: Trial-Level Alpha Error", fontsize=16, fontweight="bold", y=0.96)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -444,7 +445,6 @@ def main() -> None:
         json.dump({"summary": summary, "by_condition": summary_rows}, handle, indent=2)
 
     print(json.dumps({"summary": summary, "by_condition": summary_rows}, indent=2))
-
 
 if __name__ == "__main__":
     main()

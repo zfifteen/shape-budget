@@ -16,9 +16,47 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+observe_pose_free_signature, = load_symbols(
+    "run_pose_free_weighted_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-inverse/run.py",
+    "observe_pose_free_signature",
+)
+
+MIN_SOFTMIN_TEMPERATURE, marginalized_candidate_scores, shift_error_matrix, softmin_temperature = load_symbols(
+    "run_shift_marginalized_pose_experiment",
+    ROOT / "experiments/pose-anisotropy-interventions/shift-marginalized-pose/run.py",
+    "MIN_SOFTMIN_TEMPERATURE",
+    "marginalized_candidate_scores",
+    "shift_error_matrix",
+    "softmin_temperature",
+)
+
+ALPHA_MAX, ALPHA_MIN, GEOMETRY_BOUNDS, REFERENCE_BANK_SIZE, anisotropic_forward_signature, build_reference_bank, sample_anisotropic_parameters, symmetry_aware_errors, control_invariants = load_symbols(
+    "run_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-anisotropic-inverse/run.py",
+    "ALPHA_MAX",
+    "ALPHA_MIN",
+    "GEOMETRY_BOUNDS",
+    "REFERENCE_BANK_SIZE",
+    "anisotropic_forward_signature",
+    "build_reference_bank",
+    "sample_anisotropic_parameters",
+    "symmetry_aware_errors",
+    "control_invariants",
+)
+
+OBSERVATION_REGIMES, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "OBSERVATION_REGIMES",
+    "write_csv",
+)
 
 import json
 import math
@@ -28,26 +66,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_pose_free_weighted_inverse_experiment import observe_pose_free_signature
-from run_shift_marginalized_pose_experiment import (
-    MIN_SOFTMIN_TEMPERATURE,
-    marginalized_candidate_scores,
-    shift_error_matrix,
-    softmin_temperature,
-)
-from run_weighted_anisotropic_inverse_experiment import (
-    ALPHA_MAX,
-    ALPHA_MIN,
-    GEOMETRY_BOUNDS,
-    REFERENCE_BANK_SIZE,
-    anisotropic_forward_signature,
-    build_reference_bank,
-    sample_anisotropic_parameters,
-    symmetry_aware_errors,
-)
-from run_weighted_multisource_inverse_experiment import OBSERVATION_REGIMES, write_csv
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -60,12 +78,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 TOP_K_CANDIDATES = 1
 GRID_POINTS = 3
@@ -79,7 +95,6 @@ INITIAL_RHO_RADIUS = 0.018
 INITIAL_T_RADIUS = 0.12
 INITIAL_H_RADIUS = 0.12
 INITIAL_ALPHA_RADIUS = 0.10
-
 
 @dataclass
 class TrialRow:
@@ -115,19 +130,16 @@ class TrialRow:
     geometry_ratio_refined_over_baseline: float
     weight_ratio_refined_over_baseline: float
 
-
 def near_tie_gap_threshold(regime: dict[str, float | str | int]) -> float:
     sigma = float(regime["noise_sigma"])
     return max(sigma * sigma, MIN_NEAR_TIE_DELTA)
 
-
 def control_invariants(
     params: tuple[float, float, float, float, float, float],
 ) -> tuple[np.ndarray, np.ndarray, float]:
-    from run_weighted_anisotropic_inverse_experiment import control_invariants as base_control_invariants
+    base_control_invariants = control_invariants
 
     return base_control_invariants(params)
-
 
 def canonicalize_candidate(
     params: tuple[float, float, float, float, float, float],
@@ -141,7 +153,6 @@ def canonicalize_candidate(
     if swapped_tuple < direct_tuple:
         return swapped_geometry, swapped_weights, alpha
     return geometry, weights, alpha
-
 
 def ambiguity_metrics(
     scores: np.ndarray,
@@ -188,7 +199,6 @@ def ambiguity_metrics(
         "near_tie_diverse": near_tie_diverse,
     }
 
-
 def evaluate_params(
     observed_signature: np.ndarray,
     mask: np.ndarray,
@@ -204,11 +214,9 @@ def evaluate_params(
     marginalized = minima - temperature * math.log(float(np.mean(stable)))
     return float(marginalized), shift_stack[best_shift], best_shift
 
-
 def unique_centered_grid(center: float, radius: float, lower: float, upper: float, count: int) -> np.ndarray:
     grid = np.linspace(max(lower, center - radius), min(upper, center + radius), count)
     return np.unique(np.concatenate([grid, np.array([center], dtype=float)]))
-
 
 def top_k_unique_candidates(
     scores: np.ndarray,
@@ -220,7 +228,6 @@ def top_k_unique_candidates(
     for idx in order[:k]:
         selected.append((int(idx), int(best_shifts[int(idx)]), float(scores[int(idx)])))
     return selected
-
 
 def refine_candidate(
     observed_signature: np.ndarray,
@@ -294,7 +301,6 @@ def refine_candidate(
 
     return best_params, best_signature, best_shift, float(best_score), explored_states
 
-
 def summarize_trials(rows: list[TrialRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
     for regime in OBSERVATION_REGIMES:
@@ -351,7 +357,6 @@ def summarize_trials(rows: list[TrialRow]) -> list[dict[str, float | str]]:
         )
     return summary
 
-
 def plot_overview(path: str, summary_rows: list[dict[str, float | str]]) -> None:
     conditions = [str(item["condition"]) for item in summary_rows]
     x = np.arange(len(conditions))
@@ -387,7 +392,6 @@ def plot_overview(path: str, summary_rows: list[dict[str, float | str]]) -> None
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_trial_scatter(path: str, rows: list[TrialRow]) -> None:
     chosen_conditions = ["full_noisy", "sparse_full_noisy", "sparse_partial_high_noise"]
     fig, axes = plt.subplots(1, len(chosen_conditions), figsize=(15.4, 5.0), constrained_layout=False)
@@ -419,7 +423,6 @@ def plot_trial_scatter(path: str, rows: list[TrialRow]) -> None:
     fig.suptitle("Shift-Marginalized Local Refinement B: Trial-Level Alpha Error", fontsize=16, fontweight="bold", y=0.96)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -563,7 +566,6 @@ def main() -> None:
         json.dump({"summary": summary, "by_condition": summary_rows}, handle, indent=2)
 
     print(json.dumps({"summary": summary, "by_condition": summary_rows}, indent=2))
-
 
 if __name__ == "__main__":
     main()

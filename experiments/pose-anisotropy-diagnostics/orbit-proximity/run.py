@@ -16,9 +16,27 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+ALPHA_MAX, ALPHA_MIN, GEOMETRY_BOUNDS, anisotropic_forward_signature = load_symbols(
+    "run_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-anisotropic-inverse/run.py",
+    "ALPHA_MAX",
+    "ALPHA_MIN",
+    "GEOMETRY_BOUNDS",
+    "anisotropic_forward_signature",
+)
+
+SIGNATURE_ANGLE_COUNT, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "SIGNATURE_ANGLE_COUNT",
+    "write_csv",
+)
 
 import json
 import math
@@ -28,15 +46,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_weighted_anisotropic_inverse_experiment import (
-    ALPHA_MAX,
-    ALPHA_MIN,
-    GEOMETRY_BOUNDS,
-    anisotropic_forward_signature,
-)
-from run_weighted_multisource_inverse_experiment import SIGNATURE_ANGLE_COUNT, write_csv
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -49,18 +58,15 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
 
-
 BASE_STATE_COUNT = 96
 STEP_FRACTIONS = [0.03, 0.06, 0.10, 0.14]
 AUDIT_RANDOM_CASES = 40
 PLOT_STEP_FOR_SCATTER = 0.10
-
 
 PARAM_RANGES = {
     "rho": GEOMETRY_BOUNDS["rho_max"] - GEOMETRY_BOUNDS["rho_min"],
@@ -68,7 +74,6 @@ PARAM_RANGES = {
     "h": GEOMETRY_BOUNDS["h_max"] - GEOMETRY_BOUNDS["h_min"],
     "alpha": ALPHA_MAX - ALPHA_MIN,
 }
-
 
 @dataclass
 class PerturbationRow:
@@ -94,14 +99,11 @@ class PerturbationRow:
     best_shift: int
     nontrivial_best_shift: int
 
-
 def rmse(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.sqrt(np.mean((a - b) ** 2)))
 
-
 def shift_stack(signature: np.ndarray) -> np.ndarray:
     return np.stack([np.roll(signature, shift) for shift in range(len(signature))], axis=0)
-
 
 def orbit_metrics(base_signature: np.ndarray, perturbed_signature: np.ndarray) -> tuple[float, float, float, float, int]:
     raw = rmse(base_signature, perturbed_signature)
@@ -112,7 +114,6 @@ def orbit_metrics(base_signature: np.ndarray, perturbed_signature: np.ndarray) -
     ratio = orbit / max(raw, 1.0e-12)
     absorption = 1.0 - ratio
     return raw, orbit, absorption, ratio, best_shift
-
 
 def sample_interior_parameters(
     rng: np.random.Generator,
@@ -130,12 +131,10 @@ def sample_interior_parameters(
     alpha = float(rng.uniform(ALPHA_MIN + alpha_margin, ALPHA_MAX - alpha_margin))
     return rho, t, h, float(weights[0]), float(weights[1]), alpha
 
-
 def geometry_unit_direction(rng: np.random.Generator) -> np.ndarray:
     direction = rng.normal(size=3)
     direction /= np.linalg.norm(direction)
     return direction
-
 
 def delta_from_type(
     perturbation_type: str,
@@ -159,7 +158,6 @@ def delta_from_type(
             0.0,
         )
     raise ValueError(f"Unknown perturbation type: {perturbation_type}")
-
 
 def summarized_rows(rows: list[PerturbationRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
@@ -193,7 +191,6 @@ def summarized_rows(rows: list[PerturbationRow]) -> list[dict[str, float | str]]
                 }
             )
     return summary
-
 
 def pre_benchmark_audit(rng: np.random.Generator) -> dict[str, float | int]:
     max_shift_identity_rmse = 0.0
@@ -236,7 +233,6 @@ def pre_benchmark_audit(rng: np.random.Generator) -> dict[str, float | int]:
         "max_absorption_fraction": float(max_absorption),
     }
 
-
 def plot_absorption_curves(path: str, summary_rows: list[dict[str, float | str]]) -> None:
     fig, ax = plt.subplots(figsize=(11.6, 6.0), constrained_layout=False)
     fig.subplots_adjust(top=0.85, bottom=0.14, left=0.09, right=0.98)
@@ -270,7 +266,6 @@ def plot_absorption_curves(path: str, summary_rows: list[dict[str, float | str]]
     fig.suptitle("Orbit Proximity A: Alpha Versus Geometry Under Rotation-Orbit Matching", fontsize=15, fontweight="bold", y=0.96)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_distance_scatter(path: str, rows: list[PerturbationRow]) -> None:
     chosen = [
@@ -306,7 +301,6 @@ def plot_distance_scatter(path: str, rows: list[PerturbationRow]) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_shift_fraction(path: str, summary_rows: list[dict[str, float | str]]) -> None:
     fig, ax = plt.subplots(figsize=(10.8, 5.8), constrained_layout=False)
     fig.subplots_adjust(top=0.84, bottom=0.14, left=0.09, right=0.98)
@@ -337,7 +331,6 @@ def plot_shift_fraction(path: str, summary_rows: list[dict[str, float | str]]) -
     fig.suptitle("Orbit Proximity C: Nontrivial Orbit Absorption Frequency", fontsize=15, fontweight="bold", y=0.96)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -459,7 +452,6 @@ def main() -> None:
         json.dump({"summary": summary, "by_condition": summary_rows}, handle, indent=2)
 
     print(json.dumps({"summary": summary, "by_condition": summary_rows}, indent=2))
-
 
 if __name__ == "__main__":
     main()

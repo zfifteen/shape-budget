@@ -20,9 +20,29 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+EQUAL_WEIGHT_BANK_SIZE, GEOMETRY_BOUNDS, OBSERVATION_REGIMES, REFERENCE_BANK_SIZE, SIGNATURE_ANGLE_COUNT, TEST_TRIALS_PER_REGIME, TrialRow, aggregate_trials, build_reference_bank, forward_signature, observe_signature, symmetry_aware_errors, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "EQUAL_WEIGHT_BANK_SIZE",
+    "GEOMETRY_BOUNDS",
+    "OBSERVATION_REGIMES",
+    "REFERENCE_BANK_SIZE",
+    "SIGNATURE_ANGLE_COUNT",
+    "TEST_TRIALS_PER_REGIME",
+    "TrialRow",
+    "aggregate_trials",
+    "build_reference_bank",
+    "forward_signature",
+    "observe_signature",
+    "symmetry_aware_errors",
+    "write_csv",
+)
 
 import csv
 import json
@@ -33,23 +53,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_weighted_multisource_inverse_experiment import (
-    EQUAL_WEIGHT_BANK_SIZE,
-    GEOMETRY_BOUNDS,
-    OBSERVATION_REGIMES,
-    REFERENCE_BANK_SIZE,
-    SIGNATURE_ANGLE_COUNT,
-    TEST_TRIALS_PER_REGIME,
-    TrialRow,
-    aggregate_trials,
-    build_reference_bank,
-    forward_signature,
-    observe_signature,
-    symmetry_aware_errors,
-    write_csv,
-)
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -62,12 +65,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 @dataclass
 class PoseFreeTrialRow:
@@ -97,7 +98,6 @@ class PoseFreeTrialRow:
     equal_weight_baseline_fit_rmse: float
     weighted_fit_improvement_factor: float
 
-
 def sample_weighted_parameters(rng: np.random.Generator) -> tuple[float, float, float, float, float]:
     rho = float(rng.uniform(GEOMETRY_BOUNDS["rho_min"], GEOMETRY_BOUNDS["rho_max"]))
     t = float(rng.uniform(GEOMETRY_BOUNDS["t_min"], GEOMETRY_BOUNDS["t_max"]))
@@ -105,11 +105,9 @@ def sample_weighted_parameters(rng: np.random.Generator) -> tuple[float, float, 
     weights = rng.dirichlet(np.array([2.0, 2.0, 2.0]))
     return rho, t, h, float(weights[0]), float(weights[1])
 
-
 def build_shift_stack(bank_signatures: np.ndarray) -> np.ndarray:
     angle_count = bank_signatures.shape[1]
     return np.stack([np.roll(bank_signatures, shift, axis=1) for shift in range(angle_count)], axis=1)
-
 
 def observe_pose_free_signature(
     clean_signature: np.ndarray,
@@ -120,7 +118,6 @@ def observe_pose_free_signature(
     rotated = np.roll(clean_signature, shift)
     observed, mask = observe_signature(rotated, regime, rng)
     return rotated, observed, mask, shift
-
 
 def nearest_neighbor_pose_free(
     observed_signature: np.ndarray,
@@ -135,13 +132,11 @@ def nearest_neighbor_pose_free(
     bank_idx, shift_idx = np.unravel_index(best_flat, mse.shape)
     return bank_params[bank_idx], shifted_bank[bank_idx, shift_idx], int(shift_idx)
 
-
 def load_canonical_inverse_summary() -> dict[str, dict[str, float]]:
     path = os.path.join(BASE_DIR, "weighted_multisource_inverse_outputs", "weighted_multisource_inverse_summary.json")
     with open(path, "r", encoding="utf-8") as handle:
         data = json.load(handle)
     return {item["condition"]: item for item in data["by_condition"]}
-
 
 def compare_to_canonical(summary_rows: list[dict[str, float | str]]) -> list[dict[str, float | str]]:
     canonical = load_canonical_inverse_summary()
@@ -159,7 +154,6 @@ def compare_to_canonical(summary_rows: list[dict[str, float | str]]) -> list[dic
             }
         )
     return rows
-
 
 def plot_error_heatmap(path: str, summary_rows: list[dict[str, float | str]]) -> None:
     conditions = [str(item["condition"]) for item in summary_rows]
@@ -197,7 +191,6 @@ def plot_error_heatmap(path: str, summary_rows: list[dict[str, float | str]]) ->
     fig.suptitle("Pose-Free Weighted Inverse A: Recovery Error Across Regimes", fontsize=15, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_baseline_and_penalty(
     path: str,
@@ -240,7 +233,6 @@ def plot_baseline_and_penalty(
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_example_recoveries(path: str, rows: list[PoseFreeTrialRow]) -> None:
     chosen_conditions = ["full_clean", "partial_arc_noisy", "sparse_partial_high_noise"]
     fig, axes = plt.subplots(len(chosen_conditions), 1, figsize=(10.2, 9.4), constrained_layout=False)
@@ -277,7 +269,6 @@ def plot_example_recoveries(path: str, rows: list[PoseFreeTrialRow]) -> None:
     fig.suptitle("Pose-Free Weighted Inverse C: Representative Rotated Signature Recoveries", fontsize=15, fontweight="bold", y=0.98)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -408,7 +399,6 @@ def main() -> None:
         json.dump({"summary": summary, "by_condition": summary_rows, "penalties_vs_canonical": penalty_rows}, handle, indent=2)
 
     print(json.dumps({"summary": summary, "by_condition": summary_rows, "penalties_vs_canonical": penalty_rows}, indent=2))
-
 
 if __name__ == "__main__":
     main()

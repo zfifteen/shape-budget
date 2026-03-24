@@ -11,13 +11,6 @@ low-capacity regression models under a scale-held-out split.
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
-
 import csv
 import json
 import math
@@ -28,7 +21,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from scipy.special import ellipe
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -41,12 +33,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 @dataclass
 class IdentifiabilityTrial:
@@ -59,7 +49,6 @@ class IdentifiabilityTrial:
     e_hat: float
     abs_error: float
 
-
 @dataclass
 class BaselineResult:
     target: str
@@ -67,7 +56,6 @@ class BaselineResult:
     rmse: float
     mae: float
     r2: float
-
 
 IDENTIFIABILITY_CONDITIONS = [
     {
@@ -107,16 +95,13 @@ IDENTIFIABILITY_CONDITIONS = [
     },
 ]
 
-
 def sample_ellipse_points(a_budget: float, e: float, num_points: int, theta_start: float, theta_stop: float) -> np.ndarray:
     b = a_budget * math.sqrt(1.0 - e * e)
     theta = np.linspace(theta_start, theta_stop, num_points, endpoint=False)
     return np.column_stack([a_budget * np.cos(theta), b * np.sin(theta)])
 
-
 def add_isotropic_noise(points: np.ndarray, sigma: float, rng: np.random.Generator) -> np.ndarray:
     return points + rng.normal(scale=sigma, size=points.shape)
-
 
 def estimate_a_from_known_foci(points: np.ndarray, c: float) -> float:
     focus_left = np.array([-c, 0.0])
@@ -124,11 +109,9 @@ def estimate_a_from_known_foci(points: np.ndarray, c: float) -> float:
     constant_sum_samples = np.linalg.norm(points - focus_left, axis=1) + np.linalg.norm(points - focus_right, axis=1)
     return 0.5 * float(np.median(constant_sum_samples))
 
-
 def estimate_e_from_known_foci(points: np.ndarray, c: float) -> float:
     a_hat = estimate_a_from_known_foci(points, c)
     return c / a_hat
-
 
 def run_identifiability_trials(e_values: np.ndarray, a_values: list[float], replicates: int, rng: np.random.Generator) -> list[IdentifiabilityTrial]:
     rows: list[IdentifiabilityTrial] = []
@@ -161,7 +144,6 @@ def run_identifiability_trials(e_values: np.ndarray, a_values: list[float], repl
                     )
     return rows
 
-
 def aggregate_identifiability(rows: list[IdentifiabilityTrial], e_values: np.ndarray) -> list[dict[str, float]]:
     summary: list[dict[str, float]] = []
     for condition in IDENTIFIABILITY_CONDITIONS:
@@ -182,19 +164,16 @@ def aggregate_identifiability(rows: list[IdentifiabilityTrial], e_values: np.nda
             )
     return summary
 
-
 def normalized_perimeter_ratio(e: np.ndarray) -> np.ndarray:
     # Exact normalized ellipse perimeter: P / (2 pi a) = (2 / pi) E(e),
     # where E is the complete elliptic integral of the second kind.
     return (2.0 / math.pi) * ellipe(e**2)
-
 
 def poly_features_1d(x: np.ndarray, degree: int = 5) -> np.ndarray:
     cols = [np.ones_like(x)]
     for power in range(1, degree + 1):
         cols.append(x**power)
     return np.column_stack(cols)
-
 
 def poly_features_2d(x: np.ndarray, y: np.ndarray, degree: int = 3) -> np.ndarray:
     cols = [np.ones_like(x)]
@@ -204,7 +183,6 @@ def poly_features_2d(x: np.ndarray, y: np.ndarray, degree: int = 3) -> np.ndarra
                 continue
             cols.append((x**i) * (y**j))
     return np.column_stack(cols)
-
 
 def fit_and_score(train_x: np.ndarray, train_y: np.ndarray, test_x: np.ndarray, test_y: np.ndarray) -> tuple[float, float, float]:
     beta = np.linalg.lstsq(train_x, train_y, rcond=None)[0]
@@ -216,7 +194,6 @@ def fit_and_score(train_x: np.ndarray, train_y: np.ndarray, test_x: np.ndarray, 
     ss_tot = float(np.sum((test_y - np.mean(test_y)) ** 2))
     r2 = 1.0 - ss_res / ss_tot if ss_tot > 0 else 1.0
     return rmse, mae, r2
-
 
 def run_baseline_comparison(rng: np.random.Generator) -> list[BaselineResult]:
     sample_count = 5000
@@ -263,7 +240,6 @@ def run_baseline_comparison(rng: np.random.Generator) -> list[BaselineResult]:
             results.append(BaselineResult(target_name, feature_name, rmse, mae, r2))
     return results
 
-
 def write_csv(path: str, rows: list[dict[str, float]]) -> None:
     if not rows:
         return
@@ -271,7 +247,6 @@ def write_csv(path: str, rows: list[dict[str, float]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
-
 
 def plot_identifiability_heatmap(path: str, summary_rows: list[dict[str, float]], e_values: np.ndarray) -> None:
     matrix = np.zeros((len(IDENTIFIABILITY_CONDITIONS), len(e_values)))
@@ -298,7 +273,6 @@ def plot_identifiability_heatmap(path: str, summary_rows: list[dict[str, float]]
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_identifiability_recovery(path: str, summary_rows: list[dict[str, float]], e_values: np.ndarray) -> None:
     fig, ax = plt.subplots(figsize=(8.6, 6.6), constrained_layout=False)
     fig.subplots_adjust(top=0.88, left=0.12, right=0.98, bottom=0.11)
@@ -324,7 +298,6 @@ def plot_identifiability_recovery(path: str, summary_rows: list[dict[str, float]
     ax.legend(loc="upper left", frameon=True)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_baseline_collapse(path: str, rng: np.random.Generator) -> None:
     sample_count = 1800
@@ -355,7 +328,6 @@ def plot_baseline_collapse(path: str, rng: np.random.Generator) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_baseline_rmse(path: str, results: list[BaselineResult]) -> None:
     feature_order = ["e_only", "d_only", "S_only", "d_and_S"]
     target_order = ["width_residue", "normalized_perimeter", "major_tip_response", "minor_tip_response"]
@@ -376,7 +348,6 @@ def plot_baseline_rmse(path: str, results: list[BaselineResult]) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def summarize_identifiability(summary_rows: list[dict[str, float]]) -> dict[str, float]:
     by_condition = {}
     for condition in IDENTIFIABILITY_CONDITIONS:
@@ -387,13 +358,11 @@ def summarize_identifiability(summary_rows: list[dict[str, float]]) -> dict[str,
         }
     return by_condition
 
-
 def summarize_baselines(results: list[BaselineResult]) -> dict[str, dict[str, float]]:
     output = {}
     for target in sorted({row.target for row in results}):
         output[target] = {row.feature_set: row.rmse for row in results if row.target == target}
     return output
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -428,7 +397,6 @@ def main() -> None:
 
     print("Identifiability and baseline experiment complete.")
     print(json.dumps(summary, indent=2))
-
 
 if __name__ == "__main__":
     main()

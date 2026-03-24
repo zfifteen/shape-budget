@@ -29,9 +29,41 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+build_shift_stack, observe_pose_free_signature = load_symbols(
+    "run_pose_free_weighted_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-inverse/run.py",
+    "build_shift_stack",
+    "observe_pose_free_signature",
+)
+
+ALPHA_MAX, ALPHA_MIN, EUCLIDEAN_BASELINE_BANK_SIZE, CANONICAL_ANISO_OUTPUT_DIR, REFERENCE_BANK_SIZE, TEST_TRIALS_PER_REGIME, aggregate_trials, anisotropic_forward_signature, build_reference_bank, sample_anisotropic_parameters, symmetry_aware_errors = load_symbols(
+    "run_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-anisotropic-inverse/run.py",
+    "ALPHA_MAX",
+    "ALPHA_MIN",
+    "EUCLIDEAN_BASELINE_BANK_SIZE",
+    "OUTPUT_DIR",
+    "REFERENCE_BANK_SIZE",
+    "TEST_TRIALS_PER_REGIME",
+    "aggregate_trials",
+    "anisotropic_forward_signature",
+    "build_reference_bank",
+    "sample_anisotropic_parameters",
+    "symmetry_aware_errors",
+)
+
+OBSERVATION_REGIMES, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "OBSERVATION_REGIMES",
+    "write_csv",
+)
 
 import json
 import math
@@ -41,23 +73,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_pose_free_weighted_inverse_experiment import build_shift_stack, observe_pose_free_signature
-from run_weighted_anisotropic_inverse_experiment import (
-    ALPHA_MAX,
-    ALPHA_MIN,
-    EUCLIDEAN_BASELINE_BANK_SIZE,
-    OUTPUT_DIR as CANONICAL_ANISO_OUTPUT_DIR,
-    REFERENCE_BANK_SIZE,
-    TEST_TRIALS_PER_REGIME,
-    aggregate_trials,
-    anisotropic_forward_signature,
-    build_reference_bank,
-    sample_anisotropic_parameters,
-    symmetry_aware_errors,
-)
-from run_weighted_multisource_inverse_experiment import OBSERVATION_REGIMES, write_csv
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -70,12 +85,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 @dataclass
 class PoseFreeAnisotropicTrialRow:
@@ -110,7 +123,6 @@ class PoseFreeAnisotropicTrialRow:
     euclidean_baseline_fit_rmse: float
     fit_improvement_factor: float
 
-
 def nearest_neighbor_pose_free(
     observed_signature: np.ndarray,
     mask: np.ndarray,
@@ -124,13 +136,11 @@ def nearest_neighbor_pose_free(
     bank_idx, shift_idx = np.unravel_index(best_flat, mse.shape)
     return bank_params[bank_idx], shifted_bank[bank_idx, shift_idx], int(shift_idx)
 
-
 def load_canonical_anisotropic_summary() -> dict[str, dict[str, float]]:
     path = os.path.join(CANONICAL_ANISO_OUTPUT_DIR, "weighted_anisotropic_inverse_summary.json")
     with open(path, "r", encoding="utf-8") as handle:
         data = json.load(handle)
     return {item["condition"]: item for item in data["by_condition"]}
-
 
 def compare_to_canonical_anisotropic(summary_rows: list[dict[str, float | str]]) -> list[dict[str, float | str]]:
     canonical = load_canonical_anisotropic_summary()
@@ -149,7 +159,6 @@ def compare_to_canonical_anisotropic(summary_rows: list[dict[str, float | str]])
             }
         )
     return rows
-
 
 def plot_error_heatmap(path: str, summary_rows: list[dict[str, float | str]]) -> None:
     conditions = [str(item["condition"]) for item in summary_rows]
@@ -186,7 +195,6 @@ def plot_error_heatmap(path: str, summary_rows: list[dict[str, float | str]]) ->
     )
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_baseline_and_penalty(
     path: str,
@@ -233,7 +241,6 @@ def plot_baseline_and_penalty(
     )
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_example_recoveries(path: str, rows: list[PoseFreeAnisotropicTrialRow]) -> None:
     chosen_conditions = ["full_clean", "partial_arc_noisy", "sparse_partial_high_noise"]
@@ -282,7 +289,6 @@ def plot_example_recoveries(path: str, rows: list[PoseFreeAnisotropicTrialRow]) 
     )
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -394,7 +400,6 @@ def main() -> None:
         json.dump({"summary": summary, "by_condition": summary_rows, "penalties_vs_canonical_anisotropic": penalty_rows}, handle, indent=2)
 
     print(json.dumps({"summary": summary, "by_condition": summary_rows, "penalties_vs_canonical_anisotropic": penalty_rows}, indent=2))
-
 
 if __name__ == "__main__":
     main()

@@ -22,13 +22,6 @@ truncated hyperbolic-parameter window.
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
-
 import csv
 import json
 import math
@@ -39,7 +32,6 @@ from itertools import combinations
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -52,7 +44,6 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
@@ -60,7 +51,6 @@ os.makedirs(FIGURE_DIR, exist_ok=True)
 
 U_MAX = 1.8
 BRANCH_SAMPLE_COUNT = 500
-
 
 @dataclass
 class HyperbolaRow:
@@ -76,12 +66,10 @@ class HyperbolaRow:
     max_equation_residual: float
     rms_equation_residual: float
 
-
 def hyperbola_parameters(c: float, lambda_ratio: float) -> tuple[float, float, float]:
     a = lambda_ratio * c
     b = math.sqrt(max(c * c - a * a, 0.0))
     return a, b, c
-
 
 def hyperbola_branch_from_process(c: float, lambda_ratio: float, sample_count: int = BRANCH_SAMPLE_COUNT, u_max: float = U_MAX) -> np.ndarray:
     a, _, c = hyperbola_parameters(c, lambda_ratio)
@@ -103,13 +91,11 @@ def hyperbola_branch_from_process(c: float, lambda_ratio: float, sample_count: i
     lower[:, 1] *= -1.0
     return np.vstack([upper, lower])
 
-
 def full_hyperbola_process_points(c: float, lambda_ratio: float, sample_count: int = BRANCH_SAMPLE_COUNT, u_max: float = U_MAX) -> np.ndarray:
     right = hyperbola_branch_from_process(c, lambda_ratio, sample_count=sample_count, u_max=u_max)
     left = right.copy()
     left[:, 0] *= -1.0
     return np.vstack([left, right])
-
 
 def analytic_hyperbola_points(c: float, lambda_ratio: float, sample_count: int = BRANCH_SAMPLE_COUNT, u_max: float = U_MAX) -> np.ndarray:
     a, b, _ = hyperbola_parameters(c, lambda_ratio)
@@ -123,10 +109,8 @@ def analytic_hyperbola_points(c: float, lambda_ratio: float, sample_count: int =
     left[:, 0] *= -1.0
     return np.vstack([left, right])
 
-
 def hyperbola_equation_residual(points: np.ndarray, a: float, b: float) -> np.ndarray:
     return (points[:, 0] ** 2) / (a * a) - (points[:, 1] ** 2) / (b * b) - 1.0
-
 
 def make_rows(lambda_values: np.ndarray, c_values: list[float]) -> list[HyperbolaRow]:
     rows: list[HyperbolaRow] = []
@@ -152,7 +136,6 @@ def make_rows(lambda_values: np.ndarray, c_values: list[float]) -> list[Hyperbol
             )
     return rows
 
-
 def scale_collapse_errors(lambda_values: np.ndarray, c_values: list[float], sample_count: int = BRANCH_SAMPLE_COUNT, u_max: float = U_MAX) -> list[dict[str, float]]:
     rows: list[dict[str, float]] = []
     for lambda_ratio in lambda_values:
@@ -174,7 +157,6 @@ def scale_collapse_errors(lambda_values: np.ndarray, c_values: list[float], samp
             )
     return rows
 
-
 def write_csv(path: str, rows: list[dict[str, float]]) -> None:
     if not rows:
         return
@@ -182,7 +164,6 @@ def write_csv(path: str, rows: list[dict[str, float]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
-
 
 def plot_process_reconstruction(path: str) -> None:
     fig, axes = plt.subplots(2, 2, figsize=(12.8, 10.8), constrained_layout=False)
@@ -217,7 +198,6 @@ def plot_process_reconstruction(path: str) -> None:
     fig.suptitle("Experiment 3A: Hyperbola Process Reconstruction", fontsize=16, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_scale_collapse(path: str) -> None:
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(14.8, 6.4), constrained_layout=False)
@@ -261,7 +241,6 @@ def plot_scale_collapse(path: str) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_response_curves(path: str) -> None:
     lam = np.linspace(0.02, 0.98, 600)
     openness = np.sqrt(1.0 - lam**2)
@@ -294,7 +273,6 @@ def plot_response_curves(path: str) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_phase_map(path: str) -> None:
     separation = np.linspace(0.6, 4.0, 320)
     difference = np.linspace(0.03, 3.97, 300)
@@ -325,7 +303,6 @@ def plot_phase_map(path: str) -> None:
     fig.suptitle("Experiment 3D: Hyperbola Phase Map", fontsize=16, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     lambda_values = np.round(np.linspace(0.05, 0.95, 19), 4)
@@ -383,7 +360,6 @@ def main() -> None:
 
     print("Hyperbola twin experiment complete.")
     print(json.dumps(summary, indent=2))
-
 
 if __name__ == "__main__":
     main()

@@ -12,13 +12,6 @@ process samples.
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
-
 import csv
 import json
 import math
@@ -32,7 +25,6 @@ from scipy.stats import spearmanr
 from sklearn.decomposition import PCA
 from sklearn.manifold import Isomap
 
-
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
     {
@@ -44,12 +36,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 @dataclass
 class SpectrumRow:
@@ -57,13 +47,11 @@ class SpectrumRow:
     explained_variance_ratio: float
     cumulative_explained_variance_ratio: float
 
-
 @dataclass
 class ReconstructionRow:
     components: int
     mean_relative_error: float
     max_relative_error: float
-
 
 @dataclass
 class EmbeddingRow:
@@ -74,19 +62,16 @@ class EmbeddingRow:
     pc2: float
     isomap1: float
 
-
 def ellipse_parameters(a: float, e: float) -> tuple[float, float, float]:
     c = e * a
     b = math.sqrt(max(a * a - c * c, 0.0))
     return a, b, c
-
 
 def normalized_radii_family(a: float, c: float, sample_count: int = 800) -> np.ndarray:
     if c == 0.0:
         return np.full(sample_count, a)
     s = np.linspace(-1.0, 1.0, sample_count)
     return a + c * s
-
 
 def constant_sum_locus_points(a: float, e: float, sample_count: int = 800) -> np.ndarray:
     a, b, c = ellipse_parameters(a, e)
@@ -109,7 +94,6 @@ def constant_sum_locus_points(a: float, e: float, sample_count: int = 800) -> np
     lower[:, 1] *= -1.0
     return np.vstack([upper, lower])
 
-
 def radial_signature(points: np.ndarray, angle_count: int = 360) -> tuple[np.ndarray, np.ndarray]:
     angle = np.mod(np.arctan2(points[:, 1], points[:, 0]), 2.0 * math.pi)
     radius = np.linalg.norm(points, axis=1)
@@ -124,11 +108,9 @@ def radial_signature(points: np.ndarray, angle_count: int = 360) -> tuple[np.nda
     signature = np.interp(grid, angle_ext, radius_ext)
     return grid, signature
 
-
 def boundary_signature(a: float, e: float, angle_count: int = 360, sample_count: int = 800) -> tuple[np.ndarray, np.ndarray]:
     points = constant_sum_locus_points(a, e, sample_count=sample_count) / a
     return radial_signature(points, angle_count=angle_count)
-
 
 def signatures_to_matrix(e_values: np.ndarray, a: float, angle_count: int, sample_count: int) -> tuple[np.ndarray, np.ndarray]:
     signatures = []
@@ -138,7 +120,6 @@ def signatures_to_matrix(e_values: np.ndarray, a: float, angle_count: int, sampl
         signatures.append(sig)
     return angle_grid, np.array(signatures)
 
-
 def write_csv(path: str, rows: list[dict[str, float | int | str]]) -> None:
     if not rows:
         return
@@ -146,7 +127,6 @@ def write_csv(path: str, rows: list[dict[str, float | int | str]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
-
 
 def pca_reconstruction_errors(pca: PCA, matrix: np.ndarray, component_counts: list[int]) -> list[ReconstructionRow]:
     rows: list[ReconstructionRow] = []
@@ -164,10 +144,8 @@ def pca_reconstruction_errors(pca: PCA, matrix: np.ndarray, component_counts: li
         )
     return rows
 
-
 def signature_to_points(angle_grid: np.ndarray, signature: np.ndarray) -> np.ndarray:
     return np.column_stack([signature * np.cos(angle_grid), signature * np.sin(angle_grid)])
-
 
 def plot_embedding(path: str, unique_rows: list[EmbeddingRow], scale_rows: list[EmbeddingRow], min_between: float, max_within_by_e: list[tuple[float, float]]) -> None:
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(14.5, 6.0), constrained_layout=False)
@@ -199,7 +177,6 @@ def plot_embedding(path: str, unique_rows: list[EmbeddingRow], scale_rows: list[
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_spectrum_and_reconstruction(path: str, spectrum_rows: list[SpectrumRow], reconstruction_rows: list[ReconstructionRow]) -> None:
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(14.2, 5.6), constrained_layout=False)
     fig.subplots_adjust(top=0.84, wspace=0.26)
@@ -229,7 +206,6 @@ def plot_spectrum_and_reconstruction(path: str, spectrum_rows: list[SpectrumRow]
     fig.suptitle("Experiment 6B: Spectrum And Reconstruction", fontsize=15, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_isomap_and_reconstructions(
     path: str,
@@ -285,7 +261,6 @@ def plot_isomap_and_reconstructions(
     fig.suptitle("Experiment 6C: Nonlinear Ordering And Shape Reconstructions", fontsize=15, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     unique_e_values = np.round(np.linspace(0.02, 0.98, 193), 4)
@@ -422,7 +397,6 @@ def main() -> None:
 
     print("Manifold-dimension experiment complete.")
     print(json.dumps(summary, indent=2))
-
 
 if __name__ == "__main__":
     main()

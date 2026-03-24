@@ -17,13 +17,6 @@ Part B:
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
-
 import csv
 import itertools
 import json
@@ -38,7 +31,6 @@ import seaborn as sns
 from matplotlib.colors import ListedColormap
 from scipy.special import ellipe
 
-
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
     {
@@ -50,18 +42,15 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
 
-
 IDEAL_RELATIVE_NOISE = 0.01
 WIDTH_WINDOW = 0.22
 MAJOR_TIP_WINDOW = 0.18
 ROUTER_PILOT_FRACTION = 0.25
-
 
 EMPIRICAL_CONDITIONS = [
     {
@@ -86,7 +75,6 @@ EMPIRICAL_CONDITIONS = [
     },
 ]
 
-
 PROBE_ORDER = ["perimeter", "width", "major_tip"]
 PROBE_LABELS = {
     "perimeter": "perimeter",
@@ -102,13 +90,11 @@ PROBE_COLORS = {
     "trial_oracle": "#264653",
 }
 
-
 @dataclass
 class IdealMetricRow:
     e: float
     probe: str
     mae: float
-
 
 @dataclass
 class EmpiricalTrial:
@@ -124,34 +110,27 @@ class EmpiricalTrial:
     width_abs_error: float
     major_tip_abs_error: float
 
-
 @dataclass
 class RouterResult:
     condition: str
     method: str
     mean_abs_error: float
 
-
 def width_residue(e: np.ndarray) -> np.ndarray:
     return np.sqrt(np.maximum(1.0 - e**2, 0.0))
-
 
 def normalized_perimeter(e: np.ndarray) -> np.ndarray:
     return (2.0 / math.pi) * ellipe(e**2)
 
-
 def major_tip_response(e: np.ndarray) -> np.ndarray:
     return 1.0 / np.maximum(1.0 - e**2, 1e-300)
-
 
 def e_from_width(q: np.ndarray) -> np.ndarray:
     return np.sqrt(np.maximum(1.0 - np.clip(q, 0.0, 1.0) ** 2, 0.0))
 
-
 def e_from_major_tip(q: np.ndarray) -> np.ndarray:
     clipped = np.maximum(q, 1.0)
     return np.sqrt(np.maximum(1.0 - 1.0 / clipped, 0.0))
-
 
 def invert_perimeter_scalar(q: float) -> float:
     q = float(np.clip(q, 2.0 / math.pi, 1.0))
@@ -165,30 +144,24 @@ def invert_perimeter_scalar(q: float) -> float:
             hi = mid
     return 0.5 * (lo + hi)
 
-
 def e_from_perimeter(q: np.ndarray) -> np.ndarray:
     return np.array([invert_perimeter_scalar(float(value)) for value in q])
-
 
 def ellipse_points_from_theta(a_budget: float, e: float, theta: np.ndarray) -> np.ndarray:
     b = a_budget * math.sqrt(max(1.0 - e * e, 0.0))
     return np.column_stack([a_budget * np.cos(theta), b * np.sin(theta)])
-
 
 def split_counts(total_points: int, parts: int) -> list[int]:
     base = total_points // parts
     remainder = total_points % parts
     return [base + (1 if idx < remainder else 0) for idx in range(parts)]
 
-
 def wrap_angle(theta: np.ndarray) -> np.ndarray:
     return (theta + 2.0 * math.pi) % (2.0 * math.pi)
-
 
 def sample_uniform_boundary(a_budget: float, e: float, total_points: int) -> np.ndarray:
     theta = np.linspace(0.0, 2.0 * math.pi, total_points, endpoint=False)
     return ellipse_points_from_theta(a_budget, e, theta)
-
 
 def sample_theta_windows(
     a_budget: float,
@@ -208,29 +181,23 @@ def sample_theta_windows(
     all_theta = np.concatenate(windows) if windows else np.array([])
     return ellipse_points_from_theta(a_budget, e, all_theta)
 
-
 def add_isotropic_noise(points: np.ndarray, sigma: float, rng: np.random.Generator) -> np.ndarray:
     return points + rng.normal(scale=sigma, size=points.shape)
-
 
 def sample_extremum_strategy(a_budget: float, e: float, total_points: int) -> np.ndarray:
     return sample_theta_windows(a_budget, e, total_points, [0.0, 0.5 * math.pi, math.pi, 1.5 * math.pi], WIDTH_WINDOW)
 
-
 def sample_major_tip_strategy(a_budget: float, e: float, total_points: int) -> np.ndarray:
     return sample_theta_windows(a_budget, e, total_points, [0.0, math.pi], MAJOR_TIP_WINDOW)
-
 
 def top_abs_axis_scale(values: np.ndarray, top_k: int = 3) -> float:
     abs_values = np.sort(np.abs(values))
     k = min(max(1, top_k), len(abs_values))
     return float(np.median(abs_values[-k:]))
 
-
 def ordered_points_about_origin(points: np.ndarray) -> np.ndarray:
     theta = np.arctan2(points[:, 1], points[:, 0])
     return points[np.argsort(theta)]
-
 
 def circular_smooth(points: np.ndarray, window: int) -> np.ndarray:
     if window <= 1:
@@ -244,11 +211,9 @@ def circular_smooth(points: np.ndarray, window: int) -> np.ndarray:
     smooth_y = np.convolve(extended[:, 1], kernel, mode="valid")
     return np.column_stack([smooth_x, smooth_y])
 
-
 def polygon_perimeter(points: np.ndarray) -> float:
     shifted = np.roll(points, -1, axis=0)
     return float(np.sum(np.linalg.norm(shifted - points, axis=1)))
-
 
 def estimate_perimeter_probe(points: np.ndarray) -> float:
     ordered = ordered_points_about_origin(points)
@@ -258,12 +223,10 @@ def estimate_perimeter_probe(points: np.ndarray) -> float:
     q_hat = polygon_perimeter(smooth) / (2.0 * math.pi * a_hat)
     return float(np.clip(q_hat, 2.0 / math.pi, 1.0))
 
-
 def estimate_width_probe(points: np.ndarray) -> float:
     a_hat = max(top_abs_axis_scale(points[:, 0], top_k=3), 1e-12)
     b_hat = max(top_abs_axis_scale(points[:, 1], top_k=3), 0.0)
     return float(np.clip(b_hat / a_hat, 0.0, 1.0))
-
 
 def fit_circle_kasa(points: np.ndarray) -> tuple[float, float, float]:
     x = points[:, 0]
@@ -273,7 +236,6 @@ def fit_circle_kasa(points: np.ndarray) -> tuple[float, float, float]:
     cx, cy, c0 = np.linalg.lstsq(design, rhs, rcond=None)[0]
     radius = math.sqrt(max(c0 + cx * cx + cy * cy, 1e-12))
     return float(cx), float(cy), float(radius)
-
 
 def estimate_major_tip_probe(points: np.ndarray) -> float:
     right = points[points[:, 0] >= 0.0]
@@ -289,7 +251,6 @@ def estimate_major_tip_probe(points: np.ndarray) -> float:
         return 1.0
     return float(max(np.mean(responses), 1.0))
 
-
 def noisy_direct_measurement(
     true_value: np.ndarray,
     relative_noise: float,
@@ -301,7 +262,6 @@ def noisy_direct_measurement(
     if lower is not None or upper is not None:
         noisy = np.clip(noisy, lower if lower is not None else -np.inf, upper if upper is not None else np.inf)
     return noisy
-
 
 def run_ideal_benchmark(e_values: np.ndarray, replicates: int, rng: np.random.Generator) -> list[IdealMetricRow]:
     rows: list[IdealMetricRow] = []
@@ -347,7 +307,6 @@ def run_ideal_benchmark(e_values: np.ndarray, replicates: int, rng: np.random.Ge
             )
     return rows
 
-
 def run_empirical_trials(
     e_values: np.ndarray,
     replicates: int,
@@ -390,7 +349,6 @@ def run_empirical_trials(
                 )
     return rows
 
-
 def aggregate_empirical_mae(rows: list[EmpiricalTrial], e_values: np.ndarray) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
     for condition in EMPIRICAL_CONDITIONS:
@@ -408,13 +366,11 @@ def aggregate_empirical_mae(rows: list[EmpiricalTrial], e_values: np.ndarray) ->
                 )
     return summary
 
-
 def threshold_candidates(e_values: np.ndarray) -> list[float]:
     mids = [0.0]
     mids.extend(float(0.5 * (left + right)) for left, right in zip(e_values[:-1], e_values[1:]))
     mids.append(1.0)
     return mids
-
 
 def route_probe_with_order(value: float, tau1: float, tau2: float, order: tuple[str, str, str]) -> str:
     if value < tau1:
@@ -422,7 +378,6 @@ def route_probe_with_order(value: float, tau1: float, tau2: float, order: tuple[
     if value < tau2:
         return order[1]
     return order[2]
-
 
 def search_policy_from_value(
     train_rows: list[EmpiricalTrial],
@@ -449,7 +404,6 @@ def search_policy_from_value(
                     best_pair = (float(tau1), float(tau2))
                     best_order = order
     return best_pair[0], best_pair[1], best_order
-
 
 def evaluate_router(
     rows: list[EmpiricalTrial],
@@ -500,7 +454,6 @@ def evaluate_router(
 
     return results, threshold_rows
 
-
 def exact_inverse_audit(e_values: np.ndarray) -> dict[str, float]:
     width_e = e_from_width(width_residue(e_values))
     perimeter_e = e_from_perimeter(normalized_perimeter(e_values))
@@ -510,7 +463,6 @@ def exact_inverse_audit(e_values: np.ndarray) -> dict[str, float]:
         "max_perimeter_inverse_error": float(np.max(np.abs(perimeter_e - e_values))),
         "max_major_tip_inverse_error": float(np.max(np.abs(major_e - e_values))),
     }
-
 
 def clean_strategy_audit(e_values: np.ndarray, a_budget: float) -> dict[str, float]:
     perimeter_errors = []
@@ -531,7 +483,6 @@ def clean_strategy_audit(e_values: np.ndarray, a_budget: float) -> dict[str, flo
         "max_width_abs_error": float(max(width_errors)),
         "max_major_tip_abs_error": float(max(major_errors)),
     }
-
 
 def router_logic_audit() -> dict[str, float]:
     toy = [
@@ -587,7 +538,6 @@ def router_logic_audit() -> dict[str, float]:
         "toy_router_mean_abs_error": float(np.mean(routed_errors)),
     }
 
-
 def write_csv(path: str, rows: list[dict[str, float | str]]) -> None:
     if not rows:
         return
@@ -595,7 +545,6 @@ def write_csv(path: str, rows: list[dict[str, float | str]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
-
 
 def plot_ideal_curves(path: str, rows: list[IdealMetricRow]) -> None:
     fig, ax = plt.subplots(figsize=(8.6, 5.8))
@@ -615,7 +564,6 @@ def plot_ideal_curves(path: str, rows: list[IdealMetricRow]) -> None:
     ax.legend(frameon=True)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_empirical_curves(path: str, summary_rows: list[dict[str, float | str]], e_values: np.ndarray) -> None:
     fig, axes = plt.subplots(2, 2, figsize=(13.8, 10.0), constrained_layout=False)
@@ -642,7 +590,6 @@ def plot_empirical_curves(path: str, summary_rows: list[dict[str, float | str]],
     fig.suptitle("Equal-budget dedicated probe strategies", fontsize=15, fontweight="bold")
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_best_probe_map(path: str, summary_rows: list[dict[str, float | str]], e_values: np.ndarray) -> None:
     probe_to_id = {"perimeter": 0, "width": 1, "major_tip": 2}
@@ -677,7 +624,6 @@ def plot_best_probe_map(path: str, summary_rows: list[dict[str, float | str]], e
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_router_comparison(path: str, router_results: list[RouterResult]) -> None:
     fig, ax = plt.subplots(figsize=(11.6, 5.8))
     methods = ["perimeter_only", "width_only", "major_tip_only", "router", "phase_oracle", "trial_oracle"]
@@ -705,7 +651,6 @@ def plot_router_comparison(path: str, router_results: list[RouterResult]) -> Non
     ax.legend(frameon=True, ncol=3)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -762,7 +707,6 @@ def main() -> None:
         os.path.join(FIGURE_DIR, "probe_specialization_router_comparison.png"),
         router_results,
     )
-
 
 if __name__ == "__main__":
     main()

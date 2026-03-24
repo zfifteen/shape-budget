@@ -19,9 +19,59 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+GEOMETRY_SKEW_BIN_LABELS, candidate_conditioned_search, sample_conditioned_parameters, top_k_indices = load_symbols(
+    "run_candidate_conditioned_alignment_experiment",
+    ROOT / "experiments/pose-anisotropy-interventions/candidate-conditioned-alignment/run.py",
+    "GEOMETRY_SKEW_BIN_LABELS",
+    "candidate_conditioned_search",
+    "sample_conditioned_parameters",
+    "top_k_indices",
+)
+
+family_switching_refine, = load_symbols(
+    "run_family_switching_refinement_experiment",
+    ROOT / "experiments/pose-anisotropy-interventions/family-switching-refinement/run.py",
+    "family_switching_refine",
+)
+
+marginalized_candidate_scores, softmin_temperature = load_symbols(
+    "run_shift_marginalized_pose_experiment",
+    ROOT / "experiments/pose-anisotropy-interventions/shift-marginalized-pose/run.py",
+    "marginalized_candidate_scores",
+    "softmin_temperature",
+)
+
+build_shift_stack, observe_pose_free_signature = load_symbols(
+    "run_pose_free_weighted_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-inverse/run.py",
+    "build_shift_stack",
+    "observe_pose_free_signature",
+)
+
+ALPHA_MAX, ALPHA_MIN, GEOMETRY_BOUNDS, REFERENCE_BANK_SIZE, anisotropic_forward_signature, build_reference_bank, symmetry_aware_errors = load_symbols(
+    "run_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-anisotropic-inverse/run.py",
+    "ALPHA_MAX",
+    "ALPHA_MIN",
+    "GEOMETRY_BOUNDS",
+    "REFERENCE_BANK_SIZE",
+    "anisotropic_forward_signature",
+    "build_reference_bank",
+    "symmetry_aware_errors",
+)
+
+OBSERVATION_REGIMES, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "OBSERVATION_REGIMES",
+    "write_csv",
+)
 
 import json
 import math
@@ -31,26 +81,6 @@ from dataclasses import asdict, dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_candidate_conditioned_alignment_experiment import (
-    GEOMETRY_SKEW_BIN_LABELS,
-    candidate_conditioned_search,
-    sample_conditioned_parameters,
-    top_k_indices,
-)
-from run_family_switching_refinement_experiment import family_switching_refine
-from run_shift_marginalized_pose_experiment import marginalized_candidate_scores, softmin_temperature
-from run_pose_free_weighted_inverse_experiment import build_shift_stack, observe_pose_free_signature
-from run_weighted_anisotropic_inverse_experiment import (
-    ALPHA_MAX,
-    ALPHA_MIN,
-    GEOMETRY_BOUNDS,
-    REFERENCE_BANK_SIZE,
-    anisotropic_forward_signature,
-    build_reference_bank,
-)
-from run_weighted_multisource_inverse_experiment import OBSERVATION_REGIMES, write_csv
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -63,12 +93,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 FOCUS_CONDITIONS = ["sparse_full_noisy", "sparse_partial_high_noise"]
 FOCUS_ALPHA_BIN = "moderate"
@@ -80,7 +108,6 @@ ALPHA_PROBE_STEP = 0.08
 T_PROBE_STEP = 0.10
 RAW_RATIO_EPS = 0.03
 ALIAS_INDEX_EPS = 1.0e-6
-
 
 @dataclass
 class TrialRow:
@@ -111,17 +138,14 @@ class TrialRow:
     support_router_correct: int
     oracle_router_alpha_error: float
 
-
 def masked_rmse(a: np.ndarray, b: np.ndarray, mask: np.ndarray) -> float:
     return float(np.sqrt(np.mean((a[mask] - b[mask]) ** 2)))
-
 
 def orbit_min_rmse(reference: np.ndarray, candidate: np.ndarray, mask: np.ndarray) -> float:
     shifts = np.stack([np.roll(candidate, shift) for shift in range(len(candidate))], axis=0)
     residual = shifts[:, mask] - reference[mask][None, :]
     mse = np.mean(residual * residual, axis=1)
     return float(np.sqrt(np.min(mse)))
-
 
 def perturb_values(center: float, step: float, lower: float, upper: float) -> list[float]:
     values: list[float] = []
@@ -133,10 +157,8 @@ def perturb_values(center: float, step: float, lower: float, upper: float) -> li
         values.append(float(np.clip(center, lower, upper)))
     return values
 
-
 def alpha_strength(alpha: float) -> float:
     return float(abs(math.log(alpha)))
-
 
 def support_aware_alias_index(
     seed_params: tuple[float, float, float, float, float, float],
@@ -161,7 +183,6 @@ def support_aware_alias_index(
     visible_anchor = float(np.mean(skew_anchor))
     index = absorbable_change / max(visible_anchor, ALIAS_INDEX_EPS)
     return index, absorbable_change, visible_anchor
-
 
 def audit_alias_index_joint_shift_invariance(
     rng: np.random.Generator,
@@ -213,7 +234,6 @@ def audit_alias_index_joint_shift_invariance(
         "max_joint_shift_delta": float(max_delta),
     }
 
-
 def audit_leave_one_out_router_logic() -> dict[str, float]:
     toy_values = np.array([0.10, 0.20, 0.90, 1.00], dtype=float)
     toy_rows = [
@@ -248,7 +268,6 @@ def audit_leave_one_out_router_logic() -> dict[str, float]:
         "toy_mean_routed_alpha_error": float(np.mean([row["alpha_error"] for row in routed])),
     }
 
-
 def threshold_candidates(values: np.ndarray) -> list[float]:
     unique = np.unique(values)
     if len(unique) == 1:
@@ -258,7 +277,6 @@ def threshold_candidates(values: np.ndarray) -> list[float]:
         candidates.append(float(0.5 * (left + right)))
     candidates.append(float(unique[-1] + 1.0e-9))
     return candidates
-
 
 def choose_router_rule(train_rows: list[dict[str, float | int]], key: str) -> tuple[float, str]:
     values = np.array([float(row[key]) for row in train_rows], dtype=float)
@@ -292,12 +310,10 @@ def choose_router_rule(train_rows: list[dict[str, float | int]], key: str) -> tu
 
     return best_threshold, best_direction
 
-
 def apply_router_rule(value: float, threshold: float, direction: str) -> int:
     if direction == "family_if_low":
         return int(value <= threshold)
     return int(value > threshold)
-
 
 def leave_one_out_router(rows: list[dict[str, float | int]], key: str) -> list[dict[str, float | int]]:
     results: list[dict[str, float | int]] = []
@@ -316,7 +332,6 @@ def leave_one_out_router(rows: list[dict[str, float | int]], key: str) -> list[d
             }
         )
     return results
-
 
 def aggregate(rows: list[TrialRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
@@ -342,7 +357,6 @@ def aggregate(rows: list[TrialRow]) -> list[dict[str, float | str]]:
             }
         )
     return summary
-
 
 def aggregate_by_cell(rows: list[TrialRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
@@ -373,7 +387,6 @@ def aggregate_by_cell(rows: list[TrialRow]) -> list[dict[str, float | str]]:
                 }
             )
     return summary
-
 
 def plot_scatter(path: str, rows: list[TrialRow]) -> None:
     fig, axes = plt.subplots(1, 2, figsize=(14.6, 5.6), constrained_layout=False)
@@ -416,7 +429,6 @@ def plot_scatter(path: str, rows: list[TrialRow]) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_method_bars(path: str, cell_rows: list[dict[str, float | str]]) -> None:
     labels = [f'{row["condition"]}\n{row["geometry_skew_bin"]}' for row in cell_rows]
     x = np.arange(len(labels))
@@ -450,7 +462,6 @@ def plot_method_bars(path: str, cell_rows: list[dict[str, float | str]]) -> None
     )
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -519,8 +530,6 @@ def main() -> None:
 
                 assert conditioned_best_params is not None
                 assert family_best_params is not None
-
-                from run_weighted_anisotropic_inverse_experiment import symmetry_aware_errors
 
                 conditioned_geometry, _, conditioned_alpha = symmetry_aware_errors(true_params, conditioned_best_params)
                 family_geometry, _, family_alpha = symmetry_aware_errors(true_params, family_best_params)
@@ -617,7 +626,6 @@ def main() -> None:
         json.dump({"summary": summary, "by_condition": summary_rows, "by_cell": cell_rows}, handle, indent=2)
 
     print(json.dumps({"summary": summary, "by_condition": summary_rows, "by_cell": cell_rows}, indent=2))
-
 
 if __name__ == "__main__":
     main()

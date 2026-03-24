@@ -24,13 +24,6 @@ This script tests four linked claims:
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
-
 import csv
 import json
 import math
@@ -43,7 +36,6 @@ import numpy as np
 import seaborn as sns
 from sklearn.decomposition import PCA
 
-
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
     {
@@ -55,12 +47,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 @dataclass
 class ResidualRow:
@@ -76,7 +66,6 @@ class ResidualRow:
     max_equation_residual: float
     rms_equation_residual: float
 
-
 @dataclass
 class CollapseRow:
     family: str
@@ -90,14 +79,12 @@ class CollapseRow:
     mean_simplex_loop_error: float
     max_simplex_loop_error: float
 
-
 @dataclass
 class SpectrumRow:
     dataset: str
     component: int
     explained_variance_ratio: float
     cumulative_explained_variance_ratio: float
-
 
 def canonical_sources(rho: float, t: float, h: float, S: float = 1.0) -> np.ndarray:
     return S * np.array(
@@ -109,7 +96,6 @@ def canonical_sources(rho: float, t: float, h: float, S: float = 1.0) -> np.ndar
         dtype=float,
     )
 
-
 def equilateral_sources(rho: float, S: float = 1.0) -> np.ndarray:
     return S * np.array(
         [
@@ -120,17 +106,14 @@ def equilateral_sources(rho: float, S: float = 1.0) -> np.ndarray:
         dtype=float,
     )
 
-
 def pairwise_distance_invariants(points: np.ndarray, S: float) -> tuple[float, float, float]:
     d12 = float(np.linalg.norm(points[0] - points[1]) / S)
     d13 = float(np.linalg.norm(points[0] - points[2]) / S)
     d23 = float(np.linalg.norm(points[1] - points[2]) / S)
     return d12, d13, d23
 
-
 def total_distance(x: np.ndarray, points: np.ndarray) -> float:
     return float(np.sum(np.linalg.norm(points - x, axis=1)))
-
 
 def geometric_median(points: np.ndarray, tol: float = 1.0e-13, max_iter: int = 10_000) -> np.ndarray:
     guess = np.mean(points, axis=0)
@@ -145,7 +128,6 @@ def geometric_median(points: np.ndarray, tol: float = 1.0e-13, max_iter: int = 1
             return next_guess
         guess = next_guess
     return guess
-
 
 def boundary_radius_on_ray(points: np.ndarray, S: float, origin: np.ndarray, angle: float) -> float:
     direction = np.array([math.cos(angle), math.sin(angle)])
@@ -171,7 +153,6 @@ def boundary_radius_on_ray(points: np.ndarray, S: float, origin: np.ndarray, ang
             high = mid
     return 0.5 * (low + high)
 
-
 def boundary_curve(points: np.ndarray, S: float, angle_count: int = 360) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     origin = geometric_median(points)
     interior_sum = total_distance(origin, points)
@@ -184,11 +165,9 @@ def boundary_curve(points: np.ndarray, S: float, angle_count: int = 360) -> tupl
     curve = origin + radii[:, None] * directions
     return origin, angles, curve
 
-
 def allocation_shares(curve: np.ndarray, points: np.ndarray, S: float) -> np.ndarray:
     distances = np.column_stack([np.linalg.norm(curve - point, axis=1) for point in points])
     return distances / S
-
 
 def simplex_projection(weights: np.ndarray) -> np.ndarray:
     vertices = np.array(
@@ -200,10 +179,8 @@ def simplex_projection(weights: np.ndarray) -> np.ndarray:
     )
     return weights @ vertices
 
-
 def shape_signature(curve: np.ndarray, origin: np.ndarray, S: float) -> np.ndarray:
     return np.linalg.norm((curve - origin) / S, axis=1)
-
 
 def write_csv(path: str, rows: list[dict[str, float | int | str]]) -> None:
     if not rows:
@@ -212,7 +189,6 @@ def write_csv(path: str, rows: list[dict[str, float | int | str]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
-
 
 def collect_scale_collapse(
     configs: list[tuple[str, float, float, float]],
@@ -271,7 +247,6 @@ def collect_scale_collapse(
 
     return residual_rows, collapse_rows
 
-
 def signature_matrix_for_equilateral(rho_values: np.ndarray, angle_count: int = 240) -> np.ndarray:
     signatures = []
     for rho in rho_values:
@@ -279,7 +254,6 @@ def signature_matrix_for_equilateral(rho_values: np.ndarray, angle_count: int = 
         origin, _, curve = boundary_curve(points, 1.0, angle_count=angle_count)
         signatures.append(shape_signature(curve, origin, 1.0))
     return np.array(signatures)
-
 
 def sample_random_signatures(
     sample_size: int = 180,
@@ -304,7 +278,6 @@ def sample_random_signatures(
 
     return np.array(params), np.array(signatures)
 
-
 def spectrum_rows(dataset: str, pca: PCA, component_count: int = 8) -> list[SpectrumRow]:
     rows: list[SpectrumRow] = []
     cumulative = np.cumsum(pca.explained_variance_ratio_)
@@ -318,7 +291,6 @@ def spectrum_rows(dataset: str, pca: PCA, component_count: int = 8) -> list[Spec
             )
         )
     return rows
-
 
 def plot_gallery(path: str) -> None:
     fig, axes = plt.subplots(2, 2, figsize=(12.8, 10.8), constrained_layout=False)
@@ -349,7 +321,6 @@ def plot_gallery(path: str) -> None:
     fig.suptitle("Experiment 5A: Three-Source Constant-Sum Families", fontsize=16, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_scale_collapse(path: str, S_values: list[float]) -> None:
     rho, t, h = 0.14, 0.25, 1.15
@@ -395,7 +366,6 @@ def plot_scale_collapse(path: str, S_values: list[float]) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_dimension(path: str, equilateral_rho_values: np.ndarray, equilateral_pca: PCA, random_pca: PCA) -> None:
     fig, axes = plt.subplots(1, 3, figsize=(16.5, 5.4), constrained_layout=False)
     fig.subplots_adjust(top=0.84, wspace=0.28)
@@ -432,7 +402,6 @@ def plot_dimension(path: str, equilateral_rho_values: np.ndarray, equilateral_pc
     fig.suptitle("Experiment 5C: One-Parameter Slice And Low-Dimensional Family", fontsize=15, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     configs = [
@@ -486,7 +455,6 @@ def main() -> None:
         json.dump(summary, handle, indent=2)
 
     print(json.dumps(summary, indent=2))
-
 
 if __name__ == "__main__":
     main()

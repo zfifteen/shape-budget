@@ -31,9 +31,19 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+canonical_sources, normalize_weights, weighted_boundary_curve = load_symbols(
+    "run_weighted_multisource_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource/run.py",
+    "canonical_sources",
+    "normalize_weights",
+    "weighted_boundary_curve",
+)
 
 import csv
 import json
@@ -44,9 +54,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_weighted_multisource_experiment import canonical_sources, normalize_weights, weighted_boundary_curve
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -59,12 +66,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 REFERENCE_BANK_SIZE = 300
 EQUAL_WEIGHT_BANK_SIZE = 150
@@ -81,7 +86,6 @@ GEOMETRY_BOUNDS = {
     "h_max": 1.45,
 }
 
-
 OBSERVATION_REGIMES = [
     {"name": "full_clean", "noise_sigma": 0.0, "observed_fraction": 1.0, "mode": "full"},
     {"name": "full_noisy", "noise_sigma": 0.01, "observed_fraction": 1.0, "mode": "full"},
@@ -89,7 +93,6 @@ OBSERVATION_REGIMES = [
     {"name": "sparse_full_noisy", "noise_sigma": 0.02, "observed_count": 12, "mode": "random"},
     {"name": "sparse_partial_high_noise", "noise_sigma": 0.03, "observed_count": 10, "arc_fraction": 0.25, "mode": "sparse_contiguous"},
 ]
-
 
 @dataclass
 class TrialRow:
@@ -116,7 +119,6 @@ class TrialRow:
     equal_weight_baseline_fit_rmse: float
     weighted_fit_improvement_factor: float
 
-
 def sample_weighted_parameters(rng: np.random.Generator) -> tuple[float, float, float, float, float]:
     rho = float(rng.uniform(GEOMETRY_BOUNDS["rho_min"], GEOMETRY_BOUNDS["rho_max"]))
     t = float(rng.uniform(GEOMETRY_BOUNDS["t_min"], GEOMETRY_BOUNDS["t_max"]))
@@ -124,13 +126,11 @@ def sample_weighted_parameters(rng: np.random.Generator) -> tuple[float, float, 
     weights = rng.dirichlet(np.array([2.0, 2.0, 2.0]))
     return rho, t, h, float(weights[0]), float(weights[1])
 
-
 def sample_equal_weight_parameters(rng: np.random.Generator) -> tuple[float, float, float, float, float]:
     rho = float(rng.uniform(GEOMETRY_BOUNDS["rho_min"], GEOMETRY_BOUNDS["rho_max"]))
     t = float(rng.uniform(GEOMETRY_BOUNDS["t_min"], GEOMETRY_BOUNDS["t_max"]))
     h = float(rng.uniform(GEOMETRY_BOUNDS["h_min"], GEOMETRY_BOUNDS["h_max"]))
     return rho, t, h, 1.0 / 3.0, 1.0 / 3.0
-
 
 def boundary_signature_from_curve(curve: np.ndarray, angle_count: int = SIGNATURE_ANGLE_COUNT) -> np.ndarray:
     center = np.mean(curve, axis=0)
@@ -147,14 +147,12 @@ def boundary_signature_from_curve(curve: np.ndarray, angle_count: int = SIGNATUR
     signature = np.interp(grid, angle_ext, radius_ext)
     return signature / np.mean(signature)
 
-
 def forward_signature(params: tuple[float, float, float, float, float]) -> np.ndarray:
     rho, t, h, w1, w2 = params
     weights = normalize_weights(np.array([w1, w2, 1.0 - w1 - w2], dtype=float))
     points = canonical_sources(rho, t, h, S=1.0)
     _, _, curve = weighted_boundary_curve(points, weights, 1.0, angle_count=CURVE_SAMPLE_COUNT)
     return boundary_signature_from_curve(curve, angle_count=SIGNATURE_ANGLE_COUNT)
-
 
 def control_invariants(params: tuple[float, float, float, float, float]) -> tuple[np.ndarray, np.ndarray]:
     rho, t, h, w1, w2 = params
@@ -163,7 +161,6 @@ def control_invariants(params: tuple[float, float, float, float, float]) -> tupl
     d13 = np.linalg.norm(points[0] - points[2])
     d23 = np.linalg.norm(points[1] - points[2])
     return np.array([d12, d13, d23]), np.array([w1, w2, 1.0 - w1 - w2])
-
 
 def symmetry_aware_errors(
     true_params: tuple[float, float, float, float, float],
@@ -183,7 +180,6 @@ def symmetry_aware_errors(
     if direct_geom_mae + direct_weight_mae <= swapped_geom_mae + swapped_weight_mae:
         return direct_geom_mae, direct_weight_mae
     return swapped_geom_mae, swapped_weight_mae
-
 
 def observe_signature(
     clean_signature: np.ndarray,
@@ -217,7 +213,6 @@ def observe_signature(
         observed[mask] += rng.normal(scale=sigma, size=int(np.sum(mask)))
     return observed, mask
 
-
 def nearest_neighbor_prediction(
     observed_signature: np.ndarray,
     mask: np.ndarray,
@@ -228,7 +223,6 @@ def nearest_neighbor_prediction(
     mse = np.mean(residual * residual, axis=1)
     idx = int(np.argmin(mse))
     return bank_params[idx], bank_signatures[idx]
-
 
 def build_reference_bank(
     sample_size: int,
@@ -245,7 +239,6 @@ def build_reference_bank(
         params_list.append(params)
     return params_list, np.array(signatures)
 
-
 def write_csv(path: str, rows: list[dict[str, float | int | str]]) -> None:
     if not rows:
         return
@@ -253,7 +246,6 @@ def write_csv(path: str, rows: list[dict[str, float | int | str]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
-
 
 def aggregate_trials(rows: list[TrialRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
@@ -278,7 +270,6 @@ def aggregate_trials(rows: list[TrialRow]) -> list[dict[str, float | str]]:
             }
         )
     return summary
-
 
 def plot_error_heatmap(path: str, summary_rows: list[dict[str, float | str]]) -> None:
     conditions = [str(item["condition"]) for item in summary_rows]
@@ -317,7 +308,6 @@ def plot_error_heatmap(path: str, summary_rows: list[dict[str, float | str]]) ->
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_baseline_comparison(path: str, summary_rows: list[dict[str, float | str]]) -> None:
     conditions = [str(item["condition"]) for item in summary_rows]
     weighted_fit = np.array([float(item["weighted_fit_rmse_mean"]) for item in summary_rows])
@@ -347,7 +337,6 @@ def plot_baseline_comparison(path: str, summary_rows: list[dict[str, float | str
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_example_recoveries(path: str, rows: list[TrialRow]) -> None:
     chosen_conditions = ["full_clean", "partial_arc_noisy", "sparse_partial_high_noise"]
     fig, axes = plt.subplots(len(chosen_conditions), 1, figsize=(10.2, 9.4), constrained_layout=False)
@@ -373,7 +362,6 @@ def plot_example_recoveries(path: str, rows: list[TrialRow]) -> None:
     fig.suptitle("Weighted Inverse Experiment C: Representative Signature Recoveries", fontsize=15, fontweight="bold", y=0.98)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -447,7 +435,6 @@ def main() -> None:
         json.dump({"summary": summary, "by_condition": summary_rows}, handle, indent=2)
 
     print(json.dumps({"summary": summary, "by_condition": summary_rows}, indent=2))
-
 
 if __name__ == "__main__":
     main()

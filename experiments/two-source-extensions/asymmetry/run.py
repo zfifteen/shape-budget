@@ -17,13 +17,6 @@ This experiment asks:
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
-
 import csv
 import json
 import math
@@ -34,7 +27,6 @@ from itertools import combinations
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -47,12 +39,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 @dataclass
 class AsymmetryRow:
@@ -66,7 +56,6 @@ class AsymmetryRow:
     area_over_a2: float
     perimeter_over_2pi_a: float
     centroid_x_over_a: float
-
 
 def sample_boundary(a_budget: float, e: float, w: float, sample_count: int = 1200) -> np.ndarray:
     c = e * a_budget
@@ -116,7 +105,6 @@ def sample_boundary(a_budget: float, e: float, w: float, sample_count: int = 120
     lower[:, 1] *= -1.0
     return np.vstack([upper, lower])
 
-
 def closed_curve_metrics(points: np.ndarray) -> tuple[float, float, float]:
     closed = np.vstack([points, points[0]])
     dx = np.diff(closed[:, 0])
@@ -133,7 +121,6 @@ def closed_curve_metrics(points: np.ndarray) -> tuple[float, float, float]:
         centroid_x = float(np.sum((x[:-1] + x[1:]) * cross) / (6.0 * area))
     return abs(area), perimeter, centroid_x
 
-
 def resample_closed_curve(points: np.ndarray, sample_count: int = 500) -> np.ndarray:
     closed = np.vstack([points, points[0]])
     seg = np.sqrt(np.sum(np.diff(closed, axis=0) ** 2, axis=1))
@@ -143,12 +130,10 @@ def resample_closed_curve(points: np.ndarray, sample_count: int = 500) -> np.nda
     y = np.interp(target, s, closed[:, 1])
     return np.column_stack([x, y])
 
-
 def pointwise_distance(points_a: np.ndarray, points_b: np.ndarray) -> tuple[float, float]:
     delta = points_a - points_b
     dist = np.sqrt(np.sum(delta * delta, axis=1))
     return float(np.mean(dist)), float(np.max(dist))
-
 
 def metric_rows(e_values: np.ndarray, w_values: list[float], a_values: list[float]) -> list[AsymmetryRow]:
     rows: list[AsymmetryRow] = []
@@ -176,7 +161,6 @@ def metric_rows(e_values: np.ndarray, w_values: list[float], a_values: list[floa
                 )
     return rows
 
-
 def scale_collapse_rows(e_values: np.ndarray, w_values: list[float], a_values: list[float]) -> list[dict[str, float]]:
     rows: list[dict[str, float]] = []
     for e in e_values:
@@ -199,7 +183,6 @@ def scale_collapse_rows(e_values: np.ndarray, w_values: list[float], a_values: l
                 )
     return rows
 
-
 def one_knob_failure_rows(e_values: np.ndarray, w_values: list[float], a_budget: float = 1.0) -> list[dict[str, float]]:
     rows: list[dict[str, float]] = []
     for e in e_values:
@@ -220,7 +203,6 @@ def one_knob_failure_rows(e_values: np.ndarray, w_values: list[float], a_budget:
             )
     return rows
 
-
 def write_csv(path: str, rows: list[dict[str, float]]) -> None:
     if not rows:
         return
@@ -228,7 +210,6 @@ def write_csv(path: str, rows: list[dict[str, float]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
-
 
 def plot_family_gallery(path: str) -> None:
     fig, axes = plt.subplots(2, 3, figsize=(14.5, 9.2), constrained_layout=False)
@@ -268,7 +249,6 @@ def plot_family_gallery(path: str) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_collapse(path: str) -> None:
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(14.5, 6.6), constrained_layout=False)
     fig.subplots_adjust(top=0.88, wspace=0.24)
@@ -307,7 +287,6 @@ def plot_collapse(path: str) -> None:
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def heatmap_matrix(metric_rows: list[AsymmetryRow], metric_name: str, e_values: np.ndarray, w_values: list[float]) -> np.ndarray:
     metric_lookup = {(row.e, row.w): getattr(row, metric_name) for row in metric_rows if abs(row.a_budget - 1.0) < 1e-12}
     matrix = np.zeros((len(w_values), len(e_values)))
@@ -315,7 +294,6 @@ def heatmap_matrix(metric_rows: list[AsymmetryRow], metric_name: str, e_values: 
         for j, e in enumerate(e_values):
             matrix[i, j] = metric_lookup[(float(e), float(w))]
     return matrix
-
 
 def plot_response_surfaces(path: str, metric_rows_list: list[AsymmetryRow], e_values: np.ndarray, w_values: list[float]) -> None:
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(14.0, 5.8), constrained_layout=False)
@@ -353,7 +331,6 @@ def plot_response_surfaces(path: str, metric_rows_list: list[AsymmetryRow], e_va
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_error_summary(path: str, collapse_rows: list[dict[str, float]], family_rows: list[dict[str, float]], e_values: np.ndarray) -> None:
     fig, (ax_top, ax_bottom) = plt.subplots(2, 1, figsize=(11.5, 8.8), constrained_layout=False)
     fig.subplots_adjust(top=0.9, hspace=0.34)
@@ -381,7 +358,6 @@ def plot_error_summary(path: str, collapse_rows: list[dict[str, float]], family_
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def summarize(metric_rows_list: list[AsymmetryRow], collapse_rows: list[dict[str, float]], family_rows: list[dict[str, float]]) -> dict[str, float]:
     return {
         "num_metric_rows": len(metric_rows_list),
@@ -392,7 +368,6 @@ def summarize(metric_rows_list: list[AsymmetryRow], collapse_rows: list[dict[str
         "min_one_knob_family_distance": float(min(row["mean_family_distance"] for row in family_rows)),
         "max_one_knob_family_distance": float(max(row["mean_family_distance"] for row in family_rows)),
     }
-
 
 def main() -> None:
     e_values = np.round(np.linspace(0.10, 0.90, 17), 4)
@@ -423,7 +398,6 @@ def main() -> None:
 
     print("Asymmetry experiment complete.")
     print(json.dumps(summary, indent=2))
-
 
 if __name__ == "__main__":
     main()

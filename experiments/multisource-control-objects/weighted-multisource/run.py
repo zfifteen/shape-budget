@@ -26,13 +26,6 @@ This script tests four linked claims:
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
-
 import csv
 import json
 import math
@@ -45,7 +38,6 @@ import numpy as np
 import seaborn as sns
 from sklearn.decomposition import PCA
 
-
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
     {
@@ -57,12 +49,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 @dataclass
 class ResidualRow:
@@ -81,7 +71,6 @@ class ResidualRow:
     max_equation_residual: float
     rms_equation_residual: float
 
-
 @dataclass
 class CollapseRow:
     family: str
@@ -97,7 +86,6 @@ class CollapseRow:
     max_boundary_collapse_error: float
     mean_simplex_loop_error: float
     max_simplex_loop_error: float
-
 
 @dataclass
 class WeightVariationRow:
@@ -118,14 +106,12 @@ class WeightVariationRow:
     mean_simplex_loop_family_distance: float
     max_simplex_loop_family_distance: float
 
-
 @dataclass
 class SpectrumRow:
     dataset: str
     component: int
     explained_variance_ratio: float
     cumulative_explained_variance_ratio: float
-
 
 def canonical_sources(rho: float, t: float, h: float, S: float = 1.0) -> np.ndarray:
     return S * np.array(
@@ -137,7 +123,6 @@ def canonical_sources(rho: float, t: float, h: float, S: float = 1.0) -> np.ndar
         dtype=float,
     )
 
-
 def equilateral_sources(rho: float, S: float = 1.0) -> np.ndarray:
     return S * np.array(
         [
@@ -148,13 +133,11 @@ def equilateral_sources(rho: float, S: float = 1.0) -> np.ndarray:
         dtype=float,
     )
 
-
 def normalize_weights(weights: np.ndarray) -> np.ndarray:
     weights = np.asarray(weights, dtype=float)
     if np.any(weights <= 0.0):
         raise ValueError("Weighted multi-source experiment requires strictly positive weights.")
     return weights / np.sum(weights)
-
 
 def pairwise_distance_invariants(points: np.ndarray, S: float) -> tuple[float, float, float]:
     d12 = float(np.linalg.norm(points[0] - points[1]) / S)
@@ -162,10 +145,8 @@ def pairwise_distance_invariants(points: np.ndarray, S: float) -> tuple[float, f
     d23 = float(np.linalg.norm(points[1] - points[2]) / S)
     return d12, d13, d23
 
-
 def weighted_total_distance(x: np.ndarray, points: np.ndarray, weights: np.ndarray) -> float:
     return float(np.sum(weights * np.linalg.norm(points - x, axis=1)))
-
 
 def weighted_geometric_median(
     points: np.ndarray,
@@ -185,7 +166,6 @@ def weighted_geometric_median(
             return next_guess
         guess = next_guess
     return guess
-
 
 def boundary_radius_on_ray(
     points: np.ndarray,
@@ -217,7 +197,6 @@ def boundary_radius_on_ray(
             high = mid
     return 0.5 * (low + high)
 
-
 def weighted_boundary_curve(
     points: np.ndarray,
     weights: np.ndarray,
@@ -235,11 +214,9 @@ def weighted_boundary_curve(
     curve = origin + radii[:, None] * directions
     return origin, angles, curve
 
-
 def weighted_allocation_shares(curve: np.ndarray, points: np.ndarray, weights: np.ndarray, S: float) -> np.ndarray:
     distances = np.column_stack([np.linalg.norm(curve - point, axis=1) for point in points])
     return distances * weights[None, :] / S
-
 
 def simplex_projection(weights: np.ndarray) -> np.ndarray:
     vertices = np.array(
@@ -251,14 +228,11 @@ def simplex_projection(weights: np.ndarray) -> np.ndarray:
     )
     return weights @ vertices
 
-
 def shape_signature(curve: np.ndarray, origin: np.ndarray, S: float) -> np.ndarray:
     return np.linalg.norm((curve - origin) / S, axis=1)
 
-
 def format_weight_label(weights: np.ndarray) -> str:
     return f"({weights[0]:.2f}, {weights[1]:.2f}, {weights[2]:.2f})"
-
 
 def write_csv(path: str, rows: list[dict[str, float | int | str]]) -> None:
     if not rows:
@@ -267,7 +241,6 @@ def write_csv(path: str, rows: list[dict[str, float | int | str]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
         writer.writeheader()
         writer.writerows(rows)
-
 
 def collect_scale_collapse(
     configs: list[tuple[str, float, float, float]],
@@ -337,7 +310,6 @@ def collect_scale_collapse(
 
     return residual_rows, collapse_rows
 
-
 def collect_weight_variation(
     family: tuple[str, float, float, float],
     weight_sets: list[tuple[str, np.ndarray]],
@@ -386,7 +358,6 @@ def collect_weight_variation(
         )
     return rows
 
-
 def equilateral_weight_grid() -> list[np.ndarray]:
     weights: list[np.ndarray] = []
     grid = np.linspace(0.15, 0.70, 12)
@@ -397,7 +368,6 @@ def equilateral_weight_grid() -> list[np.ndarray]:
                 weights.append(np.array([w1, w2, w3], dtype=float))
     return weights
 
-
 def equilateral_weight_signatures(rho: float = 0.16, angle_count: int = 180) -> tuple[np.ndarray, np.ndarray]:
     weight_vectors = equilateral_weight_grid()
     signatures = []
@@ -406,7 +376,6 @@ def equilateral_weight_signatures(rho: float = 0.16, angle_count: int = 180) -> 
         origin, _, curve = weighted_boundary_curve(points, weights, 1.0, angle_count=angle_count)
         signatures.append(shape_signature(curve, origin, 1.0))
     return np.array(weight_vectors), np.array(signatures)
-
 
 def sample_random_weighted_signatures(
     sample_size: int = 180,
@@ -432,7 +401,6 @@ def sample_random_weighted_signatures(
 
     return np.array(params), np.array(signatures)
 
-
 def spectrum_rows(dataset: str, pca: PCA, component_count: int = 8) -> list[SpectrumRow]:
     rows: list[SpectrumRow] = []
     cumulative = np.cumsum(pca.explained_variance_ratio_)
@@ -446,7 +414,6 @@ def spectrum_rows(dataset: str, pca: PCA, component_count: int = 8) -> list[Spec
             )
         )
     return rows
-
 
 def plot_scale_collapse(path: str, weights: np.ndarray, S_values: list[float]) -> None:
     rho, t, h = 0.14, 0.25, 1.15
@@ -492,7 +459,6 @@ def plot_scale_collapse(path: str, weights: np.ndarray, S_values: list[float]) -
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_weight_variation(path: str, family: tuple[str, float, float, float], weight_sets: list[tuple[str, np.ndarray]]) -> None:
     _, rho, t, h = family
     points = canonical_sources(rho, t, h, S=1.0)
@@ -531,7 +497,6 @@ def plot_weight_variation(path: str, family: tuple[str, float, float, float], we
     fig.suptitle("Weighted Experiment B: Geometry Is Not Controlled By Placement Alone", fontsize=15, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_dimension(
     path: str,
@@ -579,7 +544,6 @@ def plot_dimension(
     fig.suptitle("Weighted Experiment C: Two-Parameter Slice And Five-Parameter Family", fontsize=15, fontweight="bold", y=0.97)
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     fixed_weights = normalize_weights(np.array([0.20, 0.35, 0.45], dtype=float))
@@ -660,7 +624,6 @@ def main() -> None:
         json.dump(summary, handle, indent=2)
 
     print(json.dumps(summary, indent=2))
-
 
 if __name__ == "__main__":
     main()

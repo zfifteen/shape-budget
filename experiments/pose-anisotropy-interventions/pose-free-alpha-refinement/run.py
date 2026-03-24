@@ -21,9 +21,46 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+nearest_neighbor_pose_free, = load_symbols(
+    "run_pose_free_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-anisotropic-inverse/run.py",
+    "nearest_neighbor_pose_free",
+)
+
+build_shift_stack, observe_pose_free_signature = load_symbols(
+    "run_pose_free_weighted_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-inverse/run.py",
+    "build_shift_stack",
+    "observe_pose_free_signature",
+)
+
+ALPHA_MAX, ALPHA_MIN, EUCLIDEAN_BASELINE_BANK_SIZE, REFERENCE_BANK_SIZE, TEST_TRIALS_PER_REGIME, aggregate_trials, anisotropic_forward_signature, build_reference_bank, sample_anisotropic_parameters, symmetry_aware_errors = load_symbols(
+    "run_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-anisotropic-inverse/run.py",
+    "ALPHA_MAX",
+    "ALPHA_MIN",
+    "EUCLIDEAN_BASELINE_BANK_SIZE",
+    "REFERENCE_BANK_SIZE",
+    "TEST_TRIALS_PER_REGIME",
+    "aggregate_trials",
+    "anisotropic_forward_signature",
+    "build_reference_bank",
+    "sample_anisotropic_parameters",
+    "symmetry_aware_errors",
+)
+
+OBSERVATION_REGIMES, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "OBSERVATION_REGIMES",
+    "write_csv",
+)
 
 import json
 import math
@@ -33,23 +70,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_pose_free_weighted_anisotropic_inverse_experiment import nearest_neighbor_pose_free
-from run_pose_free_weighted_inverse_experiment import build_shift_stack, observe_pose_free_signature
-from run_weighted_anisotropic_inverse_experiment import (
-    ALPHA_MAX,
-    ALPHA_MIN,
-    EUCLIDEAN_BASELINE_BANK_SIZE,
-    REFERENCE_BANK_SIZE,
-    TEST_TRIALS_PER_REGIME,
-    aggregate_trials,
-    anisotropic_forward_signature,
-    build_reference_bank,
-    sample_anisotropic_parameters,
-    symmetry_aware_errors,
-)
-from run_weighted_multisource_inverse_experiment import OBSERVATION_REGIMES, write_csv
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -62,19 +82,16 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 TOP_K_CANDIDATES = 2
 COARSE_ALPHA_GRID = np.linspace(ALPHA_MIN, ALPHA_MAX, 17)
 FINE_ALPHA_RADIUS = 0.04
 FINE_ALPHA_POINTS = 9
 PILOT_TRIALS_PER_REGIME = 10
-
 
 @dataclass
 class AlphaRefinementTrialRow:
@@ -123,7 +140,6 @@ class AlphaRefinementTrialRow:
     fit_improvement_over_baseline: float
     fit_improvement_over_euclidean: float
 
-
 def shifted_signature_mse(
     observed_signature: np.ndarray,
     mask: np.ndarray,
@@ -132,7 +148,6 @@ def shifted_signature_mse(
     masked_bank = shifted_bank[:, :, mask]
     residual = masked_bank - observed_signature[mask][None, None, :]
     return np.mean(residual * residual, axis=2)
-
 
 def top_k_unique_bank_candidates(
     observed_signature: np.ndarray,
@@ -155,7 +170,6 @@ def top_k_unique_bank_candidates(
         if len(selected) >= k:
             break
     return selected
-
 
 def evaluate_alpha_and_shift(
     observed_signature: np.ndarray,
@@ -188,7 +202,6 @@ def evaluate_alpha_and_shift(
     assert best_signature is not None
     return best_params, best_signature, best_shift, best_score
 
-
 def refine_alpha_for_candidate(
     observed_signature: np.ndarray,
     mask: np.ndarray,
@@ -212,7 +225,6 @@ def refine_alpha_for_candidate(
     )
     return evaluate_alpha_and_shift(observed_signature, mask, geometry_weight_params, fine_grid)
 
-
 def summarize_method(rows: list[AlphaRefinementTrialRow], prefix: str) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
     for regime in OBSERVATION_REGIMES:
@@ -235,7 +247,6 @@ def summarize_method(rows: list[AlphaRefinementTrialRow], prefix: str) -> list[d
             }
         )
     return summary
-
 
 def compare_methods(rows: list[AlphaRefinementTrialRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
@@ -262,7 +273,6 @@ def compare_methods(rows: list[AlphaRefinementTrialRow]) -> list[dict[str, float
             }
         )
     return summary
-
 
 def plot_alpha_refinement_heatmap(
     path: str,
@@ -304,7 +314,6 @@ def plot_alpha_refinement_heatmap(
     )
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_method_comparison(
     path: str,
@@ -356,7 +365,6 @@ def plot_method_comparison(
     )
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_example_recoveries(path: str, rows: list[AlphaRefinementTrialRow]) -> None:
     chosen_conditions = ["full_noisy", "partial_arc_noisy", "sparse_partial_high_noise"]
@@ -419,7 +427,6 @@ def plot_example_recoveries(path: str, rows: list[AlphaRefinementTrialRow]) -> N
     )
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -602,7 +609,6 @@ def main() -> None:
             indent=2,
         )
     )
-
 
 if __name__ == "__main__":
     main()

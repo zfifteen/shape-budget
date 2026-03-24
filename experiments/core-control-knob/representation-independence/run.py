@@ -24,9 +24,51 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+nearest_neighbor_pose_free, = load_symbols(
+    "run_pose_free_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-anisotropic-inverse/run.py",
+    "nearest_neighbor_pose_free",
+)
+
+build_shift_stack, = load_symbols(
+    "run_pose_free_weighted_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-inverse/run.py",
+    "build_shift_stack",
+)
+
+ALPHA_MAX, ALPHA_MIN, GEOMETRY_BOUNDS, sample_anisotropic_parameters, sample_euclidean_parameters, symmetry_aware_errors = load_symbols(
+    "run_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-anisotropic-inverse/run.py",
+    "ALPHA_MAX",
+    "ALPHA_MIN",
+    "GEOMETRY_BOUNDS",
+    "sample_anisotropic_parameters",
+    "sample_euclidean_parameters",
+    "symmetry_aware_errors",
+)
+
+canonical_sources, normalize_weights, weighted_boundary_curve = load_symbols(
+    "run_weighted_multisource_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource/run.py",
+    "canonical_sources",
+    "normalize_weights",
+    "weighted_boundary_curve",
+)
+
+OBSERVATION_REGIMES, SIGNATURE_ANGLE_COUNT, boundary_signature_from_curve, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "OBSERVATION_REGIMES",
+    "SIGNATURE_ANGLE_COUNT",
+    "boundary_signature_from_curve",
+    "write_csv",
+)
 
 import json
 import math
@@ -36,25 +78,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_pose_free_weighted_anisotropic_inverse_experiment import nearest_neighbor_pose_free
-from run_pose_free_weighted_inverse_experiment import build_shift_stack
-from run_weighted_anisotropic_inverse_experiment import (
-    ALPHA_MAX,
-    ALPHA_MIN,
-    GEOMETRY_BOUNDS,
-    sample_anisotropic_parameters,
-    sample_euclidean_parameters,
-    symmetry_aware_errors,
-)
-from run_weighted_multisource_experiment import canonical_sources, normalize_weights, weighted_boundary_curve
-from run_weighted_multisource_inverse_experiment import (
-    OBSERVATION_REGIMES,
-    SIGNATURE_ANGLE_COUNT,
-    boundary_signature_from_curve,
-    write_csv,
-)
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -67,12 +90,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 ANISOTROPIC_BANK_SIZE = 220
 EUCLIDEAN_BANK_SIZE = 120
@@ -82,7 +103,6 @@ SUPPORT_AUDIT_CASES = 30
 
 REPRESENTATIONS = ["radial", "support"]
 MODES = ["canonical", "pose_free"]
-
 
 @dataclass
 class TrialRow:
@@ -99,7 +119,6 @@ class TrialRow:
     euclidean_fit_rmse: float
     fit_improvement_factor: float
 
-
 def anisotropic_forward_curve(params: tuple[float, float, float, float, float, float]) -> np.ndarray:
     rho, t, h, w1, w2, alpha = params
     weights = normalize_weights(np.array([w1, w2, 1.0 - w1 - w2], dtype=float))
@@ -113,7 +132,6 @@ def anisotropic_forward_curve(params: tuple[float, float, float, float, float, f
     curve_raw[:, 1] /= alpha
     return curve_raw
 
-
 def support_signature_from_curve(curve: np.ndarray, angle_count: int = SIGNATURE_ANGLE_COUNT) -> np.ndarray:
     center = np.mean(curve, axis=0)
     shifted = curve - center
@@ -122,14 +140,12 @@ def support_signature_from_curve(curve: np.ndarray, angle_count: int = SIGNATURE
     support = np.max(shifted @ directions.T, axis=0)
     return support / np.mean(support)
 
-
 def representation_signature(curve: np.ndarray, representation: str) -> np.ndarray:
     if representation == "radial":
         return boundary_signature_from_curve(curve, angle_count=SIGNATURE_ANGLE_COUNT)
     if representation == "support":
         return support_signature_from_curve(curve, angle_count=SIGNATURE_ANGLE_COUNT)
     raise ValueError(f"Unknown representation: {representation}")
-
 
 def build_representation_bank(
     sample_size: int,
@@ -148,7 +164,6 @@ def build_representation_bank(
             signatures[representation].append(representation_signature(curve, representation))
 
     return params_list, {key: np.array(value) for key, value in signatures.items()}
-
 
 def sample_mask_and_noise(
     regime: dict[str, float | str | int],
@@ -182,12 +197,10 @@ def sample_mask_and_noise(
         noise[mask] = rng.normal(scale=sigma, size=int(np.sum(mask)))
     return mask, noise
 
-
 def apply_observation(clean_signature: np.ndarray, mask: np.ndarray, noise: np.ndarray) -> np.ndarray:
     observed = clean_signature.copy()
     observed[mask] += noise[mask]
     return observed
-
 
 def nearest_neighbor_prediction(
     observed_signature: np.ndarray,
@@ -200,10 +213,8 @@ def nearest_neighbor_prediction(
     idx = int(np.argmin(mse))
     return bank_params[idx], bank_signatures[idx]
 
-
 def rmse(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.sqrt(np.mean((a - b) ** 2)))
-
 
 def audit_support_identity(
     bank_signatures: np.ndarray,
@@ -244,7 +255,6 @@ def audit_support_identity(
         "max_pose_free_fit_rmse": float(max_pose_fit),
     }
 
-
 def aggregate(rows: list[TrialRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
     for representation in REPRESENTATIONS:
@@ -274,7 +284,6 @@ def aggregate(rows: list[TrialRow]) -> list[dict[str, float | str]]:
                     }
                 )
     return summary
-
 
 def pose_penalty_rows(summary_rows: list[dict[str, float | str]]) -> list[dict[str, float | str]]:
     output: list[dict[str, float | str]] = []
@@ -306,7 +315,6 @@ def pose_penalty_rows(summary_rows: list[dict[str, float | str]]) -> list[dict[s
             )
     return output
 
-
 def representation_gap_rows(summary_rows: list[dict[str, float | str]]) -> list[dict[str, float | str]]:
     output: list[dict[str, float | str]] = []
     for mode in MODES:
@@ -335,7 +343,6 @@ def representation_gap_rows(summary_rows: list[dict[str, float | str]]) -> list[
                 }
             )
     return output
-
 
 def plot_alpha_comparison(path: str, summary_rows: list[dict[str, float | str]]) -> None:
     conditions = [str(regime["name"]) for regime in OBSERVATION_REGIMES]
@@ -393,7 +400,6 @@ def plot_alpha_comparison(path: str, summary_rows: list[dict[str, float | str]])
     )
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def plot_fit_improvement_and_selectivity(
     path: str,
@@ -456,7 +462,6 @@ def plot_fit_improvement_and_selectivity(
     )
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -617,7 +622,6 @@ def main() -> None:
             indent=2,
         )
     )
-
 
 if __name__ == "__main__":
     main()

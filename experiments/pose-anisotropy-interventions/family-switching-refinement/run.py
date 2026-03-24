@@ -18,9 +18,67 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-_COMPAT_MODULES = Path(__file__).resolve().parents[3] / ".experiment_modules"
-if str(_COMPAT_MODULES) not in sys.path:
-    sys.path.insert(0, str(_COMPAT_MODULES))
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments._shared.run_loader import load_symbols
+
+GEOMETRY_SKEW_BIN_LABELS, candidate_conditioned_search, sample_conditioned_parameters, top_k_indices = load_symbols(
+    "run_candidate_conditioned_alignment_experiment",
+    ROOT / "experiments/pose-anisotropy-interventions/candidate-conditioned-alignment/run.py",
+    "GEOMETRY_SKEW_BIN_LABELS",
+    "candidate_conditioned_search",
+    "sample_conditioned_parameters",
+    "top_k_indices",
+)
+
+oracle_align_observation, = load_symbols(
+    "run_oracle_alignment_ceiling_experiment",
+    ROOT / "experiments/pose-anisotropy-diagnostics/oracle-alignment-ceiling/run.py",
+    "oracle_align_observation",
+)
+
+nearest_neighbor_aligned, rmse = load_symbols(
+    "run_orientation_locking_experiment",
+    ROOT / "experiments/pose-anisotropy-diagnostics/orientation-locking/run.py",
+    "nearest_neighbor_aligned",
+    "rmse",
+)
+
+marginalized_candidate_scores, shift_error_matrix, softmin_temperature = load_symbols(
+    "run_shift_marginalized_pose_experiment",
+    ROOT / "experiments/pose-anisotropy-interventions/shift-marginalized-pose/run.py",
+    "marginalized_candidate_scores",
+    "shift_error_matrix",
+    "softmin_temperature",
+)
+
+build_shift_stack, observe_pose_free_signature = load_symbols(
+    "run_pose_free_weighted_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/pose-free-weighted-inverse/run.py",
+    "build_shift_stack",
+    "observe_pose_free_signature",
+)
+
+ALPHA_MAX, ALPHA_MIN, GEOMETRY_BOUNDS, REFERENCE_BANK_SIZE, anisotropic_forward_signature, build_reference_bank, symmetry_aware_errors = load_symbols(
+    "run_weighted_anisotropic_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-anisotropic-inverse/run.py",
+    "ALPHA_MAX",
+    "ALPHA_MIN",
+    "GEOMETRY_BOUNDS",
+    "REFERENCE_BANK_SIZE",
+    "anisotropic_forward_signature",
+    "build_reference_bank",
+    "symmetry_aware_errors",
+)
+
+OBSERVATION_REGIMES, write_csv = load_symbols(
+    "run_weighted_multisource_inverse_experiment",
+    ROOT / "experiments/multisource-control-objects/weighted-multisource-inverse/run.py",
+    "OBSERVATION_REGIMES",
+    "write_csv",
+)
 
 import json
 import math
@@ -30,32 +88,6 @@ from dataclasses import dataclass
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-
-from run_candidate_conditioned_alignment_experiment import (
-    GEOMETRY_SKEW_BIN_LABELS,
-    candidate_conditioned_search,
-    sample_conditioned_parameters,
-    top_k_indices,
-)
-from run_oracle_alignment_ceiling_experiment import oracle_align_observation
-from run_orientation_locking_experiment import nearest_neighbor_aligned, rmse
-from run_shift_marginalized_pose_experiment import (
-    marginalized_candidate_scores,
-    shift_error_matrix,
-    softmin_temperature,
-)
-from run_pose_free_weighted_inverse_experiment import build_shift_stack, observe_pose_free_signature
-from run_weighted_anisotropic_inverse_experiment import (
-    ALPHA_MAX,
-    ALPHA_MIN,
-    GEOMETRY_BOUNDS,
-    REFERENCE_BANK_SIZE,
-    anisotropic_forward_signature,
-    build_reference_bank,
-    symmetry_aware_errors,
-)
-from run_weighted_multisource_inverse_experiment import OBSERVATION_REGIMES, write_csv
-
 
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
@@ -68,12 +100,10 @@ plt.rcParams.update(
     }
 )
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
-
 
 FOCUS_CONDITIONS = ["sparse_full_noisy", "sparse_partial_high_noise"]
 FOCUS_ALPHA_BIN = "moderate"
@@ -88,7 +118,6 @@ INITIAL_RHO_RADIUS = 0.024
 INITIAL_T_RADIUS = 0.14
 INITIAL_H_RADIUS = 0.14
 INITIAL_ALPHA_RADIUS = 0.12
-
 
 @dataclass
 class TrialRow:
@@ -128,7 +157,6 @@ class TrialRow:
     oracle_alpha_error: float
     oracle_fit_rmse: float
 
-
 def unique_centered_grid(
     center: float,
     radius: float,
@@ -142,7 +170,6 @@ def unique_centered_grid(
         values = np.concatenate([values, np.array(extra_values, dtype=float)])
     values = np.clip(values, lower, upper)
     return np.unique(values)
-
 
 def evaluate_params(
     observed_signature: np.ndarray,
@@ -158,7 +185,6 @@ def evaluate_params(
     stable = np.exp(-(mse - minima) / temperature)
     marginalized = minima - temperature * math.log(float(np.mean(stable)))
     return float(marginalized), shift_stack[best_shift], best_shift
-
 
 def family_switching_refine(
     observed_signature: np.ndarray,
@@ -231,7 +257,6 @@ def family_switching_refine(
 
     return best_params, best_signature, best_shift, float(best_score)
 
-
 def oracle_prediction(
     observed_signature: np.ndarray,
     mask: np.ndarray,
@@ -241,7 +266,6 @@ def oracle_prediction(
 ) -> tuple[tuple[float, float, float, float, float, float], np.ndarray]:
     oracle_observed, oracle_mask = oracle_align_observation(observed_signature, mask, true_shift)
     return nearest_neighbor_aligned(oracle_observed, oracle_mask, bank_signatures, bank_params)
-
 
 def summarize_cells(rows: list[TrialRow]) -> list[dict[str, float | str]]:
     summary: list[dict[str, float | str]] = []
@@ -307,7 +331,6 @@ def summarize_cells(rows: list[TrialRow]) -> list[dict[str, float | str]]:
             )
     return summary
 
-
 def build_focus_summary(cell_rows: list[dict[str, float | str]]) -> dict[str, float]:
     sparse_full_rows = [row for row in cell_rows if str(row["condition"]) == "sparse_full_noisy"]
     sparse_partial_rows = [row for row in cell_rows if str(row["condition"]) == "sparse_partial_high_noise"]
@@ -349,7 +372,6 @@ def build_focus_summary(cell_rows: list[dict[str, float | str]]) -> dict[str, fl
             max(float(row["family_non_top1_seed_fraction"]) for row in cell_rows)
         ),
     }
-
 
 def plot_focus_heatmaps(path: str, cell_rows: list[dict[str, float | str]]) -> None:
     metrics = [
@@ -415,7 +437,6 @@ def plot_focus_heatmaps(path: str, cell_rows: list[dict[str, float | str]]) -> N
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def plot_method_bars(path: str, cell_rows: list[dict[str, float | str]]) -> None:
     labels = [f'{row["condition"]}\n{row["geometry_skew_bin"]}' for row in cell_rows]
     x = np.arange(len(labels))
@@ -448,7 +469,6 @@ def plot_method_bars(path: str, cell_rows: list[dict[str, float | str]]) -> None
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
-
 def audit_seed_non_degradation(
     rng: np.random.Generator,
     bank_params: list[tuple[float, float, float, float, float, float]],
@@ -468,7 +488,6 @@ def audit_seed_non_degradation(
         "audit_cases": float(SEED_AUDIT_CASES),
         "max_refined_minus_seed_score": float(max_refined_minus_seed_score),
     }
-
 
 def audit_nearby_clean_recovery(
     rng: np.random.Generator,
@@ -510,7 +529,6 @@ def audit_nearby_clean_recovery(
         "max_alpha_error_after_nearby_refinement": float(max_alpha_error),
         "exact_rotated_signature_recovery_fraction": float(exact_signature_fraction / NEARBY_AUDIT_CASES),
     }
-
 
 def main() -> None:
     rng = np.random.default_rng(20260324)
@@ -680,7 +698,6 @@ def main() -> None:
         json.dump({"summary": summary, "by_cell": cell_rows}, handle, indent=2)
 
     print(json.dumps({"summary": summary, "by_cell": cell_rows}, indent=2))
-
 
 if __name__ == "__main__":
     main()
