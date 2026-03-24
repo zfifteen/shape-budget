@@ -1,0 +1,100 @@
+{
+  "summary": {
+    "validation_method": "leave-one-trial-out and leave-one-cell-out (same result on this packet)",
+    "benchmark_packet_source": "experiments/pose-anisotropy-interventions/joint-pose-marginalized-solver/outputs/joint_pose_marginalized_solver_trials.csv @ b3734fa",
+    "policy_family": {
+      "name": "dual_rescue_gate",
+      "description": "Default to support-aware baseline. Allow joint solver rescue only when sparse-partial evidence crosses one of two calibrated gates."
+    },
+    "out_of_sample_overall_mean_alpha_error": 0.1596356869551954,
+    "baseline_overall_mean_alpha_error": 0.1713940930372717,
+    "joint_overall_mean_alpha_error": 0.18353028132965107,
+    "oracle_best_of_two_overall_mean_alpha_error": 0.12810321606993835,
+    "out_of_sample_choose_joint_fraction": 0.08333333333333333,
+    "baseline_choose_joint_fraction": 0.0,
+    "full_packet_calibration_only": {
+      "rule": {
+        "entropy_hi": 0.75,
+        "fit_lo": 0.014,
+        "entropy_lo": 0.62,
+        "full_use": true,
+        "full_entropy": 0.7
+      },
+      "in_sample_mean_alpha_error": 0.12810321606993835,
+      "choose_joint_count": 3,
+      "note": "Calibration-only. Not a validation result."
+    }
+  },
+  "leave_one_trial_out_by_condition": [
+    {
+      "condition": "sparse_full_noisy",
+      "out_of_sample_alpha_error_mean": 0.12331280002327193,
+      "baseline_alpha_error_mean": 0.12331280002327193,
+      "joint_alpha_error_mean": 0.12836542819635968,
+      "choose_joint_fraction": 0.0
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "out_of_sample_alpha_error_mean": 0.19595857388711888,
+      "baseline_alpha_error_mean": 0.2194753860512715,
+      "joint_alpha_error_mean": 0.23869513446294247,
+      "choose_joint_fraction": 0.16666666666666666
+    }
+  ],
+  "leave_one_trial_out_by_cell": [
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_skew_bin": "low_skew",
+      "count": 2,
+      "out_of_sample_alpha_error_mean": 0.0277113962899524,
+      "baseline_alpha_error_mean": 0.0277113962899524,
+      "joint_alpha_error_mean": 0.043649719025415354,
+      "choose_joint_fraction": 0.0
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_skew_bin": "mid_skew",
+      "count": 2,
+      "out_of_sample_alpha_error_mean": 0.01127518308596105,
+      "baseline_alpha_error_mean": 0.01127518308596105,
+      "joint_alpha_error_mean": 0.01127518308596105,
+      "choose_joint_fraction": 0.0
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_skew_bin": "high_skew",
+      "count": 2,
+      "out_of_sample_alpha_error_mean": 0.3309518206939023,
+      "baseline_alpha_error_mean": 0.3309518206939023,
+      "joint_alpha_error_mean": 0.33017138247770267,
+      "choose_joint_fraction": 0.0
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_skew_bin": "low_skew",
+      "count": 2,
+      "out_of_sample_alpha_error_mean": 0.03372114911132645,
+      "baseline_alpha_error_mean": 0.10427158560378445,
+      "joint_alpha_error_mean": 0.18903846174357128,
+      "choose_joint_fraction": 0.5
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_skew_bin": "mid_skew",
+      "count": 2,
+      "out_of_sample_alpha_error_mean": 0.3057758645276058,
+      "baseline_alpha_error_mean": 0.3057758645276058,
+      "joint_alpha_error_mean": 0.3057758645276058,
+      "choose_joint_fraction": 0.0
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_skew_bin": "high_skew",
+      "count": 2,
+      "out_of_sample_alpha_error_mean": 0.2483787080224243,
+      "baseline_alpha_error_mean": 0.2483787080224243,
+      "joint_alpha_error_mean": 0.22127107711765034,
+      "choose_joint_fraction": 0.0
+    }
+  ]
+}
