@@ -18,6 +18,10 @@ No forward-model changes and no latent-object changes were introduced.
 - moderate anisotropy
 - low / mid / high skew cells
 
+## Safety checks
+
+- the script now fails fast if focused conditions or focused cells are missing from the source packet, to prevent silent zero-valued aggregates.
+
 ## Outputs
 
 - `outputs/support_aware_joint_policy_solver_resolved_eval.csv`

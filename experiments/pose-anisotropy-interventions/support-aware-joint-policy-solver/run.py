@@ -29,9 +29,27 @@ FOCUS_CONDITIONS = ["sparse_full_noisy", "sparse_partial_high_noise"]
 
 
 def mean(values: list[float]) -> float:
-    return sum(values) / max(len(values), 1)
+    if not values:
+        raise ValueError("Cannot compute mean of empty values.")
+    return sum(values) / len(values)
 
 
+
+
+def validate_packet(rows: list[dict[str, float | str | int]]) -> None:
+    if not rows:
+        raise ValueError("Focused packet is empty; expected focused trial rows.")
+
+    present_conditions = {str(r["condition"]) for r in rows}
+    missing_conditions = sorted(set(FOCUS_CONDITIONS) - present_conditions)
+    if missing_conditions:
+        raise ValueError(f"Focused packet missing conditions: {missing_conditions}")
+
+    expected_cells = {f"{cond}::{skew}" for cond in FOCUS_CONDITIONS for skew in ["low_skew", "mid_skew", "high_skew"]}
+    present_cells = {f"{r['condition']}::{r['geometry_skew_bin']}" for r in rows}
+    missing_cells = sorted(expected_cells - present_cells)
+    if missing_cells:
+        raise ValueError(f"Focused packet missing cells: {missing_cells}")
 def summarize(rows: list[dict[str, float | str | int]], key: str) -> list[dict[str, float | str]]:
     values = sorted({str(r[key]) for r in rows})
     out: list[dict[str, float | str]] = []
@@ -80,6 +98,8 @@ def main() -> None:
                     "resolved_choose_joint": choose_joint,
                 }
             )
+
+    validate_packet(rows)
 
     overall = {
         "support_alpha_mean": mean([float(r["support_alpha"]) for r in rows]),
