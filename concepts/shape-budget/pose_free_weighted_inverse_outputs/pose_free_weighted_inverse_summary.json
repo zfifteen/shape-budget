@@ -1,0 +1,110 @@
+{
+  "summary": {
+    "reference_bank_size": 300,
+    "equal_weight_bank_size": 150,
+    "test_trials_per_regime": 40,
+    "best_geometry_mae_mean": 0.05529653723248771,
+    "worst_geometry_mae_mean": 0.10775770302877541,
+    "best_weight_mae_mean": 0.1255448315507795,
+    "worst_weight_mae_mean": 0.1693687329765163,
+    "best_weighted_fit_rmse_mean": 0.0011064639736277629,
+    "worst_weighted_fit_rmse_mean": 0.014553812492276174,
+    "smallest_fit_improvement_factor_mean": 1.123951499188491,
+    "largest_fit_improvement_factor_mean": 5.441739449919811,
+    "smallest_geometry_penalty_factor": 0.7712718641743489,
+    "largest_geometry_penalty_factor": 1.394122403433644,
+    "smallest_weight_penalty_factor": 1.191006822536671,
+    "largest_weight_penalty_factor": 1.8164314024527732,
+    "smallest_fit_penalty_factor": 0.3757929256080283,
+    "largest_fit_penalty_factor": 1.361309833612324
+  },
+  "by_condition": [
+    {
+      "condition": "full_clean",
+      "geometry_mae_mean": 0.05529653723248771,
+      "geometry_mae_p95": 0.15229886481689525,
+      "weight_mae_mean": 0.14503200231820576,
+      "weight_mae_p95": 0.32038432425595376,
+      "weighted_fit_rmse_mean": 0.0011064639736277629,
+      "equal_weight_baseline_fit_rmse_mean": 0.006347078868474239,
+      "fit_improvement_factor_mean": 5.441739449919811
+    },
+    {
+      "condition": "full_noisy",
+      "geometry_mae_mean": 0.05787114849517629,
+      "geometry_mae_p95": 0.13045317148401514,
+      "weight_mae_mean": 0.1693687329765163,
+      "weight_mae_p95": 0.3760155041315341,
+      "weighted_fit_rmse_mean": 0.0020846066623225077,
+      "equal_weight_baseline_fit_rmse_mean": 0.004014357637750025,
+      "fit_improvement_factor_mean": 2.4632149458811092
+    },
+    {
+      "condition": "partial_arc_noisy",
+      "geometry_mae_mean": 0.08682605577414634,
+      "geometry_mae_p95": 0.20666319059954683,
+      "weight_mae_mean": 0.14781914065056248,
+      "weight_mae_p95": 0.3142801132619297,
+      "weighted_fit_rmse_mean": 0.004316783601258752,
+      "equal_weight_baseline_fit_rmse_mean": 0.00830457774633544,
+      "fit_improvement_factor_mean": 2.3936699315033465
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_mae_mean": 0.10775770302877541,
+      "geometry_mae_p95": 0.21822746311725685,
+      "weight_mae_mean": 0.1255448315507795,
+      "weight_mae_p95": 0.2857254365146173,
+      "weighted_fit_rmse_mean": 0.008752726256179209,
+      "equal_weight_baseline_fit_rmse_mean": 0.010741046647421634,
+      "fit_improvement_factor_mean": 1.3465665996931104
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_mae_mean": 0.07768197201445035,
+      "geometry_mae_p95": 0.18575818581062808,
+      "weight_mae_mean": 0.14868339579832018,
+      "weight_mae_p95": 0.30246681811524706,
+      "weighted_fit_rmse_mean": 0.014553812492276174,
+      "equal_weight_baseline_fit_rmse_mean": 0.014556629253897052,
+      "fit_improvement_factor_mean": 1.123951499188491
+    }
+  ],
+  "penalties_vs_canonical": [
+    {
+      "condition": "full_clean",
+      "geometry_mae_penalty_factor": 0.8332785390326153,
+      "weight_mae_penalty_factor": 1.4559122542351295,
+      "weighted_fit_rmse_penalty_factor": 0.3757929256080283,
+      "fit_improvement_ratio_vs_canonical": 0.9848449959487016
+    },
+    {
+      "condition": "full_noisy",
+      "geometry_mae_penalty_factor": 0.7712718641743489,
+      "weight_mae_penalty_factor": 1.8164314024527732,
+      "weighted_fit_rmse_penalty_factor": 0.6674849765082036,
+      "fit_improvement_ratio_vs_canonical": 0.5049727131999632
+    },
+    {
+      "condition": "partial_arc_noisy",
+      "geometry_mae_penalty_factor": 1.394122403433644,
+      "weight_mae_penalty_factor": 1.717280710256798,
+      "weighted_fit_rmse_penalty_factor": 1.008622714673563,
+      "fit_improvement_ratio_vs_canonical": 0.567659518236543
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_mae_penalty_factor": 1.3932549724447914,
+      "weight_mae_penalty_factor": 1.279168233107174,
+      "weighted_fit_rmse_penalty_factor": 1.361309833612324,
+      "fit_improvement_ratio_vs_canonical": 0.4509828612589823
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_mae_penalty_factor": 0.903802948878798,
+      "weight_mae_penalty_factor": 1.191006822536671,
+      "weighted_fit_rmse_penalty_factor": 0.9589088459660438,
+      "fit_improvement_ratio_vs_canonical": 0.598778983224921
+    }
+  ]
+}
