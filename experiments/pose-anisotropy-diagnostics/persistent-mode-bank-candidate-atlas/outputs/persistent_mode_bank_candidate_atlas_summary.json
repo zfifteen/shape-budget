@@ -1,0 +1,38 @@
+{
+  "experiment": "persistent-mode-bank-candidate-atlas",
+  "methods": [
+    "one_shot_random",
+    "persistent_mode_informed"
+  ],
+  "trial_count": 36,
+  "candidate_row_count": 17946,
+  "cluster_row_count": 1876,
+  "bank_summary_row_count": 108,
+  "random_bank_size": 300,
+  "scout_bank_size": 120,
+  "final_bank_size": 300,
+  "target_conditions": [
+    "sparse_partial_high_noise"
+  ],
+  "bank_seeds": [
+    20260324,
+    20260325,
+    20260326
+  ],
+  "splits": [
+    "holdout",
+    "confirmation"
+  ],
+  "mean_band_candidate_count_by_method": {
+    "one_shot_random": 90.4074074074074,
+    "persistent_mode_informed": 209.92592592592595
+  },
+  "mean_compression_load_by_method": {
+    "one_shot_random": 27.54452789139416,
+    "persistent_mode_informed": 18.80049930768792
+  },
+  "mean_mode_persistence_rate_by_method": {
+    "one_shot_random": 0.866392672725924,
+    "persistent_mode_informed": 0.8410709991466594
+  }
+}
