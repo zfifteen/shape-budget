@@ -1,0 +1,128 @@
+{
+  "experiment": "candidate-atlas-instrumentation",
+  "trial_count": 72,
+  "candidate_row_count": 27013,
+  "cluster_row_count": 5440,
+  "reference_bank_size": 300,
+  "bank_seeds": [
+    20260324,
+    20260325,
+    20260326,
+    20260327,
+    20260328
+  ],
+  "frontier_capture_count": 16,
+  "geometry_cluster_threshold": 0.08,
+  "mean_band_candidate_count": 59.03611111111112,
+  "mean_frontier_candidate_count": 16.0,
+  "mean_cluster_count": 15.11111111111111,
+  "mean_compression_load": 10.823709789729836,
+  "mean_mode_persistence_rate": 0.9352723328468809,
+  "compression_load_vs_mode_persistence_corr": 0.4801852218060386,
+  "split_summary": [
+    {
+      "split": "calibration",
+      "count": 36,
+      "mean_band_candidate_count": 59.73888888888889,
+      "mean_frontier_candidate_count": 16.0,
+      "mean_cluster_count": 15.077777777777776,
+      "mean_cluster_entropy": 0.7959473621891473,
+      "mean_compression_load": 10.462345726146483,
+      "mean_mode_persistence_rate": 0.9342342502471013,
+      "mean_poison_pull": 0.002859445178160113,
+      "mean_supportive_pull": 0.3760740289592924
+    },
+    {
+      "split": "holdout",
+      "count": 18,
+      "mean_band_candidate_count": 58.56666666666667,
+      "mean_frontier_candidate_count": 16.0,
+      "mean_cluster_count": 15.244444444444444,
+      "mean_cluster_entropy": 0.8044902243337511,
+      "mean_compression_load": 11.36561838837936,
+      "mean_mode_persistence_rate": 0.9529422946547277,
+      "mean_poison_pull": 0.0022768785521511464,
+      "mean_supportive_pull": 0.39029970357714583
+    },
+    {
+      "split": "confirmation",
+      "count": 18,
+      "mean_band_candidate_count": 58.10000000000001,
+      "mean_frontier_candidate_count": 16.0,
+      "mean_cluster_count": 15.044444444444444,
+      "mean_cluster_entropy": 0.7717228686080146,
+      "mean_compression_load": 11.004529318247018,
+      "mean_mode_persistence_rate": 0.919678536238594,
+      "mean_poison_pull": 0.001701081770570446,
+      "mean_supportive_pull": 0.37457263001407726
+    }
+  ],
+  "condition_summary": [
+    {
+      "split": "calibration",
+      "condition": "sparse_full_noisy",
+      "count": 18,
+      "mean_band_candidate_count": 26.644444444444442,
+      "mean_cluster_count": 12.322222222222223,
+      "mean_compression_load": 8.422319979906666,
+      "mean_mode_persistence_rate": 0.907652627527843,
+      "mean_poison_pull": 0.005470261492077616,
+      "mean_supportive_pull": 0.3207353047848009
+    },
+    {
+      "split": "calibration",
+      "condition": "sparse_partial_high_noise",
+      "count": 18,
+      "mean_band_candidate_count": 92.83333333333334,
+      "mean_cluster_count": 17.833333333333332,
+      "mean_compression_load": 12.502371472386299,
+      "mean_mode_persistence_rate": 0.9608158729663594,
+      "mean_poison_pull": 0.00024862886424260953,
+      "mean_supportive_pull": 0.4314127531337838
+    },
+    {
+      "split": "holdout",
+      "condition": "sparse_full_noisy",
+      "count": 9,
+      "mean_band_candidate_count": 27.377777777777776,
+      "mean_cluster_count": 12.688888888888888,
+      "mean_compression_load": 7.8563252009369755,
+      "mean_mode_persistence_rate": 0.9313061223205114,
+      "mean_poison_pull": 0.004553757104302293,
+      "mean_supportive_pull": 0.3531554532502493
+    },
+    {
+      "split": "holdout",
+      "condition": "sparse_partial_high_noise",
+      "count": 9,
+      "mean_band_candidate_count": 89.75555555555555,
+      "mean_cluster_count": 17.799999999999997,
+      "mean_compression_load": 14.874911575821747,
+      "mean_mode_persistence_rate": 0.9745784669889438,
+      "mean_poison_pull": 0.0,
+      "mean_supportive_pull": 0.4274439539040423
+    },
+    {
+      "split": "confirmation",
+      "condition": "sparse_full_noisy",
+      "count": 9,
+      "mean_band_candidate_count": 20.37777777777778,
+      "mean_cluster_count": 11.666666666666666,
+      "mean_compression_load": 7.175583126162288,
+      "mean_mode_persistence_rate": 0.8887661979910895,
+      "mean_poison_pull": 0.0034021635411408922,
+      "mean_supportive_pull": 0.3489131616846907
+    },
+    {
+      "split": "confirmation",
+      "condition": "sparse_partial_high_noise",
+      "count": 9,
+      "mean_band_candidate_count": 95.82222222222222,
+      "mean_cluster_count": 18.42222222222222,
+      "mean_compression_load": 14.83347551033175,
+      "mean_mode_persistence_rate": 0.9505908744860986,
+      "mean_poison_pull": 0.0,
+      "mean_supportive_pull": 0.40023209834346385
+    }
+  ]
+}
