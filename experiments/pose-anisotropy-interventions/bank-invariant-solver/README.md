@@ -82,6 +82,42 @@ python experiments/pose-anisotropy-interventions/bank-invariant-solver/run.py ru
 python experiments/pose-anisotropy-interventions/bank-invariant-solver/run.py generate-block --block calibration_block_1 --variant baseline
 ```
 
+## Results
+
+### Baseline Variant (bank_size=300, TOP_K_SEEDS=3)
+
+| Split | Support | Joint | Chooser | Outcome |
+| --- | ---: | ---: | ---: | --- |
+| Calibration | `0.1862` | `0.1596` | `0.1403` | beats both |
+| Holdout block 1 | `0.1273` | `0.1180` | `0.1152` | beats both |
+| Confirmation block | `0.1319` | `0.1773` | `0.1674` | beats joint, loses to support |
+
+The bank-invariant chooser cleared holdout (beating both candidates) but
+failed the fresh-bank confirmation block: it beat the joint candidate
+(`0.1674 < 0.1773`) but not the support-aware baseline (`0.1674 > 0.1319`).
+
+Compared to the bank-adaptive solver:
+
+- The bank-adaptive baseline failed holdout entirely (beat support but lost
+  to joint).
+- The bank-invariant baseline **cleared holdout** by beating both candidates —
+  a stronger result than the bank-adaptive baseline.
+- Both approaches still fail fresh-bank confirmation.
+
+### Interpretation
+
+The differential feature redesign improved bank stability enough to clear
+holdout, which the bank-adaptive solver's baseline could not do.  But the
+confirmation failure shows that bank sensitivity remains, albeit reduced.
+
+The result narrows the remaining solver bottleneck further: differential
+features help, but are not sufficient alone for confirmation-stable routing.
+
+Relevant reports:
+
+- [ladder summary](outputs/reports/baseline__ladder_summary.json)
+- [full plan result](outputs/reports/baseline__full_plan_result.json)
+
 ## Outputs
 
 - `outputs/cache/` — cached trial tables per block × variant
