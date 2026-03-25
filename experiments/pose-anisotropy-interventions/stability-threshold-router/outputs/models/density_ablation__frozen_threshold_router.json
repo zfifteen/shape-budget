@@ -1,0 +1,100 @@
+{
+  "solver_family": "stability_threshold_router",
+  "variant": {
+    "name": "density_ablation",
+    "reference_bank_size": 600,
+    "top_k_seeds": 5
+  },
+  "train_blocks": [
+    "calibration_block_1",
+    "calibration_block_2"
+  ],
+  "focused_conditions": [
+    "sparse_full_noisy",
+    "sparse_partial_high_noise"
+  ],
+  "focused_alpha_bin": "moderate",
+  "cells": [
+    "sparse_full_noisy__low_skew",
+    "sparse_full_noisy__mid_skew",
+    "sparse_full_noisy__high_skew",
+    "sparse_partial_high_noise__low_skew",
+    "sparse_partial_high_noise__mid_skew",
+    "sparse_partial_high_noise__high_skew"
+  ],
+  "ridge_lambda": 1.0,
+  "feature_names": [
+    "sparse_full_noisy__low_skew",
+    "sparse_full_noisy__mid_skew",
+    "sparse_full_noisy__high_skew",
+    "sparse_partial_high_noise__low_skew",
+    "sparse_partial_high_noise__mid_skew",
+    "sparse_partial_high_noise__high_skew",
+    "support_log_alpha",
+    "joint_log_alpha",
+    "support_abs_t",
+    "joint_abs_t",
+    "support_score",
+    "joint_score",
+    "support_entropy",
+    "joint_entropy",
+    "support_cv_score",
+    "joint_cv_score"
+  ],
+  "feature_mean": [
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666,
+    0.045205760719377486,
+    0.014944000668086247,
+    0.38301500215210715,
+    0.37061493436304294,
+    0.0019627800537736573,
+    0.001956301479235458,
+    0.5800379653543437,
+    0.5778466871570725,
+    0.0008448637642243371,
+    0.0008479035926238696
+  ],
+  "feature_std": [
+    0.3726779962499649,
+    0.3726779962499649,
+    0.3726779962499649,
+    0.3726779962499649,
+    0.3726779962499649,
+    0.3726779962499649,
+    0.16929869267708658,
+    0.17718123857776433,
+    0.19661244588641785,
+    0.211516542856777,
+    0.0007795888091446596,
+    0.0007693236209916906,
+    0.1573058697037481,
+    0.15143854839350734,
+    0.0006755356708165269,
+    0.0006719468983519067
+  ],
+  "weights": [
+    0.018937031151736224,
+    0.01583248774701518,
+    -0.03740099586836306,
+    -0.0012831224145502772,
+    0.048031365942604425,
+    -0.044116766558442384,
+    -0.03439823118899799,
+    0.011505987803340612,
+    0.04106211089268614,
+    -0.02475226930960817,
+    -0.004094582694143932,
+    0.019312998456019602,
+    0.05120446555450535,
+    -0.028579289884816315,
+    -0.061908187923500516,
+    -0.004782498507748841
+  ],
+  "bias": -0.0008825663893685254,
+  "train_count": 36
+}

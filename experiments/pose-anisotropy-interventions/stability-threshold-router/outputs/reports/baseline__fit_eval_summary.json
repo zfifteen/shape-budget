@@ -1,0 +1,197 @@
+{
+  "variant": {
+    "name": "baseline",
+    "reference_bank_size": 300,
+    "top_k_seeds": 3
+  },
+  "model_path": "/home/user/workspace/shape-budget-check/experiments/pose-anisotropy-interventions/stability-threshold-router/outputs/models/baseline__frozen_threshold_router.json",
+  "decision_threshold_path": "/home/user/workspace/shape-budget-check/experiments/pose-anisotropy-interventions/stability-threshold-router/outputs/models/baseline__decision_thresholds.json",
+  "calibration": {
+    "label": "calibration",
+    "count": 36,
+    "support_alpha_error_mean": 0.18616575174394656,
+    "joint_alpha_error_mean": 0.15957053609517624,
+    "chooser_alpha_error_mean": 0.1474116003600033,
+    "choose_joint_fraction": 0.5833333333333334,
+    "chooser_minus_support_alpha_error": -0.03875415138394325,
+    "chooser_minus_joint_alpha_error": -0.012158935735172932,
+    "beats_support": true,
+    "beats_joint": true,
+    "by_condition": [
+      {
+        "condition": "sparse_full_noisy",
+        "count": 18,
+        "support_alpha_error_mean": 0.16975304816779024,
+        "joint_alpha_error_mean": 0.12853304544960487,
+        "chooser_alpha_error_mean": 0.12167253514584614,
+        "choose_joint_fraction": 0.7222222222222222
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "count": 18,
+        "support_alpha_error_mean": 0.20257845532010288,
+        "joint_alpha_error_mean": 0.19060802674074762,
+        "chooser_alpha_error_mean": 0.17315066557416045,
+        "choose_joint_fraction": 0.4444444444444444
+      }
+    ],
+    "by_cell": [
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "low_skew",
+        "count": 6,
+        "support_alpha_error_mean": 0.12831778022294102,
+        "joint_alpha_error_mean": 0.05778724472705234,
+        "chooser_alpha_error_mean": 0.0982450863868678,
+        "choose_joint_fraction": 0.6666666666666666
+      },
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "mid_skew",
+        "count": 6,
+        "support_alpha_error_mean": 0.15237353476511903,
+        "joint_alpha_error_mean": 0.15790424102659376,
+        "chooser_alpha_error_mean": 0.09754705921135115,
+        "choose_joint_fraction": 0.6666666666666666
+      },
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "high_skew",
+        "count": 6,
+        "support_alpha_error_mean": 0.2285678295153107,
+        "joint_alpha_error_mean": 0.16990765059516852,
+        "chooser_alpha_error_mean": 0.16922545983931947,
+        "choose_joint_fraction": 0.8333333333333334
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "low_skew",
+        "count": 6,
+        "support_alpha_error_mean": 0.19074784467360703,
+        "joint_alpha_error_mean": 0.17762076031615223,
+        "chooser_alpha_error_mean": 0.17748414297120432,
+        "choose_joint_fraction": 0.5
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "mid_skew",
+        "count": 6,
+        "support_alpha_error_mean": 0.20696295642434262,
+        "joint_alpha_error_mean": 0.21453646267032966,
+        "chooser_alpha_error_mean": 0.2124867511706429,
+        "choose_joint_fraction": 0.5
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "high_skew",
+        "count": 6,
+        "support_alpha_error_mean": 0.21002456486235896,
+        "joint_alpha_error_mean": 0.17966685723576092,
+        "chooser_alpha_error_mean": 0.12948110258063408,
+        "choose_joint_fraction": 0.3333333333333333
+      }
+    ],
+    "plain_language_result": "The frozen chooser beat both cached candidates on calibration: support 0.1862, joint 0.1596, chooser 0.1474.",
+    "bgp_interpretation": "strengthens BGP"
+  },
+  "holdout": {
+    "label": "holdout_block_1",
+    "count": 18,
+    "support_alpha_error_mean": 0.1273419203110743,
+    "joint_alpha_error_mean": 0.11804474437812235,
+    "chooser_alpha_error_mean": 0.12105068529874563,
+    "choose_joint_fraction": 0.5555555555555556,
+    "chooser_minus_support_alpha_error": -0.006291235012328672,
+    "chooser_minus_joint_alpha_error": 0.0030059409206232846,
+    "beats_support": true,
+    "beats_joint": false,
+    "by_condition": [
+      {
+        "condition": "sparse_full_noisy",
+        "count": 9,
+        "support_alpha_error_mean": 0.10309746994171788,
+        "joint_alpha_error_mean": 0.09127626783299317,
+        "chooser_alpha_error_mean": 0.09127626783299317,
+        "choose_joint_fraction": 0.7777777777777778
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "count": 9,
+        "support_alpha_error_mean": 0.15158637068043074,
+        "joint_alpha_error_mean": 0.14481322092325152,
+        "chooser_alpha_error_mean": 0.15082510276449806,
+        "choose_joint_fraction": 0.3333333333333333
+      }
+    ],
+    "by_cell": [
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "low_skew",
+        "count": 3,
+        "support_alpha_error_mean": 0.11121130786998883,
+        "joint_alpha_error_mean": 0.23564305638601593,
+        "chooser_alpha_error_mean": 0.23564305638601593,
+        "choose_joint_fraction": 1.0
+      },
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "mid_skew",
+        "count": 3,
+        "support_alpha_error_mean": 0.1693621235552326,
+        "joint_alpha_error_mean": 0.010063263644430406,
+        "chooser_alpha_error_mean": 0.010063263644430406,
+        "choose_joint_fraction": 0.6666666666666666
+      },
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "high_skew",
+        "count": 3,
+        "support_alpha_error_mean": 0.028718978399932205,
+        "joint_alpha_error_mean": 0.02812248346853315,
+        "chooser_alpha_error_mean": 0.02812248346853315,
+        "choose_joint_fraction": 0.6666666666666666
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "low_skew",
+        "count": 3,
+        "support_alpha_error_mean": 0.07538138594586503,
+        "joint_alpha_error_mean": 0.18916195424841808,
+        "chooser_alpha_error_mean": 0.07538138594586503,
+        "choose_joint_fraction": 0.3333333333333333
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "mid_skew",
+        "count": 3,
+        "support_alpha_error_mean": 0.10389247269234274,
+        "joint_alpha_error_mean": 0.12479414738339227,
+        "chooser_alpha_error_mean": 0.10160866894454479,
+        "choose_joint_fraction": 0.3333333333333333
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "high_skew",
+        "count": 3,
+        "support_alpha_error_mean": 0.27548525340308444,
+        "joint_alpha_error_mean": 0.12048356113794423,
+        "chooser_alpha_error_mean": 0.2754852534030844,
+        "choose_joint_fraction": 0.3333333333333333
+      }
+    ],
+    "plain_language_result": "The frozen chooser beat the support-aware baseline but not the joint candidate on holdout_block_1: support 0.1273, joint 0.1180, chooser 0.1211.",
+    "bgp_interpretation": "narrows the remaining solver-design challenge"
+  }
+}

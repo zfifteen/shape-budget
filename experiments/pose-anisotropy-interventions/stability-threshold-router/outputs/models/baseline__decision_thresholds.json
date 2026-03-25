@@ -1,0 +1,251 @@
+{
+  "solver_family": "stability_threshold_router",
+  "variant": {
+    "name": "baseline",
+    "reference_bank_size": 300,
+    "top_k_seeds": 3
+  },
+  "train_blocks": [
+    "calibration_block_1",
+    "calibration_block_2"
+  ],
+  "focused_conditions": [
+    "sparse_full_noisy",
+    "sparse_partial_high_noise"
+  ],
+  "focused_alpha_bin": "moderate",
+  "cells": [
+    "sparse_full_noisy__low_skew",
+    "sparse_full_noisy__mid_skew",
+    "sparse_full_noisy__high_skew",
+    "sparse_partial_high_noise__low_skew",
+    "sparse_partial_high_noise__mid_skew",
+    "sparse_partial_high_noise__high_skew"
+  ],
+  "decision_thresholds": {
+    "sparse_full_noisy__low_skew": -0.007215,
+    "sparse_full_noisy__mid_skew": 0.0,
+    "sparse_full_noisy__high_skew": -0.001147,
+    "sparse_partial_high_noise__low_skew": -0.016121,
+    "sparse_partial_high_noise__mid_skew": 0.0,
+    "sparse_partial_high_noise__high_skew": -0.079501
+  },
+  "search_log": [
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_skew_bin": "low_skew",
+      "selected_threshold": -0.007215,
+      "selected_cell_alpha_error_mean": 0.0982450863868678,
+      "threshold_candidates": [
+        {
+          "threshold": -0.254768,
+          "cell_alpha_error_mean": 0.12831778022294102
+        },
+        {
+          "threshold": -0.085388,
+          "cell_alpha_error_mean": 0.0982450863868678
+        },
+        {
+          "threshold": -0.076776,
+          "cell_alpha_error_mean": 0.0982450863868678
+        },
+        {
+          "threshold": -0.035091,
+          "cell_alpha_error_mean": 0.0982450863868678
+        },
+        {
+          "threshold": -0.007215,
+          "cell_alpha_error_mean": 0.0982450863868678
+        },
+        {
+          "threshold": 0.0,
+          "cell_alpha_error_mean": 0.09835593002357661
+        },
+        {
+          "threshold": 0.052438,
+          "cell_alpha_error_mean": 0.09835593002357661
+        }
+      ]
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_skew_bin": "mid_skew",
+      "selected_threshold": 0.0,
+      "selected_cell_alpha_error_mean": 0.09754705921135115,
+      "threshold_candidates": [
+        {
+          "threshold": -0.049304,
+          "cell_alpha_error_mean": 0.15156292801143734
+        },
+        {
+          "threshold": -0.04875,
+          "cell_alpha_error_mean": 0.1525739882811343
+        },
+        {
+          "threshold": -0.029049,
+          "cell_alpha_error_mean": 0.09754705921135115
+        },
+        {
+          "threshold": -0.021968,
+          "cell_alpha_error_mean": 0.09754705921135115
+        },
+        {
+          "threshold": 0.0,
+          "cell_alpha_error_mean": 0.09754705921135115
+        },
+        {
+          "threshold": 0.007872,
+          "cell_alpha_error_mean": 0.09754705921135115
+        },
+        {
+          "threshold": 0.184707,
+          "cell_alpha_error_mean": 0.09754705921135115
+        }
+      ]
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_skew_bin": "high_skew",
+      "selected_threshold": -0.001147,
+      "selected_cell_alpha_error_mean": 0.16922545983931947,
+      "threshold_candidates": [
+        {
+          "threshold": -0.175638,
+          "cell_alpha_error_mean": 0.2285678295153107
+        },
+        {
+          "threshold": -0.07748,
+          "cell_alpha_error_mean": 0.17022975140925042
+        },
+        {
+          "threshold": -0.054243,
+          "cell_alpha_error_mean": 0.16922545983931947
+        },
+        {
+          "threshold": -0.018111,
+          "cell_alpha_error_mean": 0.16922545983931947
+        },
+        {
+          "threshold": -0.010144,
+          "cell_alpha_error_mean": 0.16922545983931947
+        },
+        {
+          "threshold": -0.001147,
+          "cell_alpha_error_mean": 0.16922545983931947
+        },
+        {
+          "threshold": 0.0,
+          "cell_alpha_error_mean": 0.16990765059516852
+        }
+      ]
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_skew_bin": "low_skew",
+      "selected_threshold": -0.016121,
+      "selected_cell_alpha_error_mean": 0.17748414297120432,
+      "threshold_candidates": [
+        {
+          "threshold": -0.068015,
+          "cell_alpha_error_mean": 0.19074784467360703
+        },
+        {
+          "threshold": -0.040748,
+          "cell_alpha_error_mean": 0.19074784467360703
+        },
+        {
+          "threshold": -0.038673,
+          "cell_alpha_error_mean": 0.19074784467360703
+        },
+        {
+          "threshold": -0.016121,
+          "cell_alpha_error_mean": 0.17748414297120432
+        },
+        {
+          "threshold": 0.0,
+          "cell_alpha_error_mean": 0.17861115284388043
+        },
+        {
+          "threshold": 0.014475,
+          "cell_alpha_error_mean": 0.1820187809527348
+        },
+        {
+          "threshold": 0.057061,
+          "cell_alpha_error_mean": 0.17762076031615223
+        }
+      ]
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_skew_bin": "mid_skew",
+      "selected_threshold": 0.0,
+      "selected_cell_alpha_error_mean": 0.2124867511706429,
+      "threshold_candidates": [
+        {
+          "threshold": -0.058393,
+          "cell_alpha_error_mean": 0.2124867511706429
+        },
+        {
+          "threshold": -0.0336,
+          "cell_alpha_error_mean": 0.2124867511706429
+        },
+        {
+          "threshold": -0.001253,
+          "cell_alpha_error_mean": 0.2124867511706429
+        },
+        {
+          "threshold": 0.0,
+          "cell_alpha_error_mean": 0.2124867511706429
+        },
+        {
+          "threshold": 0.012089,
+          "cell_alpha_error_mean": 0.21453646267032966
+        },
+        {
+          "threshold": 0.034988,
+          "cell_alpha_error_mean": 0.21453646267032966
+        },
+        {
+          "threshold": 0.07725,
+          "cell_alpha_error_mean": 0.21453646267032966
+        }
+      ]
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_skew_bin": "high_skew",
+      "selected_threshold": -0.079501,
+      "selected_cell_alpha_error_mean": 0.12948110258063408,
+      "threshold_candidates": [
+        {
+          "threshold": -0.168709,
+          "cell_alpha_error_mean": 0.12948110258063408
+        },
+        {
+          "threshold": -0.079501,
+          "cell_alpha_error_mean": 0.12948110258063408
+        },
+        {
+          "threshold": -0.007364,
+          "cell_alpha_error_mean": 0.13069381786302156
+        },
+        {
+          "threshold": 0.0,
+          "cell_alpha_error_mean": 0.13069381786302156
+        },
+        {
+          "threshold": 0.00289,
+          "cell_alpha_error_mean": 0.13069381786302156
+        },
+        {
+          "threshold": 0.017702,
+          "cell_alpha_error_mean": 0.17966685723576092
+        },
+        {
+          "threshold": 0.038548,
+          "cell_alpha_error_mean": 0.17966685723576092
+        }
+      ]
+    }
+  ]
+}
