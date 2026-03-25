@@ -228,6 +228,8 @@ The next move should stay inside Layer 3 and target the holdout miss directly.
 
 The most useful immediate variants are:
 
-1. tighten the gate so the mid-skew sparse-full failures do not open
-2. make the local refinement more conservative when the refined bank spread grows too fast
-3. test whether only one or two backbone-consistent seed families should be allowed in the sparse-full branch
+1. test a correction-flux-triggered variant that only refines when the post-anchor move is large enough to be real: [backbone correction-flux-triggered alpha solver](../backbone-correction-flux-triggered-alpha-solver/README.md)
+2. test a correction-pressure ratio that combines move size, sign coherence, and anchored gate uncertainty: [backbone correction-pressure-triggered alpha solver](../backbone-correction-pressure-triggered-alpha-solver/README.md)
+3. tighten the gate so the mid-skew sparse-full failures do not open
+4. make the local refinement more conservative when the refined bank spread grows too fast
+5. test whether only one or two backbone-consistent seed families should be allowed in the sparse-full branch
