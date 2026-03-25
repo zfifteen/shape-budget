@@ -104,12 +104,11 @@ FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
 
 BLOCK_SPECS = {
-    "calibration": (20260410, 20260411, 20260412, 20260416, 20260417, 20260418),
     "holdout": (20260422, 20260423, 20260424),
     "confirmation": (20260425, 20260426, 20260427),
 }
 
-BANK_SEEDS = (20260324, 20260325, 20260326, 20260327, 20260328)
+BANK_SEEDS = (20260324, 20260325, 20260326)
 
 RANDOM_BANK_SIZE = 300
 SCOUT_BANK_SIZE = 120
@@ -124,13 +123,13 @@ GEOMETRY_CLUSTER_THRESHOLD = 0.08
 NUMERIC_EPS = 1.0e-9
 ALPHA_LOG_RANGE = float(math.log(ALPHA_MAX) - math.log(ALPHA_MIN))
 
-GLOBAL_RANGE_SAMPLE_SIZE = 5000
+GLOBAL_RANGE_SAMPLE_SIZE = 2500
 GLOBAL_RANGE_SEED = 20260301
 
 METHOD_RANDOM = "one_shot_random"
-METHOD_SCOUT_RANDOM = "scout_random_fill"
 METHOD_INFORMED = "persistent_mode_informed"
-METHOD_ORDER = (METHOD_RANDOM, METHOD_SCOUT_RANDOM, METHOD_INFORMED)
+METHOD_ORDER = (METHOD_RANDOM, METHOD_INFORMED)
+TARGET_CONDITIONS = ("sparse_partial_high_noise",)
 
 ARCHETYPE_BONUS = {
     "dominant_core": 1.00,
@@ -731,7 +730,7 @@ def aggregate_trial_rows(
                 "mean_consensus_geometry_bank_span_norm": float(np.mean([row.consensus_geometry_bank_span_norm for row in split_subset])),
             }
         )
-        for condition in FOCUS_CONDITIONS:
+        for condition in TARGET_CONDITIONS:
             subset = [row for row in split_subset if row.condition == condition]
             condition_summary.append(
                 {
@@ -770,12 +769,11 @@ def plot_condition_metric(
     ylabel: str,
 ) -> None:
     splits = list(BLOCK_SPECS.keys())
-    conditions = list(FOCUS_CONDITIONS)
+    conditions = list(TARGET_CONDITIONS)
     x = np.arange(len(splits))
     width = 0.24
     colors = {
         METHOD_RANDOM: "#6c757d",
-        METHOD_SCOUT_RANDOM: "#2a9d8f",
         METHOD_INFORMED: "#e76f51",
     }
 
@@ -811,7 +809,7 @@ def main() -> None:
 
     for split, seeds in BLOCK_SPECS.items():
         for observation_seed in seeds:
-            for condition in FOCUS_CONDITIONS:
+            for condition in TARGET_CONDITIONS:
                 regime = next(item for item in OBSERVATION_REGIMES if item["name"] == condition)
                 for skew_bin in GEOMETRY_SKEW_BIN_LABELS:
                     trial_rng = make_trial_rng(observation_seed, condition, skew_bin)
@@ -860,34 +858,7 @@ def main() -> None:
                             geometry_ranges,
                         )
 
-                        scout_random_rng = bank_rng(bank_seed_value, observation_seed, condition, skew_bin, stage=2)
-                        scout_random_params = build_scout_random_fill_params(
-                            scout_context,
-                            carryover_indices,
-                            scout_random_rng,
-                        )
-                        scout_random_context = build_bank_context_from_params(bank_seed_value, scout_random_params)
-                        method_bank_rows[METHOD_SCOUT_RANDOM].append(
-                            evaluate_bank_context(
-                                METHOD_SCOUT_RANDOM,
-                                split,
-                                observation_seed,
-                                bank_seed_value,
-                                condition,
-                                skew_bin,
-                                true_params,
-                                true_geometry,
-                                true_shift,
-                                observed_signature,
-                                mask,
-                                temperature,
-                                band,
-                                geometry_ranges,
-                                scout_random_context,
-                            )
-                        )
-
-                        informed_rng = bank_rng(bank_seed_value, observation_seed, condition, skew_bin, stage=3)
+                        informed_rng = bank_rng(bank_seed_value, observation_seed, condition, skew_bin, stage=2)
                         informed_params = build_informed_params(
                             scout_context,
                             clusters,

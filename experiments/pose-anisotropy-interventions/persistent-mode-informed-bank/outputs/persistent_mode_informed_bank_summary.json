@@ -1,0 +1,24 @@
+{
+  "random_bank_size": 300,
+  "scout_bank_size": 120,
+  "final_bank_size": 300,
+  "final_carryover_budget": 72,
+  "final_local_expansion_budget": 192,
+  "final_exploration_budget": 36,
+  "methods": [
+    "one_shot_random",
+    "persistent_mode_informed"
+  ],
+  "trial_count_per_method": 18,
+  "bank_row_count": 108,
+  "hard_branch_compression_reduction_vs_random": {
+    "holdout": 0.07944071205793746,
+    "confirmation": 0.4921975129296684
+  },
+  "hard_branch_geometry_mae_ratio_vs_random": {
+    "holdout": 1.004333932433843,
+    "confirmation": 0.9720519624105389
+  },
+  "meets_20pct_hard_branch_target": false,
+  "preserves_hard_branch_geometry_within_5pct": true
+}
