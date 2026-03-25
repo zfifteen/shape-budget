@@ -186,7 +186,7 @@ In plain language:
 - the anisotropy signal was being scrambled mainly by pose handling
 - perfect pose largely unscrumbles it
 
-That means the current bottleneck is now much clearer:
+That means the current solver challenge is now much clearer:
 
 - not “there is no `alpha` signal in the boundary”
 - but “our practical pose-handling methods are too unstable under incomplete observations to extract that signal”

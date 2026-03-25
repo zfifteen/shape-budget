@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This experiment is the first direct test of the symmetry-orbit mechanism proposed for the pose-free anisotropic bottleneck.
+This experiment is the first direct test of the symmetry-orbit mechanism proposed for the pose-free anisotropic solver challenge.
 
 The mechanism under test was:
 
@@ -148,7 +148,7 @@ This experiment does not support:
 
 The cleaner reading is:
 
-- orbit proximity is one real contributor to the pose-free anisotropic bottleneck
+- orbit proximity is one real contributor to the pose-free anisotropic solver challenge
 - but by itself it probably does not explain the full `11x` to `31x` inverse penalty seen earlier
 
 ## By Perturbation Type
@@ -170,7 +170,7 @@ But the main comparison still holds:
 
 This result strengthens the BGP program in a useful way.
 
-It says the pose-free anisotropic bottleneck is not just an arbitrary inverse failure.
+It says the pose-free anisotropic solver challenge is not just an arbitrary inverse failure.
 
 There is real structure behind it.
 

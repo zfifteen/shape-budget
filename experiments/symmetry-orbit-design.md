@@ -4,7 +4,7 @@
 
 The recent inverse results point to a more specific next-phase hypothesis.
 
-The bottleneck does not look like a generic failure of the latent-object program.
+The solver challenge does not look like a generic failure of the latent-object program.
 
 It looks more like this:
 

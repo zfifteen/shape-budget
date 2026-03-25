@@ -82,7 +82,7 @@ The goal here is not exhaustive coverage. It is to test the exact mechanism clai
 
 The result is not a blanket win, but it is a very strong clue.
 
-> Geometry-plus-alpha family switching helps the sparse-full moderate branch overall and modestly improves the original sparse-full moderate mid-skew failure slice, but it hurts the sparse-partial moderate branch overall. The new method therefore does not solve the whole bottleneck. Instead, it splits the bottleneck by support type.
+> Geometry-plus-alpha family switching helps the sparse-full moderate branch overall and modestly improves the original sparse-full moderate mid-skew failure slice, but it hurts the sparse-partial moderate branch overall. The new method therefore does not solve the whole solver challenge. Instead, it splits the solver challenge by support type.
 
 Focused summary:
 
@@ -187,11 +187,11 @@ This is a strong mechanism clue.
 
 It suggests:
 
-> in the sparse-full moderate branch, a meaningful part of the bottleneck really is upstream family choice or geometry-level ambiguity, not local alpha cleanup inside the already-chosen family.
+> in the sparse-full moderate branch, a meaningful part of the solver challenge really is upstream family choice or geometry-level ambiguity, not local alpha cleanup inside the already-chosen family.
 
 ## Interpretation
 
-This result sharpens the bottleneck diagnosis.
+This result sharpens the solver challenge diagnosis.
 
 What it establishes:
 
@@ -206,7 +206,7 @@ What it does not support:
 
 The strongest reading is:
 
-> the pose-free anisotropic bottleneck has at least two support-dependent subproblems. Sparse-full moderate cells need better family selection or geometry switching before local alpha cleanup. Sparse-partial moderate cells benefit more from fixed-family local alpha disentanglement and can be harmed by freer geometry motion.
+> the pose-free anisotropic solver challenge has at least two support-dependent subproblems. Sparse-full moderate cells need better family selection or geometry switching before local alpha cleanup. Sparse-partial moderate cells benefit more from fixed-family local alpha disentanglement and can be harmed by freer geometry motion.
 
 That is more informative than a simple “worked” or “failed” result.
 

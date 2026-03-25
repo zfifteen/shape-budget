@@ -2,11 +2,11 @@
 
 ## Purpose
 
-This experiment tests a sharper version of the current bottleneck hypothesis.
+This experiment tests a sharper version of the current solver challenge hypothesis.
 
 The working idea was:
 
-> maybe the remaining pose-free anisotropic bottleneck is not “find a universally better alpha estimator,” but “route each trial to the right refinement policy before refinement starts.”
+> maybe the remaining pose-free anisotropic solver challenge is not “find a universally better alpha estimator,” but “route each trial to the right refinement policy before refinement starts.”
 
 The candidate routing signals tested here are:
 
@@ -210,7 +210,7 @@ It sharpens it.
 
 What it establishes:
 
-- the bottleneck is a policy-routing problem rather than a single-estimator problem
+- the solver challenge is a policy-routing problem rather than a single-estimator problem
 - the raw ratio carries real signal in the sparse-full branch
 - the current support-aware index is not the right compressed variable
 

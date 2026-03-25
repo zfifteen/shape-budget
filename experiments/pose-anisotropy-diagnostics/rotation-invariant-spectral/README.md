@@ -4,7 +4,7 @@
 
 This experiment tests a direct version of the question raised by the previous artifact:
 
-Is the pose-free `alpha` bottleneck mostly an artifact of the current shift-search radial-signature representation?
+Is the pose-free `alpha` recovery challenge mostly an artifact of the current shift-search radial-signature representation?
 
 The previous pose-free anisotropic inverse and the latent ambiguity experiment showed that:
 
@@ -14,7 +14,7 @@ The previous pose-free anisotropic inverse and the latent ambiguity experiment s
 
 But that still left open an important possibility:
 
-- maybe the bottleneck comes mostly from how the inverse handles pose
+- maybe the solver challenge comes mostly from how the inverse handles pose
 - maybe a cleaner pose-invariant representation would make `alpha` much easier to read
 
 This experiment probes that possibility directly.
@@ -155,7 +155,7 @@ Three things stand out:
 
 This result answers the earlier question in a useful way.
 
-The pose-free `alpha` bottleneck is not just a trivial artifact of the current shift-search representation.
+The pose-free `alpha` recovery challenge is not just a trivial artifact of the current shift-search representation.
 
 If that were the main problem, then a cleaner pose-invariant encoding should have made `alpha` broadly easier to recover.
 
@@ -167,7 +167,7 @@ Instead, what we see is:
 
 That means two things are true at once:
 
-- the earlier bottleneck was partly representation-dependent in the sense that representation always matters
+- the earlier solver challenge was partly representation-dependent in the sense that representation always matters
 - but it was not merely a bug of using full-signature shift search
 
 In plain language:
@@ -191,7 +191,7 @@ This experiment does show:
 
 - a genuinely pose-invariant boundary encoding can be built and audited cleanly
 - that encoding does not generally improve `alpha` recovery
-- the earlier pose-free `alpha` bottleneck is not explained away by the current shift-search representation alone
+- the earlier pose-free `alpha` recovery challenge is not explained away by the current shift-search representation alone
 - low-order invariant compression becomes strongly ill-conditioned under partial support
 
 This experiment does not address:

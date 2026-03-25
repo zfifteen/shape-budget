@@ -3,21 +3,21 @@
 ## Purpose
 
 This note records the current experiment priority after the recent pose-free
-anisotropic bottleneck work.
+anisotropic solver challenge work.
 
-The key question is not whether that bottleneck matters at all.
+The key question is not whether that solver challenge matters at all.
 
 It does.
 
 The key question is:
 
-> does the current bottleneck jeopardize the Budget Governor Principle in a general way, or is it a narrower inverse-and-representation problem that should not dominate the research program?
+> does the current solver challenge jeopardize the Budget Governor Principle in a general way, or is it a narrower inverse-and-representation problem that should not dominate the research program?
 
-The bottleneck belongs to the second category.
+The solver challenge belongs to the second category.
 
 ## Current Read
 
-The pose-free weighted anisotropic bottleneck is real, but it is not a general threat to BGP.
+The pose-free weighted anisotropic solver challenge is real, but it is not a general threat to BGP.
 
 Why:
 
@@ -29,9 +29,9 @@ Why:
   - incomplete support
 - the oracle-alignment result already shows that much of the lost `alpha` signal is present in the observation and is being lost by practical inference rather than by failure of the underlying budget-governed structure
 
-So the current bottleneck is best read as:
+So the current solver challenge is best read as:
 
-- an important inverse bottleneck
+- an important solver-design challenge in inverse recovery
 - a useful mechanism testbed
 - but not the main determinant of whether BGP stands or falls as a broader theory
 
@@ -44,7 +44,7 @@ The main evidence classes are:
 1. representation independence
 2. operational usefulness
 3. scope boundaries and falsification structure
-4. bottleneck cleanup
+4. solver challenge cleanup
 
 That order is intentional.
 
@@ -56,10 +56,10 @@ Too much of the current inverse pipeline still passes through the centroid-norma
 
 If the core results survive a genuinely different boundary encoding, then BGP becomes much harder to dismiss as a representation artifact.
 
-If the bottleneck changes substantially, that is also valuable:
+If the solver challenge changes substantially, that is also valuable:
 
 - the theory gets cleaner
-- the bottleneck becomes more local
+- the solver challenge becomes more local
 
 ### Main question
 
@@ -132,32 +132,32 @@ Where does BGP stay compact and where does it stop compressing the problem clean
 
 The goal is a disciplined scope map, not just more positive examples.
 
-## Priority 4: Bottleneck Cleanup
+## Priority 4: Solver Challenge Cleanup
 
 ### Why it still matters
 
-The current bottleneck is scientifically important and can still produce publishable mechanism results.
+The current solver challenge is scientifically important and can still produce publishable mechanism results.
 
 But it is now a branch-specific disentanglement problem, not the highest-priority theory-hardening problem.
 
-### Current read on the bottleneck
+### Current read on the solver challenge
 
 - sparse-full observations seem to benefit from geometry-level family switching
 - sparse-partial observations often benefit more from fixed-family local alpha handling
 - the first scalar regime-router pilot did not solve this globally
 
-So the bottleneck should remain active, but it should not dominate the program until the broader theory-hardening work above is stronger.
+So the solver challenge should remain active, but it should not dominate the program until the broader theory-hardening work above is stronger.
 
 ## Recommended Order
 
 1. `REPRESENTATION_INDEPENDENCE_EXPERIMENT`
 2. `PROBE_SPECIALIZATION_EXPERIMENT`
 3. `SCOPE_BOUNDARY_EXPERIMENT`
-4. return to branch-aware bottleneck routing and cleanup
+4. return to branch-aware solver routing and cleanup
 
 ## Working Decision
 
-The current bottleneck should be treated as:
+The current solver challenge should be treated as:
 
 - important
 - informative
@@ -176,11 +176,11 @@ That experiment has now been completed.
 The result was the decisive one:
 
 - the core inferential BGP result survived the representation swap
-- the pose-free anisotropic bottleneck persisted in kind, though not with identical severity
+- the pose-free anisotropic solver challenge persisted in kind, though not with identical severity
 
 So the triage decision now becomes even clearer:
 
-> the bottleneck is still important, but it does not look like the highest-priority threat to BGP. The next theory-hardening priority should move to operational usefulness and then to scope boundaries.
+> the solver challenge is still important, but it does not look like the highest-priority threat to BGP. The next theory-hardening priority should move to operational usefulness and then to scope boundaries.
 
 That operational-usefulness step has now also been completed.
 
@@ -200,8 +200,8 @@ The result was the disciplined one the triage needed:
 - exact one-knob scope is established in the symmetric ellipse base case and the hyperbola twin
 - asymmetry and raw anisotropy explicitly falsify universal one-scalar compression, but compact corrected control objects restore collapse
 - equal-weight three-source is about three-parameter and weighted three-source about five-parameter
-- the pose-free anisotropic bottleneck is now localized as a selective `alpha` fragility, not a general loss of compact budget structure
+- the pose-free anisotropic solver challenge is now localized as a selective `alpha` fragility, not a general loss of compact budget structure
 
 So the triage decision now becomes:
 
-> the theory-hardening sequence is complete. The next immediate priority can return to branch-aware bottleneck cleanup or outward harder-scope tests, but it no longer needs to treat universal-scope ambiguity as the main blocker.
+> the theory-hardening sequence is complete. The next immediate priority can return to branch-aware solver challenge cleanup or outward harder-scope tests, but it no longer needs to treat universal-scope ambiguity as the main blocker.

@@ -1,7 +1,7 @@
 """
 Post-roadmap extension: rotation-invariant spectral representation experiment.
 
-This experiment tests whether the pose-free alpha bottleneck is partly caused
+This experiment tests whether the pose-free alpha recovery challenge is partly caused
 by the current shift-search radial-signature representation.
 
 The comparison is between:

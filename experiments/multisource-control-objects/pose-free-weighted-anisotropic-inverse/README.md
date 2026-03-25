@@ -255,7 +255,7 @@ The cleanest next step is not a broader medium yet.
 
 It is to improve `alpha` identifiability under the same combined nuisance.
 
-At this point the project has shown that the latent-object result survives, but it has also revealed a bottleneck:
+At this point the project has shown that the latent-object result survives, but it has also revealed a solver challenge:
 
 - geometry and weights are relatively robust
 - `alpha` is much more weakly identified once pose is hidden

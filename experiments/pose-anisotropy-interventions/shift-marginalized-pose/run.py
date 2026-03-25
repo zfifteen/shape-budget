@@ -1,7 +1,7 @@
 """
 Post-roadmap extension: shift-marginalized pose experiment.
 
-This experiment tests whether the pose-free alpha bottleneck is partly caused
+This experiment tests whether the pose-free alpha recovery challenge is partly caused
 by the hard winner-take-all pose rule used in the current inverse.
 
 The comparison is between:

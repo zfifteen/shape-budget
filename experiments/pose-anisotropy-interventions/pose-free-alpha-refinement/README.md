@@ -53,7 +53,7 @@ So this artifact is about direction, not final benchmark precision.
 
 The result is mixed, but informative.
 
-> Direct alpha refinement often improves fit and improves `alpha` recovery in some regimes, but it does not rescue `alpha` uniformly. That means the bottleneck is not only coarse search resolution.
+> Direct alpha refinement often improves fit and improves `alpha` recovery in some regimes, but it does not rescue `alpha` uniformly. That means the solver challenge is not only coarse search resolution.
 
 The summary file is [pose_free_alpha_refinement_summary.json](outputs/pose_free_alpha_refinement_summary.json).
 
@@ -108,7 +108,7 @@ These numbers say something precise:
 
 This is the strongest read I take from the pilot:
 
-The alpha bottleneck is only partly a search problem.
+The alpha recovery challenge is only partly a search problem.
 
 If the issue were mostly that the bank did not search alpha finely enough, then direct refinement should have helped almost everywhere.
 
@@ -154,7 +154,7 @@ This pilot does show:
 
 - direct local refinement of `alpha` is feasible
 - local refinement can improve fit without uniformly improving `alpha`
-- the combined-nuisance bottleneck is deeper than a coarse alpha grid alone
+- the combined-nuisance solver challenge is deeper than a coarse alpha grid alone
 
 This pilot does not address:
 

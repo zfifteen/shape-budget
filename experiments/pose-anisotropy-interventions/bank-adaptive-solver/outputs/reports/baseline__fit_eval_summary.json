@@ -191,6 +191,6 @@
       }
     ],
     "plain_language_result": "The frozen chooser beat the support-aware baseline but not the joint candidate on holdout_block_1: support 0.1273, joint 0.1180, chooser 0.1223.",
-    "bgp_interpretation": "narrows the remaining solver bottleneck"
+    "bgp_interpretation": "narrows the remaining solver-design challenge"
   }
 }

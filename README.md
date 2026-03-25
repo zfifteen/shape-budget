@@ -2,7 +2,7 @@
 
 The Budget Governor Principle (BGP) is the latent control parameter `e = c / a` for the symmetric constant-sum two-source process.
 
-In that regime, `e` governs the normalized shape family, predicts normalized observables, and is recoverable from boundary data. This repository establishes that base case, extends the same budget logic into asymmetry, anisotropy, and multi-source control objects, and isolates the current open inverse bottleneck in the pose-free anisotropic setting.
+In that regime, `e` governs the normalized shape family, predicts normalized observables, and is recoverable from boundary data. This repository establishes that base case, extends the same budget logic into asymmetry, anisotropy, and multi-source control objects, and isolates the current open solver challenge in the pose-free anisotropic setting.
 
 **BGP in one sentence:** normalized separation relative to total budget governs how much transverse freedom remains after structural separation cost is paid.
 
@@ -89,48 +89,13 @@ In other words:
 
 That is the core one-knob result in this repo.
 
-## What The Experiments Found
+## Evidence
 
-The project now establishes a broader result set than the original concept note alone.
+Across the current `31`-experiment suite, the symmetric two-source base case is tested from multiple angles. The control-knob experiments show exact reconstruction of the analytic ellipse, normalized scale collapse at fixed `e`, and one-dimensional response curves for normalized observables. The inverse and baseline studies then show that `e` is operational: it is recoverable from noisy, partial, and sparse boundary data, it outperforms raw separation `d`, raw budget `S`, and low-capacity models on `(d, S)` under scale shift, and its conditioning structure survives additional hardening work on manifold dimension, edge-regime stability, representation independence, and probe specialization.
 
-### 1. In the symmetric two-source case, the control knob is real
+The broader experiment program then tests scope rather than assuming universality. Asymmetry upgrades the family from one control variable to two, the fixed-difference twin gives a hyperbola-side one-knob analog, controlled anisotropy upgrades the raw family to `(e, alpha)`, and equal-weight and weighted three-source branches are governed by compact normalized control objects rather than by one scalar. The scope-boundary experiments make that ladder explicit: exact one-knob scope holds in the symmetric ellipse and hyperbola-twin branches, richer positive branches remain compact under `2 / 2 / 3 / 5`-dimensional control objects, and explicit wrong-compression controls show that the universal-one-scalar version is false in the tested richer branches.
 
-The main control-knob experiment showed:
-
-- the circle-combination process reconstructs the analytic ellipse to machine precision
-- fixed `e` gives normalized scale collapse
-- several normalized observables behave as one-dimensional functions of `e`
-
-The known-source inverse experiment then showed that `e` is also operational:
-
-- it can be recovered accurately from noisy, partial, and sparse boundary observations
-- it strongly outperforms raw separation `d`, raw budget `S`, or low-capacity models on `(d, S)` under scale shift
-
-### 2. The claim broadens in a structured way
-
-Once symmetry is broken, the original one-knob family does **not** survive unchanged.
-
-That is a good thing, not a bad one, because the failure is structured:
-
-- asymmetry upgrades the family from one control variable to two
-- the fixed-difference twin yields a hyperbola-side counterpart
-- controlled anisotropy upgrades the raw family to `(e, alpha)`
-- three-source families are governed by compact normalized source-placement objects rather than by one scalar
-
-A newer scope-boundary synthesis now makes that ladder explicit:
-
-- exact one-knob scope holds in the symmetric ellipse and hyperbola-twin branches
-- asymmetry and raw anisotropy require `2`-parameter control objects
-- equal-weight and weighted three-source branches require about `3` and `5` control dimensions
-- explicit wrong-compression controls show that the universal-one-scalar claim is false in the tested richer branches
-
-So the current view is not:
-
-- “everything is one knob forever”
-
-It is:
-
-- “budget-governed shape families stay low-dimensional, but the right control object expands as the process gets richer”
+The inverse program also goes beyond forward description. In weighted three-source and anisotropic settings, boundary-only inference recovers normalized geometry, normalized participation weights, and, in canonical pose, medium anisotropy with clear gains over simpler baselines. The hardest branch is now sharply localized: in the pose-free anisotropic inverse, geometry remains comparatively stable while anisotropy `alpha` becomes the weakly identified direction. Oracle alignment, ambiguity studies, failure maps, and the later solver-policy experiments all point to the same readout: the current limit is selective symmetry handling under incomplete support, not a collapse of the underlying budget-governed control-object result.
 
 ## Key Plot 3: From Shape Description To Latent Variable
 
@@ -149,24 +114,11 @@ The inverse experiments show that this compact control object is recoverable fro
 
 That is why the project increasingly talks about **operational latent variables** rather than just geometric descriptors.
 
-### 3. The current bottleneck is not “the idea breaks”
+## Current Solver Challenge
 
-The hardest branch so far is the pose-free anisotropic inverse:
+The hardest branch so far is the pose-free anisotropic inverse, where rotation, anisotropy, geometry, and participation weights are all hidden at once. The failure is selective rather than uniform: geometry stays fairly recoverable, weights degrade but remain usable, and anisotropy `alpha` is the weakly identified direction.
 
-- unknown rotation
-- unknown anisotropy
-- unknown geometry
-- unknown participation weights
-
-What the repo found is surprisingly specific:
-
-- geometry stays fairly recoverable
-- weights degrade, but remain usable
-- anisotropy `alpha` becomes the weakly identified direction
-
-That means the failure is selective, not uniform.
-
-The current diagnosis is that this is mainly a **symmetry-handling** problem: hidden rotation can impersonate medium anisotropy much more easily than it can impersonate the underlying normalized geometry.
+The current diagnosis is a symmetry-handling limit rather than a failure of the latent-variable program. Hidden rotation can impersonate medium anisotropy much more easily than it can impersonate the underlying normalized geometry, which is why the next method target is better pose handling under incomplete observations rather than a new control object.
 
 ## Key Plot 4: The Signal Is There, But Pose Handling Matters
 
@@ -176,7 +128,7 @@ This figure shows one of the most important diagnostics in the whole folder.
 
 The baseline pose-free anisotropic inverse does not recover `alpha` well. But when the inverse is given the true pose, `alpha` error drops dramatically across every tested regime. That means the anisotropy signal is genuinely present in the boundary; the current pipeline is mostly losing it because practical pose handling is unstable under incomplete observations.
 
-This is why the repo’s current bottleneck is no longer “is there really a latent variable here?” It is “how do we preserve enough broken symmetry before inference starts?”
+This is why the repo’s current solver challenge is no longer “is there really a latent variable here?” It is “how do we preserve enough broken symmetry before inference starts?”
 
 ## Key Plot 5: Where The Current Pipeline Fails
 

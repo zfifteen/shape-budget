@@ -11,7 +11,7 @@ bibliography: references.bib
 link-citations: true
 colorlinks: true
 abstract: |
-  The Budget Governor Principle (BGP) is the experimentally established control-parameter law for the symmetric constant-sum two-source Euclidean process. In that base case, BGP is the latent control parameter `e = c/a` for normalized geometry and `b/a = sqrt(1-e^2)` is the corresponding transverse residue. Controlled computational studies in this repository show that this parameter governs normalized shape, remains recoverable from noisy boundary observations when the source positions are known, and outperforms raw separation and raw budget variables under scale shift. Additional studies show that the same budget logic extends in a structured way: asymmetry upgrades the family from one knob to two, the hyperbola case yields a deficit-side twin, controlled anisotropy adds a medium parameter removable by whitening, and equal-weight and weighted three-source families are governed by compact normalized control objects. In weighted multi-source and anisotropic settings those control objects form operational latent variables recoverable from boundary data. The main current bottleneck is the pose-free anisotropic inverse, where geometry and weights remain comparatively stable but anisotropy becomes weakly identified under hidden rotation. Matched ambiguity studies, oracle alignment, and alignment failure maps localize that bottleneck to symmetry handling rather than missing signal.
+  The Budget Governor Principle (BGP) is the experimentally established control-parameter law for the symmetric constant-sum two-source Euclidean process. In that base case, BGP is the latent control parameter `e = c/a` for normalized geometry and `b/a = sqrt(1-e^2)` is the corresponding transverse residue. Controlled computational studies in this repository show that this parameter governs normalized shape, remains recoverable from noisy boundary observations when the source positions are known, and outperforms raw separation and raw budget variables under scale shift. Additional studies show that the same budget logic extends in a structured way: asymmetry upgrades the family from one knob to two, the hyperbola case yields a deficit-side twin, controlled anisotropy adds a medium parameter removable by whitening, and equal-weight and weighted three-source families are governed by compact normalized control objects. In weighted multi-source and anisotropic settings those control objects form operational latent variables recoverable from boundary data. The main current solver challenge is the pose-free anisotropic inverse, where geometry and weights remain comparatively stable but anisotropy becomes weakly identified under hidden rotation. Matched ambiguity studies, oracle alignment, and alignment failure maps localize that solver challenge to symmetry handling rather than missing signal.
 ---
 
 **Keywords:** ellipse eccentricity; conic geometry; inverse problems; latent variables; anisotropy; multi-source geometry; scale collapse; shape analysis
@@ -27,7 +27,7 @@ The established result set is:
 - in the symmetric two-source base case, `e = c/a` governs normalized geometry
 - in that same setting, boundary data recovers `e` and `e` outperforms raw separation and raw budget variables under scale shift
 - beyond the base case, asymmetry, anisotropy, and multi-source families are still governed by compact normalized control objects
-- the main open bottleneck is pose-free anisotropic inversion, where hidden rotation selectively weakens anisotropy recovery
+- the main open solver challenge is pose-free anisotropic inversion, where hidden rotation selectively weakens anisotropy recovery
 
 # Core Proposal
 
@@ -155,7 +155,7 @@ The controlled anisotropic extension strengthened that reading further. In the c
 
 That is strong evidence that medium structure can join geometry and participation as part of the same operational latent object.
 
-# Pose-Free Anisotropy and the Current Bottleneck
+# Pose-Free Anisotropy and the Current Solver Challenge
 
 The hardest current branch is the pose-free anisotropic inverse, where unknown rotation and unknown medium anisotropy appear together.
 
@@ -171,9 +171,9 @@ The matched ambiguity study made that diagnosis much sharper. Hiding rotation br
 
 The oracle alignment ceiling then showed that the missing signal is largely still there. Giving the inverse the true pose improved `alpha` by about `5.65x` to `13.21x` across all regimes while leaving geometry roughly stable.
 
-![Oracle alignment ceiling. Once true pose is restored, most of the lost anisotropy signal comes back, which means the main bottleneck is practical symmetry handling rather than missing information in the boundary.](figures/figure5_oracle_alignment_ceiling_alpha_methods.png){ width=92% }
+![Oracle alignment ceiling. Once true pose is restored, most of the lost anisotropy signal comes back, which means the main solver challenge is practical symmetry handling rather than missing information in the boundary.](figures/figure5_oracle_alignment_ceiling_alpha_methods.png){ width=92% }
 
-The newest failure-map result puts a shape on that bottleneck:
+The newest failure-map result puts a shape on that solver challenge:
 
 - full observations are the only region where simple practical locking stays broadly non-negative on oracle-gain capture,
 - high-skew geometries are friendlier than low-skew and mid-skew ones,
@@ -256,7 +256,7 @@ The strongest next steps are:
 
 The narrow mathematical heart of the project is the symmetric two-source result: `e = c/a` is the budget governor for normalized geometry. The repository now establishes a broader result set as well. The same budget logic extends into low-dimensional control objects for asymmetric, anisotropic, and multi-source families, and in weighted inverse settings those objects form operational latent variables.
 
-The current bottleneck is also clearer than it was at the start. The hardest remaining problem is not whether the latent state exists. It is how to keep enough symmetry broken before inference to recover the anisotropy part of that latent state robustly under sparse and partial observations.
+The current solver challenge is also clearer than it was at the start. The hardest remaining problem is not whether the latent state exists. It is how to keep enough symmetry broken before inference to recover the anisotropy part of that latent state robustly under sparse and partial observations.
 
 That is a strong place for the program to be. BGP now functions as a technical framework for how budget-constrained geometry is organized and how much of that hidden organization can be recovered from what we observe.
 

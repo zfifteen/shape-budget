@@ -12,7 +12,7 @@ Method:
 - jointly re-optimize alpha and rotation shift on a dense alpha grid
 - keep the refined candidate with the best masked fit
 
-This tests whether the alpha bottleneck is partly a search-resolution problem
+This tests whether the alpha recovery challenge is partly a search-resolution problem
 rather than a failure of the latent-object framework itself.
 """
 

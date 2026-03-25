@@ -808,19 +808,19 @@ def summarize_predictions(rows: list[dict[str, float | str]], label: str) -> dic
             f"The frozen chooser beat the support-aware baseline but not the joint candidate on {label}: "
             f"support {support_mean:.4f}, joint {joint_mean:.4f}, chooser {chooser_mean:.4f}."
         )
-        bgp_interpretation = "narrows the remaining solver bottleneck"
+        bgp_interpretation = "narrows the remaining solver-design challenge"
     elif beats_joint:
         plain_language = (
             f"The frozen chooser beat the joint candidate but not the support-aware baseline on {label}: "
             f"support {support_mean:.4f}, joint {joint_mean:.4f}, chooser {chooser_mean:.4f}."
         )
-        bgp_interpretation = "narrows the remaining solver bottleneck"
+        bgp_interpretation = "narrows the remaining solver-design challenge"
     else:
         plain_language = (
             f"The frozen chooser did not beat either cached candidate on {label}: "
             f"support {support_mean:.4f}, joint {joint_mean:.4f}, chooser {chooser_mean:.4f}."
         )
-        bgp_interpretation = "narrows the remaining solver bottleneck"
+        bgp_interpretation = "narrows the remaining solver-design challenge"
 
     return {
         "label": label,
@@ -1044,7 +1044,7 @@ def run_full_plan(force: bool = False) -> dict[str, object]:
                 "The frozen chooser cleared holdout block 1 but failed fresh-bank confirmation without recalibration; "
                 "the routed solver is not yet reliable on the focused slice."
             ),
-            "final_bgp_interpretation": "narrows the remaining solver bottleneck",
+            "final_bgp_interpretation": "narrows the remaining solver-design challenge",
         }
         save_report("baseline", "full_plan_result", final_payload)
         return final_payload
@@ -1062,13 +1062,13 @@ def run_full_plan(force: bool = False) -> dict[str, object]:
             "The support-vs-joint router stayed bank-sensitive after the allowed density ablation; "
             "current support-vs-joint routing is too bank-sensitive for a reliable solution under this solver family."
         )
-        final_payload["final_bgp_interpretation"] = "narrows the remaining solver bottleneck"
+        final_payload["final_bgp_interpretation"] = "narrows the remaining solver-design challenge"
     elif not density_result["working_solver"]:
         final_payload["final_plain_language_result"] = (
             "The density ablation cleared holdout block 1 but failed fresh-bank confirmation without recalibration; "
             "current support-vs-joint routing is still too bank-sensitive for a reliable solution under this solver family."
         )
-        final_payload["final_bgp_interpretation"] = "narrows the remaining solver bottleneck"
+        final_payload["final_bgp_interpretation"] = "narrows the remaining solver-design challenge"
 
     save_report("density_ablation", "full_plan_result", final_payload)
     return final_payload

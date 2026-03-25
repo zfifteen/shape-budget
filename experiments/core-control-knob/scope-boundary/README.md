@@ -9,7 +9,7 @@ This experiment maps the tested scope boundary directly:
 - where the control object stays one-dimensional
 - where it expands but stays compact
 - where wrong compression leaves visible normalized family gaps
-- where the current failure is a branch-specific inverse bottleneck rather than a general failure of BGP
+- where the current failure is a branch-specific solver challenge in inverse recovery rather than a general failure of BGP
 
 The experiment script is [run_scope_boundary_experiment.py](run.py#L1).
 
@@ -58,7 +58,7 @@ It measures three wrong-compression failures against the corrected compact objec
 - raw anisotropy under `e`-only compression
 - weighted three-source under geometry-only compression
 
-### 3. Operational and bottleneck summary
+### 3. Operational and solver challenge summary
 
 It pulls together the established inverse and theory-hardening results:
 
@@ -72,7 +72,7 @@ It pulls together the established inverse and theory-hardening results:
 
 The scope boundary is now clear.
 
-> BGP stays compact across every tested positive branch, but it is not universally one scalar. The established map is: one scalar in the symmetric ellipse base case and the hyperbola twin; two parameters under asymmetry and raw anisotropy; about three parameters in equal-weight three-source; about five parameters in weighted three-source; operational inverse usefulness persists into weighted and anisotropic branches; and the main current scope limit is the selective `alpha` bottleneck in the pose-free anisotropic inverse rather than a general failure of compact budget-governed structure.
+> BGP stays compact across every tested positive branch, but it is not universally one scalar. The established map is: one scalar in the symmetric ellipse base case and the hyperbola twin; two parameters under asymmetry and raw anisotropy; about three parameters in equal-weight three-source; about five parameters in weighted three-source; operational inverse usefulness persists into weighted and anisotropic branches; and the main current scope limit is the selective `alpha` recovery challenge in the pose-free anisotropic inverse rather than a general failure of compact budget-governed structure.
 
 This is the disciplined scope map the theory-hardening triage called for.
 
@@ -223,14 +223,14 @@ So the repo’s main ambiguity is lower than it was before this experiment.
 
 The next high-value choices are now clearer:
 
-- return to the pose-free anisotropy bottleneck as a targeted branch problem
+- return to the pose-free anisotropy solver challenge as a targeted branch problem
 - or move outward to harder scope tests such as unknown anisotropy-axis orientation, richer media, or out-of-family application checks
 
 ## Figures
 
 - [scope_boundary_compactness_ladder.png](outputs/figures/scope_boundary_compactness_ladder.png)
 - [scope_boundary_negative_controls.png](outputs/figures/scope_boundary_negative_controls.png)
-- [scope_boundary_bottleneck_map.png](outputs/figures/scope_boundary_bottleneck_map.png)
+- [scope_boundary_solver_challenge_map.png](outputs/figures/scope_boundary_solver_challenge_map.png)
 
 The clearest figures are:
 

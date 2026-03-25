@@ -13,7 +13,7 @@ The script is [run.py](run.py#L1).
 
 ## What Was Tested
 
-The focused comparison is on the current bottleneck slice:
+The focused comparison is on the current solver challenge slice:
 
 - `sparse_full_noisy`
 - `sparse_partial_high_noise`
@@ -87,8 +87,8 @@ The new solver is still informative.
 It shows that:
 
 - a single elegant joint objective is not enough by itself to resolve the
-  bottleneck
-- but the bottleneck still looks like a solver-design problem, not a theory
+  solver challenge
+- but the solver challenge still looks like a solver-design problem, not a theory
   failure
 - because a fresh solver built around the right nuisance treatment gets
   competitive in some cells without changing the control object
@@ -123,7 +123,7 @@ yet the clean replacement for the current support-aware policy.
 
 ## Bottom Line
 
-The bottleneck is still not resolved by one uniform from-scratch solver.
+The solver challenge is still not resolved by one uniform from-scratch solver.
 
 The current best practical answer remains:
 
@@ -133,5 +133,5 @@ The current best practical answer remains:
 
 That strengthens the current diagnosis:
 
-- the bottleneck is still mostly a solver-design problem
+- the solver challenge is still mostly a solver-design problem
 - but it is not yet solved by one uniform inverse objective alone

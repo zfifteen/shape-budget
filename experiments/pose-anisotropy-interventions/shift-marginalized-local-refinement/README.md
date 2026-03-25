@@ -6,7 +6,7 @@ This experiment follows directly from the shift-marginalized pose result.
 
 That earlier artifact showed that:
 
-- hard best-shift scoring was part of the pose-free `alpha` bottleneck
+- hard best-shift scoring was part of the pose-free `alpha` recovery challenge
 - soft shift-marginalization tightened the `alpha` envelope in every regime
 - the gains were real but only moderate
 
@@ -156,7 +156,7 @@ That is the core read.
 
 This micro-pilot rules out one specific intervention path.
 
-It suggests that the remaining pose-free anisotropic `alpha` bottleneck is not mainly a matter of cleaning up the chosen local basin.
+It suggests that the remaining pose-free anisotropic `alpha` recovery challenge is not mainly a matter of cleaning up the chosen local basin.
 
 In plain language:
 
@@ -174,7 +174,7 @@ It does say:
 - local refinement can shrink the local ambiguity cloud
 - but local refinement alone is not enough to recover the missing `alpha` signal
 
-So the remaining bottleneck looks more like a basin-selection or representation problem than a simple within-basin optimization problem.
+So the remaining solver challenge looks more like a basin-selection or representation problem than a simple within-basin optimization problem.
 
 ## What This Establishes
 
@@ -183,7 +183,7 @@ This experiment does show:
 - the audited local refinement loop behaves correctly under the marginalized objective
 - local refinement can tighten the selected ambiguity basin substantially
 - local refinement can improve fit or geometry without improving `alpha`
-- the remaining `alpha` bottleneck is not solved by a one-seed one-round local cleanup
+- the remaining `alpha` solver challenge is not solved by a one-seed one-round local cleanup
 
 This experiment does not address:
 

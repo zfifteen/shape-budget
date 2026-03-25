@@ -80,9 +80,9 @@ Support:
 
 The result is strong.
 
-> The core inferential BGP result survives the representation swap. Under the support encoding, canonical recovery remains useful, the anisotropy-aware inverse still decisively beats the Euclidean baseline, and pose-free observation still degrades `alpha` much more than geometry. The hard pose-free alpha bottleneck therefore does not look like a radial-signature artifact, even though its severity is representation-sensitive in some sparse regimes.
+> The core inferential BGP result survives the representation swap. Under the support encoding, canonical recovery remains useful, the anisotropy-aware inverse still decisively beats the Euclidean baseline, and pose-free observation still degrades `alpha` much more than geometry. The hard pose-free alpha recovery challenge therefore does not look like a radial-signature artifact, even though its severity is representation-sensitive in some sparse regimes.
 
-This is exactly the kind of result that hardens the theory while narrowing the bottleneck.
+This is exactly the kind of result that hardens the theory while narrowing the solver challenge.
 
 The summary file is [representation_independence_summary.json](outputs/representation_independence_summary.json).
 
@@ -146,7 +146,7 @@ Examples:
   - support alpha penalty: `3.978`
   - selectivity: `4.88x`
 
-So the selective `alpha` bottleneck is not just a quirk of the radial representation.
+So the selective `alpha` recovery challenge is not just a quirk of the radial representation.
 
 ## What Changed With The Representation Swap
 
@@ -166,7 +166,7 @@ The most visible differences are:
   - support alpha: `0.2486`
   - support over radial alpha ratio: `1.90`
 
-So the bottleneck magnitude is representation-sensitive.
+So the solver challenge magnitude is representation-sensitive.
 
 That matters.
 
@@ -176,7 +176,7 @@ But the key point is what did **not** disappear:
 - useful canonical recovery
 - the selective pose penalty on `alpha`
 
-That is why this experiment strengthens BGP even though it does not “solve” the bottleneck.
+That is why this experiment strengthens BGP even though it does not “solve” the solver challenge.
 
 ## Interpretation
 
@@ -185,16 +185,16 @@ This experiment changes the diagnosis in a very useful way.
 What it establishes:
 
 - the core BGP inferential result is representation-robust across at least two genuinely different encodings
-- the pose-free `alpha` bottleneck is not just a radial-signature artifact
-- the bottleneck magnitude still depends on representation, so practical inference design remains important
+- the pose-free `alpha` recovery challenge is not just a radial-signature artifact
+- the solver challenge magnitude still depends on representation, so practical inference design remains important
 
 What it does not support:
 
-- a claim that the current bottleneck has nothing to do with representation
+- a claim that the current solver challenge has nothing to do with representation
 
 The strongest reading is:
 
-> BGP itself now looks substantially more representation-independent than before, while the hard pose-free anisotropic bottleneck looks partly representation-sensitive in magnitude but not in kind.
+> BGP itself now looks substantially more representation-independent than before, while the hard pose-free anisotropic solver challenge looks partly representation-sensitive in magnitude but not in kind.
 
 That is a strong theory-hardening result.
 
@@ -202,7 +202,7 @@ That is a strong theory-hardening result.
 
 This experiment answers the triage question directly.
 
-The current bottleneck does not look like a general threat to BGP.
+The current solver challenge does not look like a general threat to BGP.
 
 Why:
 
@@ -210,13 +210,13 @@ Why:
 - the selective `alpha` penalty also survived the swap
 - only the difficulty level of the hardest pose-free sparse cases changed materially
 
-So the bottleneck still matters, but it now looks more like:
+So the solver challenge still matters, but it now looks more like:
 
 - an inference-design problem
 - with representation-sensitive severity
 - rather than a theory-level failure of BGP
 
-That means it is reasonable to move higher-value theory-hardening work ahead of bottleneck cleanup for a while.
+That means it is reasonable to move higher-value theory-hardening work ahead of solver challenge cleanup for a while.
 
 ## Figures
 

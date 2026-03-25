@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This experiment tests a narrower hypothesis about the pose-free anisotropic bottleneck.
+This experiment tests a narrower hypothesis about the pose-free anisotropic solver challenge.
 
 The earlier results showed that:
 
@@ -162,7 +162,7 @@ That is the strongest signal in the whole artifact.
 
 This result says something precise.
 
-The hard best-shift rule was part of the bottleneck.
+The hard best-shift rule was part of the solver challenge.
 
 Not all of it, but part of it.
 
@@ -194,14 +194,14 @@ That is exactly the kind of intermediate result that helps the program:
 
 This experiment does show:
 
-- the hard best-shift pose rule contributes to the pose-free `alpha` bottleneck
+- the hard best-shift pose rule contributes to the pose-free `alpha` recovery challenge
 - soft shift-marginalization modestly improves `alpha` in most noisy regimes
 - the `alpha` ambiguity envelope tightens in every regime
 - the strongest gains appear in the hardest sparse partial setting
 
 This experiment does not address:
 
-- that the `alpha` bottleneck is solved
+- that the `alpha` solver challenge is solved
 - that soft marginalization is the best pose treatment available
 - that weight recovery improves too; in fact, weight MAE often gets a bit worse
 

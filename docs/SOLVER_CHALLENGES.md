@@ -1,6 +1,6 @@
 # Solver Challenges
 
-BGP is the latent control parameter `e = c / a` for normalized geometry in the symmetric constant-sum two-source Euclidean process. The repo establishes compact corrected control objects across the tested positive branches, and the current solver bottleneck is the focused pose-free anisotropic inverse under hidden rotation, not a general failure of compact budget-governed structure.
+BGP is the latent control parameter `e = c / a` for normalized geometry in the symmetric constant-sum two-source Euclidean process. The repo establishes compact corrected control objects across the tested positive branches, and the current solver challenge is the focused pose-free anisotropic inverse under hidden rotation, not a general failure of compact budget-governed structure.
 
 This document is for external developers who want to resolve the remaining solver-design issue.
 
@@ -10,8 +10,8 @@ The repo establishes the following points already.
 
 - The base case is established in the strongest tested scope. See [technical note](../technical-note/technical_note.md).
 - The weighted anisotropic canonical-pose inverse jointly recovers normalized geometry, normalized weights, and `alpha` from boundary data. See [weighted anisotropic inverse](../experiments/multisource-control-objects/weighted-anisotropic-inverse/README.md).
-- The hard pose-free `alpha` bottleneck is not a radial-signature artifact. The representation swap preserves the core inferential result while the same selective `alpha` fragility remains. See [representation independence](../experiments/core-control-knob/representation-independence/README.md).
-- The scope map is established: BGP stays compact across every tested positive branch, while the main current limit is the selective pose-free anisotropic `alpha` bottleneck. See [scope boundary](../experiments/core-control-knob/scope-boundary/README.md).
+- The hard pose-free `alpha` recovery challenge is not a radial-signature artifact. The representation swap preserves the core inferential result while the same selective `alpha` fragility remains. See [representation independence](../experiments/core-control-knob/representation-independence/README.md).
+- The scope map is established: BGP stays compact across every tested positive branch, while the main current limit is the selective pose-free anisotropic `alpha` recovery challenge. See [scope boundary](../experiments/core-control-knob/scope-boundary/README.md).
 
 The practical conclusion is narrow and important:
 
@@ -35,7 +35,7 @@ The current solver challenge is not “find a universally better alpha estimator
 Several interventions already narrowed the problem.
 
 - A pure joint objective is not enough by itself. The first-principles joint solver does not beat the current support-aware baseline overall. See [joint pose-marginalized solver](../experiments/pose-anisotropy-interventions/joint-pose-marginalized-solver/README.md).
-- The bottleneck splits by support type. Geometry freedom helps the sparse-full branch and often hurts the sparse-partial branch. See [family switching refinement](../experiments/pose-anisotropy-interventions/family-switching-refinement/README.md).
+- The solver challenge splits by support type. Geometry freedom helps the sparse-full branch and often hurts the sparse-partial branch. See [family switching refinement](../experiments/pose-anisotropy-interventions/family-switching-refinement/README.md).
 - Simple scalar routing is not enough. Useful routing signal exists, but one-scalar routers do not beat the fixed policy overall. See [regime router](../experiments/pose-anisotropy-diagnostics/regime-router/README.md).
 - Direct score competition is not enough in sparse-partial. The competitive hybrid helps, but simple competition misroutes too many sparse-partial cases. See [competitive hybrid resolver](../experiments/pose-anisotropy-interventions/competitive-hybrid-resolver/README.md).
 
@@ -115,7 +115,7 @@ That is why the correct stop-condition summary is:
 
 > current support-vs-joint routing is still too bank-sensitive for a reliable solution under this solver family
 
-The bank-adaptive attempt narrows the remaining bottleneck. It does not weaken the broader BGP theory.
+The bank-adaptive attempt narrows the remaining solver challenge. It does not weaken the broader BGP theory.
 
 ## What A Working Solver Must Do
 
@@ -153,7 +153,7 @@ If you are extending the solver stack, these are the best starting references.
 
 ## Practical Developer Read
 
-The control object is still the right theory object. The current bottleneck is an operational inverse problem.
+The control object is still the right theory object. The current solver challenge is an operational inverse problem.
 
 External solver work is most likely to help if it improves one of these failure modes:
 

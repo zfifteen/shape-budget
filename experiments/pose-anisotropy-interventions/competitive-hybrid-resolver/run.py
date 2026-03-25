@@ -1,6 +1,6 @@
 """
 Post-roadmap extension: competitive hybrid resolver for the pose-free
-anisotropic bottleneck.
+anisotropic solver challenge.
 
 This experiment stops trying to predict the right refinement family in advance.
 Instead it runs the two strongest existing refiners from the same top

@@ -286,14 +286,14 @@
         }
       ],
       "plain_language_result": "The frozen chooser beat the support-aware baseline but not the joint candidate on holdout_block_1: support 0.1273, joint 0.1180, chooser 0.1223.",
-      "bgp_interpretation": "narrows the remaining solver bottleneck"
+      "bgp_interpretation": "narrows the remaining solver-design challenge"
     },
     "confirmation": null,
     "model_path": "/Users/velocityworks/IdeaProjects/shape-budget/experiments/pose-anisotropy-interventions/bank-adaptive-solver/outputs/models/baseline__frozen_ridge_chooser.json",
     "holdout_success": false,
     "working_solver": false,
     "plain_language_result": "The frozen chooser beat the support-aware baseline but not the joint candidate on holdout_block_1: support 0.1273, joint 0.1180, chooser 0.1223.",
-    "bgp_interpretation": "narrows the remaining solver bottleneck"
+    "bgp_interpretation": "narrows the remaining solver-design challenge"
   },
   "density_ablation": {
     "variant": {
@@ -675,14 +675,14 @@
         }
       ],
       "plain_language_result": "The frozen chooser beat the support-aware baseline but not the joint candidate on confirmation_block: support 0.1475, joint 0.1104, chooser 0.1435.",
-      "bgp_interpretation": "narrows the remaining solver bottleneck"
+      "bgp_interpretation": "narrows the remaining solver-design challenge"
     },
     "model_path": "/Users/velocityworks/IdeaProjects/shape-budget/experiments/pose-anisotropy-interventions/bank-adaptive-solver/outputs/models/density_ablation__frozen_ridge_chooser.json",
     "holdout_success": true,
     "working_solver": false,
     "plain_language_result": "The frozen chooser beat the support-aware baseline but not the joint candidate on confirmation_block: support 0.1475, joint 0.1104, chooser 0.1435.",
-    "bgp_interpretation": "narrows the remaining solver bottleneck"
+    "bgp_interpretation": "narrows the remaining solver-design challenge"
   },
   "final_plain_language_result": "The density ablation cleared holdout block 1 but failed fresh-bank confirmation without recalibration; current support-vs-joint routing is still too bank-sensitive for a reliable solution under this solver family.",
-  "final_bgp_interpretation": "narrows the remaining solver bottleneck"
+  "final_bgp_interpretation": "narrows the remaining solver-design challenge"
 }

@@ -46,7 +46,7 @@
     "probe_router_factor_min": 0.9866383436275722,
     "probe_router_factor_max": 1.0417816608832124
   },
-  "bottleneck": {
+  "solver_challenge": {
     "minimum_support_selectivity": 4.876575019720263,
     "maximum_support_selectivity": 11.960775666242712,
     "minimum_posefree_fit_improvement_factor": 3.7803557929262843,

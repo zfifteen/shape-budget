@@ -3,7 +3,7 @@ Post-roadmap extension: shift-marginalized local refinement experiment.
 
 This experiment builds directly on the soft shift-marginalized pose score.
 
-It asks whether the remaining pose-free alpha bottleneck is partly a local-fit
+It asks whether the remaining pose-free alpha recovery challenge is partly a local-fit
 problem once pose is handled more softly:
 
 1. retrieve top candidates using the shift-marginalized score

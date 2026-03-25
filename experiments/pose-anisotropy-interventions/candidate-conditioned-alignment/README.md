@@ -6,7 +6,7 @@ This experiment tests a sharper intervention suggested by the symmetry-orbit dia
 
 The current pose-free anisotropic inverse already does per-candidate best-shift matching. The stronger idea tested here is narrower:
 
-> maybe the practical bottleneck is not lack of candidate conditioning in the minimal sense, but lack of a candidate-conditioned local model of the `shift <-> alpha` tradeoff.
+> maybe the practical solver challenge is not lack of candidate conditioning in the minimal sense, but lack of a candidate-conditioned local model of the `shift <-> alpha` tradeoff.
 
 So instead of only choosing the best bank candidate under an observation-only pose rule, this experiment:
 
@@ -109,7 +109,7 @@ This balanced design matters because the question is specifically about the hard
 
 The result is mixed, but meaningfully so.
 
-> Candidate-conditioned local `shift + alpha` search improves `alpha` recovery over observation-only shift marginalization in `4` of `5` regimes overall, with its strongest gains in the partial and sparse-partial regimes. But it does not uniformly rescue the targeted moderate sparse band. In particular, the sparse-full moderate mid-skew slice gets much worse, and the neighboring sparse-full moderate high-skew slice also fails sharply. So this intervention establishes the orbit-alias mechanism as one part of the bottleneck, not the whole bottleneck.
+> Candidate-conditioned local `shift + alpha` search improves `alpha` recovery over observation-only shift marginalization in `4` of `5` regimes overall, with its strongest gains in the partial and sparse-partial regimes. But it does not uniformly rescue the targeted moderate sparse band. In particular, the sparse-full moderate mid-skew slice gets much worse, and the neighboring sparse-full moderate high-skew slice also fails sharply. So this intervention establishes the orbit-alias mechanism as one part of the solver challenge, not the whole solver challenge.
 
 The summary file is [candidate_conditioned_alignment_summary.json](outputs/candidate_conditioned_alignment_summary.json).
 
@@ -219,7 +219,7 @@ This result strengthens the symmetry-orbit mechanism, but only in a partial way.
 
 What it establishes:
 
-- the bottleneck is not purely “generic inverse noise”
+- the solver challenge is not purely “generic inverse noise”
 - a candidate-family local disentanglement step can recover real alpha headroom
 - the gains are especially visible in the partial-support branch, including the hardest sparse-partial regime
 
@@ -229,7 +229,7 @@ What it does not establish:
 
 So the established reading is:
 
-> candidate-conditioned local disentanglement does target a real part of the alpha bottleneck, but the orbit-proximity mechanism is incomplete. There is at least one additional difficulty inside the sparse-full moderate region, especially around the mid-skew slice and its nearby family members, that this intervention does not reach.
+> candidate-conditioned local disentanglement does target a real part of the alpha recovery challenge, but the orbit-proximity mechanism is incomplete. There is at least one additional difficulty inside the sparse-full moderate region, especially around the mid-skew slice and its nearby family members, that this intervention does not reach.
 
 One plausible interpretation is:
 
@@ -249,7 +249,7 @@ This experiment does show:
 
 This experiment does not address:
 
-- a general solution to the pose-free alpha bottleneck
+- a general solution to the pose-free alpha recovery challenge
 - that candidate-conditioned local search is the right final mechanism for sparse-full ambiguity
 - whether the remaining failure is due mainly to wrong seed-family selection, insufficient local alpha search, or a deeper representation-level alias
 
@@ -264,7 +264,7 @@ If it had succeeded everywhere, we would have had a near-immediate path forward.
 Instead, the result is more informative:
 
 - the hypothesis has teeth
-- but it only explains part of the bottleneck
+- but it only explains part of the solver challenge
 
 That means the next experiment should not abandon the orbit diagnosis.
 

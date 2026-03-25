@@ -1,12 +1,12 @@
 # Competitive Hybrid Resolver
 
-This experiment targets the current bottleneck directly.
+This experiment targets the current solver challenge directly.
 
 The question is simple:
 
 1. run the two strongest existing refiners from the same top marginalized seeds
 2. let them compete on the same marginalized score
-3. see whether that resolves the sparse moderate pose-free anisotropy bottleneck
+3. see whether that resolves the sparse moderate pose-free anisotropy solver challenge
 
 The script is [run.py](run.py#L1).
 
@@ -63,9 +63,9 @@ The failure mode is clear in the trial outputs:
 
 So score competition is a strong resolver in sparse-full, but an unreliable selector in sparse-partial.
 
-## Bottleneck fix
+## Solver Challenge fix
 
-The bottleneck slice is resolved much better by a **support-aware hard gate** using the already-computed paths:
+The solver challenge slice is resolved much better by a **support-aware hard gate** using the already-computed paths:
 
 - `sparse_full_noisy` -> use the competitive hybrid
 - `sparse_partial_high_noise` -> use the fixed-family candidate-conditioned path
@@ -89,9 +89,9 @@ So the support-aware gate closes most of the remaining gap without inventing a n
 
 ## Interpretation
 
-The current bottleneck is not that both refinement paths fail.
+The current solver challenge is not that both refinement paths fail.
 
-The current bottleneck is that:
+The current solver challenge is that:
 
 - sparse-full wants geometry freedom
 - sparse-partial wants fixed-family `shift + alpha` cleanup
@@ -118,4 +118,4 @@ The strongest practical resolver found here is:
 - keep the competitive hybrid in sparse-full
 - suppress family switching in sparse-partial
 
-That is the smallest fix in the repo so far that materially reduces the current bottleneck.
+That is the smallest fix in the repo so far that materially reduces the current solver challenge.

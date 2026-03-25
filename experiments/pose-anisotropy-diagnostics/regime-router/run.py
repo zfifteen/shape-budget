@@ -1,8 +1,8 @@
 """
 Post-roadmap extension: regime-router experiment for the pose-free anisotropic
-bottleneck.
+solver challenge.
 
-This experiment tests whether the remaining sparse moderate bottleneck can be
+This experiment tests whether the remaining sparse moderate solver challenge can be
 handled better by routing each trial to one of two refinement policies:
 
 1. fixed-family alpha-only search

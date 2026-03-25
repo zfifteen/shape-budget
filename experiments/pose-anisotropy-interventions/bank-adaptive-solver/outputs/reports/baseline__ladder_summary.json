@@ -284,12 +284,12 @@
       }
     ],
     "plain_language_result": "The frozen chooser beat the support-aware baseline but not the joint candidate on holdout_block_1: support 0.1273, joint 0.1180, chooser 0.1223.",
-    "bgp_interpretation": "narrows the remaining solver bottleneck"
+    "bgp_interpretation": "narrows the remaining solver-design challenge"
   },
   "confirmation": null,
   "model_path": "/Users/velocityworks/IdeaProjects/shape-budget/experiments/pose-anisotropy-interventions/bank-adaptive-solver/outputs/models/baseline__frozen_ridge_chooser.json",
   "holdout_success": false,
   "working_solver": false,
   "plain_language_result": "The frozen chooser beat the support-aware baseline but not the joint candidate on holdout_block_1: support 0.1273, joint 0.1180, chooser 0.1223.",
-  "bgp_interpretation": "narrows the remaining solver bottleneck"
+  "bgp_interpretation": "narrows the remaining solver-design challenge"
 }

@@ -499,11 +499,11 @@ def plot_overview(path: str, summary_rows: list[dict[str, float | str]]) -> None
     ax.set_xticks(x)
     ax.set_xticklabels(conditions, rotation=20, ha="right")
     ax.set_ylabel("mean alpha absolute error")
-    ax.set_title("Focused bottleneck alpha recovery")
+    ax.set_title("Focused alpha recovery on the solver-challenge slice")
     ax.legend(loc="upper right", frameon=True, ncol=2)
 
     fig.suptitle(
-        "Joint Pose-Marginalized Solver A: From-Scratch Inverse On The Bottleneck Slice",
+        "Joint Pose-Marginalized Solver A: From-Scratch Inverse On The Focused Solver-Challenge Slice",
         fontsize=16,
         fontweight="bold",
         y=0.96,

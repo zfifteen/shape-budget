@@ -8,7 +8,7 @@ new forward families. It reads the established experiment outputs and measures:
 2. where one-knob compression fails but a compact higher-dimensional control
    object restores collapse,
 3. where the latent object remains operational in inverse settings, and
-4. where the current bottleneck is branch-specific rather than a general
+4. where the current solver challenge is branch-specific rather than a general
    failure of BGP.
 """
 
@@ -378,7 +378,7 @@ def build_operational_rows(
         },
         {
             "branch": "pose-free weighted anisotropic inverse",
-            "scope_status": "branch-specific bottleneck",
+            "scope_status": "branch-specific solver challenge",
             "control_object": "geometry + weights + alpha under hidden pose",
             "primary_metric": "fit improvement over Euclidean baseline",
             "primary_value": float(posefree["smallest_fit_improvement_factor_mean"]),
@@ -452,7 +452,7 @@ def build_summary(
             "probe_router_factor_min": float(probe_row["secondary_min_value"]),
             "probe_router_factor_max": float(probe_row["secondary_max_value"]),
         },
-        "bottleneck": {
+        "solver_challenge": {
             "minimum_support_selectivity": float(min(row["selectivity"] for row in support_rows)),
             "maximum_support_selectivity": float(max(row["selectivity"] for row in support_rows)),
             "minimum_posefree_fit_improvement_factor": float(pose_row["primary_value"]),
@@ -559,7 +559,7 @@ def plot_negative_controls(path: Path, negative_rows: list[dict[str, Any]]) -> N
     plt.close(fig)
 
 
-def plot_bottleneck_map(
+def plot_solver_challenge_map(
     path: Path,
     representation_penalties: list[dict[str, Any]],
     posefree_penalties: list[dict[str, Any]],
@@ -621,7 +621,7 @@ def plot_bottleneck_map(
     ax_right.set_xticks(x2)
     ax_right.set_xticklabels([row["condition"] for row in posefree_penalties], rotation=20, ha="right")
     ax_right.set_ylabel("Penalty factor vs canonical pose")
-    ax_right.set_title("The current pose-free bottleneck is selective, not general")
+    ax_right.set_title("The current pose-free solver challenge is selective, not general")
     ax_right.legend(loc="upper right", frameon=True)
 
     fig.tight_layout()
@@ -655,8 +655,8 @@ def main() -> None:
 
     plot_compactness_ladder(FIGURE_DIR / "scope_boundary_compactness_ladder.png", branch_rows)
     plot_negative_controls(FIGURE_DIR / "scope_boundary_negative_controls.png", negative_rows)
-    plot_bottleneck_map(
-        FIGURE_DIR / "scope_boundary_bottleneck_map.png",
+    plot_solver_challenge_map(
+        FIGURE_DIR / "scope_boundary_solver_challenge_map.png",
         representation_penalties,
         posefree_penalties,
     )

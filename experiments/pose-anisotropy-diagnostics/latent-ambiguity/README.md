@@ -177,7 +177,7 @@ In plain language:
 - it is telling us somewhat less about weights
 - but once rotation is hidden, it can support several materially different anisotropy values that all score nearly as well
 
-That is a more precise diagnosis of the bottleneck than the earlier inverse artifacts alone.
+That is a more precise diagnosis of the solver challenge than the earlier inverse artifacts alone.
 
 ## What This Establishes
 
@@ -221,7 +221,7 @@ Code:
 
 The highest-leverage next step is not a larger alpha sweep.
 
-This experiment already shows that the pose-free anisotropic bottleneck is an ambiguity-structure problem.
+This experiment already shows that the pose-free anisotropic solver challenge is an ambiguity-structure problem.
 
 The next experiment should try to reduce that ambiguity structure directly, for example by:
 
