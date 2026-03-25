@@ -45,6 +45,8 @@ Each experiment lives in its own folder with:
 
 ## Pose-Anisotropy Diagnostics
 
+- [Candidate Atlas Instrumentation](pose-anisotropy-diagnostics/candidate-atlas-instrumentation/README.md)
+- [Candidate Atlas Pattern Mining](pose-anisotropy-diagnostics/candidate-atlas-pattern-mining/README.md)
 - [Latent Ambiguity](pose-anisotropy-diagnostics/latent-ambiguity/README.md)
 - [Ambiguity-Width Diagnostic](pose-anisotropy-diagnostics/ambiguity-width-diagnostic/README.md)
 - [Rotation-Invariant Spectral](pose-anisotropy-diagnostics/rotation-invariant-spectral/README.md)
@@ -56,6 +58,7 @@ Each experiment lives in its own folder with:
 
 ## Pose-Anisotropy Interventions
 
+- [Persistent-Mode Informed Bank](pose-anisotropy-interventions/persistent-mode-informed-bank/README.md)
 - [Backbone Correction-Pressure-Triggered Alpha Solver](pose-anisotropy-interventions/backbone-correction-pressure-triggered-alpha-solver/README.md)
 - [Backbone Correction-Flux-Triggered Alpha Solver](pose-anisotropy-interventions/backbone-correction-flux-triggered-alpha-solver/README.md)
 - [Backbone Conditional Alpha Solver](pose-anisotropy-interventions/backbone-conditional-alpha-solver/README.md)

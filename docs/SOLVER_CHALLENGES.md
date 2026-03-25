@@ -178,6 +178,7 @@ If you are extending the solver stack, these are the best starting references.
 - [backbone conditional alpha solver](../experiments/pose-anisotropy-interventions/backbone-conditional-alpha-solver/README.md)
 - [backbone correction-flux-triggered alpha solver](../experiments/pose-anisotropy-interventions/backbone-correction-flux-triggered-alpha-solver/README.md)
 - [backbone correction-pressure-triggered alpha solver](../experiments/pose-anisotropy-interventions/backbone-correction-pressure-triggered-alpha-solver/README.md)
+- [persistent-mode informed bank](../experiments/pose-anisotropy-interventions/persistent-mode-informed-bank/README.md)
 - [candidate atlas instrumentation](../experiments/pose-anisotropy-diagnostics/candidate-atlas-instrumentation/README.md)
 - [candidate atlas pattern mining](../experiments/pose-anisotropy-diagnostics/candidate-atlas-pattern-mining/README.md)
 - [bank-adaptive solver driver](../experiments/pose-anisotropy-interventions/bank-adaptive-solver/run.py)
