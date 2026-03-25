@@ -1,0 +1,204 @@
+{
+  "experiment": "candidate-atlas-pattern-mining",
+  "trial_count": 72,
+  "gate_open_trial_count": 53,
+  "archetype_counts": {
+    "fringe_singleton": 1551,
+    "compact_minor": 1288,
+    "alpha_fan": 1182,
+    "broad_fan": 1036,
+    "dominant_core": 383
+  },
+  "archetype_condition_counts": {
+    "alpha_fan": {
+      "sparse_full_noisy": 519,
+      "sparse_partial_high_noise": 663
+    },
+    "broad_fan": {
+      "sparse_full_noisy": 165,
+      "sparse_partial_high_noise": 871
+    },
+    "compact_minor": {
+      "sparse_full_noisy": 788,
+      "sparse_partial_high_noise": 500
+    },
+    "dominant_core": {
+      "sparse_full_noisy": 191,
+      "sparse_partial_high_noise": 192
+    },
+    "fringe_singleton": {
+      "sparse_full_noisy": 542,
+      "sparse_partial_high_noise": 1009
+    }
+  },
+  "gate_open_correlations": {
+    "fan_vs_core_vs_improve": 0.28276082410055026,
+    "fan_vs_core_vs_correction_pressure": 0.18034196871288455,
+    "useful_structure_ratio_vs_improve": 0.2796690121565569,
+    "useful_structure_ratio_vs_refined_alpha_bank_log_span": 0.36570316028872674,
+    "fringe_burden_vs_improve": -0.04628571313502273,
+    "fringe_burden_vs_correction_pressure": -0.21464004730192937,
+    "residual_shell_alpha_mass_vs_improve": 0.13938718664149932,
+    "residual_shell_alpha_mass_vs_correction_pressure": 0.2663501371852422
+  },
+  "fan_vs_core_rule": {
+    "threshold": 0.4106624740288613,
+    "calibration_error": 0.12784844012564534,
+    "calibration_fire_rate": 0.56,
+    "holdout_error": 0.1587100990515855,
+    "holdout_fire_rate": 0.42857142857142855,
+    "confirmation_error": 0.11815115220784538,
+    "confirmation_fire_rate": 0.7142857142857143
+  },
+  "poison_heuristic_shift": {
+    "old_candidate_poison_score_vs_improve": 0.02454427910754485,
+    "old_candidate_poison_score_vs_correction_pressure": -0.0009256109038922222,
+    "new_residual_shell_alpha_mass_vs_improve": 0.13938718664149932,
+    "new_residual_shell_alpha_mass_vs_correction_pressure": 0.2663501371852422
+  },
+  "split_summary": [
+    {
+      "split": "calibration",
+      "count": 36,
+      "mean_dominant_core_mass": 0.2686918939728628,
+      "mean_broad_fan_mass": 0.296737677870331,
+      "mean_alpha_fan_mass": 0.19613933656319382,
+      "mean_fringe_singleton_mass": 0.02844969214893854,
+      "mean_compact_minor_mass": 0.2099813994446732,
+      "mean_fan_vs_core": 0.4570417124048154,
+      "mean_useful_structure_ratio": 1.2876892799980384,
+      "mean_fringe_burden": 0.13344039187127515,
+      "mean_residual_shell_alpha_mass": 0.1316132415420771,
+      "mean_improve": 0.006572290766933333,
+      "mean_correction_pressure": 0.27790097014739634
+    },
+    {
+      "split": "holdout",
+      "count": 18,
+      "mean_dominant_core_mass": 0.2652923990073759,
+      "mean_broad_fan_mass": 0.24631817101818823,
+      "mean_alpha_fan_mass": 0.2217372530718552,
+      "mean_fringe_singleton_mass": 0.03229421565611776,
+      "mean_compact_minor_mass": 0.23435796124646227,
+      "mean_fan_vs_core": 0.43264226659787197,
+      "mean_useful_structure_ratio": 1.0804156110611494,
+      "mean_fringe_burden": 0.1494731962793489,
+      "mean_residual_shell_alpha_mass": 0.12743023947513907,
+      "mean_improve": -0.005218272448686478,
+      "mean_correction_pressure": 0.26619892001907713
+    },
+    {
+      "split": "confirmation",
+      "count": 18,
+      "mean_dominant_core_mass": 0.2508672349038159,
+      "mean_broad_fan_mass": 0.28482566735649817,
+      "mean_alpha_fan_mass": 0.23730345294673372,
+      "mean_fringe_singleton_mass": 0.03034509469308207,
+      "mean_compact_minor_mass": 0.19665855009986954,
+      "mean_fan_vs_core": 0.5491908670198566,
+      "mean_useful_structure_ratio": 1.3231306512147663,
+      "mean_fringe_burden": 0.12867436974301683,
+      "mean_residual_shell_alpha_mass": 0.1547372476435361,
+      "mean_improve": 0.01905996240074287,
+      "mean_correction_pressure": 0.31411644398604627
+    }
+  ],
+  "condition_summary": [
+    {
+      "split": "calibration",
+      "condition": "sparse_full_noisy",
+      "count": 18,
+      "mean_dominant_core_mass": 0.30477849485307573,
+      "mean_broad_fan_mass": 0.13846315026623046,
+      "mean_alpha_fan_mass": 0.24399151037867503,
+      "mean_fringe_singleton_mass": 0.005813982800542881,
+      "mean_compact_minor_mass": 0.3069528617014756,
+      "mean_fan_vs_core": 0.29715204368421994,
+      "mean_useful_structure_ratio": 0.6904901716679047,
+      "mean_fringe_burden": 0.15929041365128066,
+      "mean_residual_shell_alpha_mass": 0.00801460345278386,
+      "mean_improve": -0.0018891940774424252,
+      "mean_correction_pressure": 0.2919957522756595
+    },
+    {
+      "split": "calibration",
+      "condition": "sparse_partial_high_noise",
+      "count": 18,
+      "mean_dominant_core_mass": 0.2326052930926499,
+      "mean_broad_fan_mass": 0.4550122054744316,
+      "mean_alpha_fan_mass": 0.14828716274771264,
+      "mean_fringe_singleton_mass": 0.051085401497334204,
+      "mean_compact_minor_mass": 0.11300993718787088,
+      "mean_fan_vs_core": 0.6169313811254108,
+      "mean_useful_structure_ratio": 1.8848883883281726,
+      "mean_fringe_burden": 0.10759037009126964,
+      "mean_residual_shell_alpha_mass": 0.2552118796313703,
+      "mean_improve": 0.01926451803349697,
+      "mean_correction_pressure": 0.25675879695500164
+    },
+    {
+      "split": "holdout",
+      "condition": "sparse_full_noisy",
+      "count": 9,
+      "mean_dominant_core_mass": 0.26517202039074683,
+      "mean_broad_fan_mass": 0.14686133118765918,
+      "mean_alpha_fan_mass": 0.27129300263028905,
+      "mean_fringe_singleton_mass": 0.011906237110002575,
+      "mean_compact_minor_mass": 0.304767408681302,
+      "mean_fan_vs_core": 0.38243225034324013,
+      "mean_useful_structure_ratio": 0.841677334714814,
+      "mean_fringe_burden": 0.16428994145065356,
+      "mean_residual_shell_alpha_mass": 0.008183954448218062,
+      "mean_improve": 0.0034314719402072855,
+      "mean_correction_pressure": 0.2715652267295859
+    },
+    {
+      "split": "holdout",
+      "condition": "sparse_partial_high_noise",
+      "count": 9,
+      "mean_dominant_core_mass": 0.26541277762400506,
+      "mean_broad_fan_mass": 0.34577501084871726,
+      "mean_alpha_fan_mass": 0.17218150351342143,
+      "mean_fringe_singleton_mass": 0.052682194202232926,
+      "mean_compact_minor_mass": 0.16394851381162254,
+      "mean_fan_vs_core": 0.48285228285250387,
+      "mean_useful_structure_ratio": 1.3191538874074844,
+      "mean_fringe_burden": 0.1346564511080442,
+      "mean_residual_shell_alpha_mass": 0.24667652450206004,
+      "mean_improve": -0.013868016837580242,
+      "mean_correction_pressure": 0.2608326133085684
+    },
+    {
+      "split": "confirmation",
+      "condition": "sparse_full_noisy",
+      "count": 9,
+      "mean_dominant_core_mass": 0.26292348753791406,
+      "mean_broad_fan_mass": 0.11058367019661673,
+      "mean_alpha_fan_mass": 0.31306269936908226,
+      "mean_fringe_singleton_mass": 0.005021607454887732,
+      "mean_compact_minor_mass": 0.3084085354414989,
+      "mean_fan_vs_core": 0.4371465261255273,
+      "mean_useful_structure_ratio": 0.9825188179180085,
+      "mean_fringe_burden": 0.15922587517563716,
+      "mean_residual_shell_alpha_mass": 0.022985836131684756,
+      "mean_improve": 0.012025249354839897,
+      "mean_correction_pressure": 0.24240402421538865
+    },
+    {
+      "split": "confirmation",
+      "condition": "sparse_partial_high_noise",
+      "count": 9,
+      "mean_dominant_core_mass": 0.23881098226971773,
+      "mean_broad_fan_mass": 0.45906766451637954,
+      "mean_alpha_fan_mass": 0.1615442065243852,
+      "mean_fringe_singleton_mass": 0.05566858193127641,
+      "mean_compact_minor_mass": 0.08490856475824021,
+      "mean_fan_vs_core": 0.6612352079141857,
+      "mean_useful_structure_ratio": 1.6637424845115243,
+      "mean_fringe_burden": 0.09812286431039653,
+      "mean_residual_shell_alpha_mass": 0.28648865915538746,
+      "mean_improve": 0.028439579795280168,
+      "mean_correction_pressure": 0.4097330036802562
+    }
+  ]
+}
