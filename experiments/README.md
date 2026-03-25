@@ -47,6 +47,7 @@ Each experiment lives in its own folder with:
 
 - [Candidate Atlas Instrumentation](pose-anisotropy-diagnostics/candidate-atlas-instrumentation/README.md)
 - [Candidate Atlas Pattern Mining](pose-anisotropy-diagnostics/candidate-atlas-pattern-mining/README.md)
+- [Persistent-Mode Bank Candidate Atlas](pose-anisotropy-diagnostics/persistent-mode-bank-candidate-atlas/README.md)
 - [Latent Ambiguity](pose-anisotropy-diagnostics/latent-ambiguity/README.md)
 - [Ambiguity-Width Diagnostic](pose-anisotropy-diagnostics/ambiguity-width-diagnostic/README.md)
 - [Rotation-Invariant Spectral](pose-anisotropy-diagnostics/rotation-invariant-spectral/README.md)

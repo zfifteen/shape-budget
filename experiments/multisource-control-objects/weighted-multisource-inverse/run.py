@@ -243,7 +243,7 @@ def write_csv(path: str, rows: list[dict[str, float | int | str]]) -> None:
     if not rows:
         return
     with open(path, "w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 

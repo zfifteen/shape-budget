@@ -181,6 +181,7 @@ If you are extending the solver stack, these are the best starting references.
 - [persistent-mode informed bank](../experiments/pose-anisotropy-interventions/persistent-mode-informed-bank/README.md)
 - [candidate atlas instrumentation](../experiments/pose-anisotropy-diagnostics/candidate-atlas-instrumentation/README.md)
 - [candidate atlas pattern mining](../experiments/pose-anisotropy-diagnostics/candidate-atlas-pattern-mining/README.md)
+- [persistent-mode bank candidate atlas](../experiments/pose-anisotropy-diagnostics/persistent-mode-bank-candidate-atlas/README.md)
 - [bank-adaptive solver driver](../experiments/pose-anisotropy-interventions/bank-adaptive-solver/run.py)
 - [joint pose-marginalized solver](../experiments/pose-anisotropy-interventions/joint-pose-marginalized-solver/run.py)
 - [family switching refinement](../experiments/pose-anisotropy-interventions/family-switching-refinement/run.py)
