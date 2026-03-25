@@ -46,6 +46,7 @@ Each experiment lives in its own folder with:
 ## Pose-Anisotropy Diagnostics
 
 - [Latent Ambiguity](pose-anisotropy-diagnostics/latent-ambiguity/README.md)
+- [Ambiguity-Width Diagnostic](pose-anisotropy-diagnostics/ambiguity-width-diagnostic/README.md)
 - [Rotation-Invariant Spectral](pose-anisotropy-diagnostics/rotation-invariant-spectral/README.md)
 - [Orbit Proximity](pose-anisotropy-diagnostics/orbit-proximity/README.md)
 - [Orientation Locking](pose-anisotropy-diagnostics/orientation-locking/README.md)
@@ -55,6 +56,9 @@ Each experiment lives in its own folder with:
 
 ## Pose-Anisotropy Interventions
 
+- [Backbone Conditional Alpha Solver](pose-anisotropy-interventions/backbone-conditional-alpha-solver/README.md)
+- [Backbone Observability Gate](pose-anisotropy-interventions/backbone-observability-gate/README.md)
+- [Backbone Consensus Solver](pose-anisotropy-interventions/backbone-consensus-solver/README.md)
 - [Shift-Marginalized Pose](pose-anisotropy-interventions/shift-marginalized-pose/README.md)
 - [Shift-Marginalized Local Refinement](pose-anisotropy-interventions/shift-marginalized-local-refinement/README.md)
 - [Pose-Free Alpha Refinement](pose-anisotropy-interventions/pose-free-alpha-refinement/README.md)

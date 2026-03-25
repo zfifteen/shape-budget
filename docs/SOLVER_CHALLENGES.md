@@ -30,6 +30,32 @@ The focused slice is:
 
 The current solver challenge is not “find a universally better alpha estimator.” The challenge is to build a solver or routing policy that stays reliable across fresh bank seeds in this slice.
 
+## Layered Construction Rule
+
+The next solver should mirror the control structure that the repo has already established.
+
+Use this construction rule:
+
+- build the solver backbone-first, not full-latent-first
+- validate each capability layer before adding the next one
+- do not force point recovery of every latent coordinate at the first stage
+
+The default layered plan is:
+
+1. recover the stable control backbone first
+2. validate that backbone recovery stays stable across fresh bank seeds
+3. add an observability or ambiguity layer for extension coordinates
+4. add conditional extension recovery only where the observation supports it
+5. only then attempt a full confirmation-stable solver policy
+
+In practical terms, new solver work should begin by asking:
+
+- what part of the control object is already stable in this observation class
+- which coordinates become ambiguous under hidden rotation and sparse support
+- whether the next capability layer is actually validated before the following layer is added
+
+This repo should not default to monolithic full-latent search-and-route designs when the evidence suggests a layered observability structure instead.
+
 ## What The Repo Already Rules Out
 
 Several interventions already narrowed the problem.
@@ -144,6 +170,9 @@ Please keep new solver work inside a new experiment folder and preserve these ev
 
 If you are extending the solver stack, these are the best starting references.
 
+- [backbone consensus solver](../experiments/pose-anisotropy-interventions/backbone-consensus-solver/README.md)
+- [backbone observability gate](../experiments/pose-anisotropy-interventions/backbone-observability-gate/README.md)
+- [backbone conditional alpha solver](../experiments/pose-anisotropy-interventions/backbone-conditional-alpha-solver/README.md)
 - [bank-adaptive solver driver](../experiments/pose-anisotropy-interventions/bank-adaptive-solver/run.py)
 - [joint pose-marginalized solver](../experiments/pose-anisotropy-interventions/joint-pose-marginalized-solver/run.py)
 - [family switching refinement](../experiments/pose-anisotropy-interventions/family-switching-refinement/run.py)
