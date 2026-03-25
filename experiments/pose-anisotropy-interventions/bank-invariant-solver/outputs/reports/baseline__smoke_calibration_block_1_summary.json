@@ -1,0 +1,101 @@
+{
+  "variant": {
+    "name": "baseline",
+    "reference_bank_size": 300,
+    "top_k_seeds": 3
+  },
+  "summary": {
+    "label": "smoke_calibration_block_1",
+    "count": 18,
+    "support_alpha_error_mean": 0.1984484434227383,
+    "joint_alpha_error_mean": 0.17922188387211907,
+    "chooser_alpha_error_mean": 0.1385150318150029,
+    "choose_joint_fraction": 0.4444444444444444,
+    "chooser_minus_support_alpha_error": -0.05993341160773538,
+    "chooser_minus_joint_alpha_error": -0.04070685205711616,
+    "beats_support": true,
+    "beats_joint": true,
+    "by_condition": [
+      {
+        "condition": "sparse_full_noisy",
+        "count": 9,
+        "support_alpha_error_mean": 0.15874479142439946,
+        "joint_alpha_error_mean": 0.14210899257907483,
+        "chooser_alpha_error_mean": 0.10141607753168043,
+        "choose_joint_fraction": 0.5555555555555556
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "count": 9,
+        "support_alpha_error_mean": 0.23815209542107713,
+        "joint_alpha_error_mean": 0.2163347751651633,
+        "chooser_alpha_error_mean": 0.1756139860983254,
+        "choose_joint_fraction": 0.3333333333333333
+      }
+    ],
+    "by_cell": [
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "low_skew",
+        "count": 3,
+        "support_alpha_error_mean": 0.16664172474982805,
+        "joint_alpha_error_mean": 0.10671802435109916,
+        "chooser_alpha_error_mean": 0.10671802435109916,
+        "choose_joint_fraction": 0.6666666666666666
+      },
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "mid_skew",
+        "count": 3,
+        "support_alpha_error_mean": 0.13173447574770827,
+        "joint_alpha_error_mean": 0.14239498123862726,
+        "chooser_alpha_error_mean": 0.021680617608141994,
+        "choose_joint_fraction": 0.6666666666666666
+      },
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "high_skew",
+        "count": 3,
+        "support_alpha_error_mean": 0.17785817377566204,
+        "joint_alpha_error_mean": 0.17721397214749812,
+        "chooser_alpha_error_mean": 0.17584959063580016,
+        "choose_joint_fraction": 0.3333333333333333
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "low_skew",
+        "count": 3,
+        "support_alpha_error_mean": 0.158258330568699,
+        "joint_alpha_error_mean": 0.14080020312695454,
+        "chooser_alpha_error_mean": 0.13173092716389365,
+        "choose_joint_fraction": 0.3333333333333333
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "mid_skew",
+        "count": 3,
+        "support_alpha_error_mean": 0.19264510766339807,
+        "joint_alpha_error_mean": 0.20779212015537216,
+        "chooser_alpha_error_mean": 0.19264510766339807,
+        "choose_joint_fraction": 0.3333333333333333
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "high_skew",
+        "count": 3,
+        "support_alpha_error_mean": 0.36355284803113425,
+        "joint_alpha_error_mean": 0.3004120022131633,
+        "chooser_alpha_error_mean": 0.20246592346768452,
+        "choose_joint_fraction": 0.3333333333333333
+      }
+    ],
+    "plain_language_result": "The bank-invariant chooser beat both cached candidates on smoke_calibration_block_1: support 0.1984, joint 0.1792, chooser 0.1385.",
+    "bgp_interpretation": "strengthens BGP"
+  }
+}

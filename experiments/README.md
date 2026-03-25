@@ -60,3 +60,5 @@ Each experiment lives in its own folder with:
 - [Pose-Free Alpha Refinement](pose-anisotropy-interventions/pose-free-alpha-refinement/README.md)
 - [Candidate-Conditioned Alignment](pose-anisotropy-interventions/candidate-conditioned-alignment/README.md)
 - [Family-Switching Refinement](pose-anisotropy-interventions/family-switching-refinement/README.md)
+- [Bank-Adaptive Solver](pose-anisotropy-interventions/bank-adaptive-solver/README.md)
+- [Bank-Invariant Solver](pose-anisotropy-interventions/bank-invariant-solver/README.md)

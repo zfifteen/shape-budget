@@ -1,0 +1,393 @@
+{
+  "selected_variant": "baseline",
+  "baseline": {
+    "variant": {
+      "name": "baseline",
+      "reference_bank_size": 300,
+      "top_k_seeds": 3
+    },
+    "smoke": {
+      "label": "smoke_calibration_block_1",
+      "count": 18,
+      "support_alpha_error_mean": 0.1984484434227383,
+      "joint_alpha_error_mean": 0.17922188387211907,
+      "chooser_alpha_error_mean": 0.1385150318150029,
+      "choose_joint_fraction": 0.4444444444444444,
+      "chooser_minus_support_alpha_error": -0.05993341160773538,
+      "chooser_minus_joint_alpha_error": -0.04070685205711616,
+      "beats_support": true,
+      "beats_joint": true,
+      "by_condition": [
+        {
+          "condition": "sparse_full_noisy",
+          "count": 9,
+          "support_alpha_error_mean": 0.15874479142439946,
+          "joint_alpha_error_mean": 0.14210899257907483,
+          "chooser_alpha_error_mean": 0.10141607753168043,
+          "choose_joint_fraction": 0.5555555555555556
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "count": 9,
+          "support_alpha_error_mean": 0.23815209542107713,
+          "joint_alpha_error_mean": 0.2163347751651633,
+          "chooser_alpha_error_mean": 0.1756139860983254,
+          "choose_joint_fraction": 0.3333333333333333
+        }
+      ],
+      "by_cell": [
+        {
+          "condition": "sparse_full_noisy",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "low_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.16664172474982805,
+          "joint_alpha_error_mean": 0.10671802435109916,
+          "chooser_alpha_error_mean": 0.10671802435109916,
+          "choose_joint_fraction": 0.6666666666666666
+        },
+        {
+          "condition": "sparse_full_noisy",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "mid_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.13173447574770827,
+          "joint_alpha_error_mean": 0.14239498123862726,
+          "chooser_alpha_error_mean": 0.021680617608141994,
+          "choose_joint_fraction": 0.6666666666666666
+        },
+        {
+          "condition": "sparse_full_noisy",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "high_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.17785817377566204,
+          "joint_alpha_error_mean": 0.17721397214749812,
+          "chooser_alpha_error_mean": 0.17584959063580016,
+          "choose_joint_fraction": 0.3333333333333333
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "low_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.158258330568699,
+          "joint_alpha_error_mean": 0.14080020312695454,
+          "chooser_alpha_error_mean": 0.13173092716389365,
+          "choose_joint_fraction": 0.3333333333333333
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "mid_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.19264510766339807,
+          "joint_alpha_error_mean": 0.20779212015537216,
+          "chooser_alpha_error_mean": 0.19264510766339807,
+          "choose_joint_fraction": 0.3333333333333333
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "high_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.36355284803113425,
+          "joint_alpha_error_mean": 0.3004120022131633,
+          "chooser_alpha_error_mean": 0.20246592346768452,
+          "choose_joint_fraction": 0.3333333333333333
+        }
+      ],
+      "plain_language_result": "The bank-invariant chooser beat both cached candidates on smoke_calibration_block_1: support 0.1984, joint 0.1792, chooser 0.1385.",
+      "bgp_interpretation": "strengthens BGP"
+    },
+    "calibration": {
+      "label": "calibration",
+      "count": 36,
+      "support_alpha_error_mean": 0.18616575174394656,
+      "joint_alpha_error_mean": 0.15957053609517624,
+      "chooser_alpha_error_mean": 0.14028252339112385,
+      "choose_joint_fraction": 0.4444444444444444,
+      "chooser_minus_support_alpha_error": -0.045883228352822714,
+      "chooser_minus_joint_alpha_error": -0.019288012704052393,
+      "beats_support": true,
+      "beats_joint": true,
+      "by_condition": [
+        {
+          "condition": "sparse_full_noisy",
+          "count": 18,
+          "support_alpha_error_mean": 0.16975304816779027,
+          "joint_alpha_error_mean": 0.12853304544960487,
+          "chooser_alpha_error_mean": 0.10811977008723589,
+          "choose_joint_fraction": 0.5555555555555556
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "count": 18,
+          "support_alpha_error_mean": 0.20257845532010282,
+          "joint_alpha_error_mean": 0.19060802674074762,
+          "chooser_alpha_error_mean": 0.17244527669501178,
+          "choose_joint_fraction": 0.3333333333333333
+        }
+      ],
+      "by_cell": [
+        {
+          "condition": "sparse_full_noisy",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "low_skew",
+          "count": 6,
+          "support_alpha_error_mean": 0.12831778022294107,
+          "joint_alpha_error_mean": 0.05778724472705232,
+          "chooser_alpha_error_mean": 0.05778724472705232,
+          "choose_joint_fraction": 0.8333333333333334
+        },
+        {
+          "condition": "sparse_full_noisy",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "mid_skew",
+          "count": 6,
+          "support_alpha_error_mean": 0.15237353476511897,
+          "joint_alpha_error_mean": 0.15790424102659376,
+          "chooser_alpha_error_mean": 0.09734660569533583,
+          "choose_joint_fraction": 0.3333333333333333
+        },
+        {
+          "condition": "sparse_full_noisy",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "high_skew",
+          "count": 6,
+          "support_alpha_error_mean": 0.22856782951531074,
+          "joint_alpha_error_mean": 0.16990765059516852,
+          "chooser_alpha_error_mean": 0.16922545983931955,
+          "choose_joint_fraction": 0.5
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "low_skew",
+          "count": 6,
+          "support_alpha_error_mean": 0.1907478446736071,
+          "joint_alpha_error_mean": 0.1776207603161523,
+          "chooser_alpha_error_mean": 0.18089177108005874,
+          "choose_joint_fraction": 0.6666666666666666
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "mid_skew",
+          "count": 6,
+          "support_alpha_error_mean": 0.20696295642434256,
+          "joint_alpha_error_mean": 0.21453646267032958,
+          "chooser_alpha_error_mean": 0.20696295642434256,
+          "choose_joint_fraction": 0.16666666666666666
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "high_skew",
+          "count": 6,
+          "support_alpha_error_mean": 0.21002456486235888,
+          "joint_alpha_error_mean": 0.1796668572357609,
+          "chooser_alpha_error_mean": 0.12948110258063403,
+          "choose_joint_fraction": 0.16666666666666666
+        }
+      ],
+      "plain_language_result": "The bank-invariant chooser beat both cached candidates on calibration: support 0.1862, joint 0.1596, chooser 0.1403.",
+      "bgp_interpretation": "strengthens BGP"
+    },
+    "holdout": {
+      "label": "holdout_block_1",
+      "count": 18,
+      "support_alpha_error_mean": 0.12734192031107427,
+      "joint_alpha_error_mean": 0.11804474437812235,
+      "chooser_alpha_error_mean": 0.11520310357396367,
+      "choose_joint_fraction": 0.5555555555555556,
+      "chooser_minus_support_alpha_error": -0.012138816737110605,
+      "chooser_minus_joint_alpha_error": -0.0028416408041586766,
+      "beats_support": true,
+      "beats_joint": true,
+      "by_condition": [
+        {
+          "condition": "sparse_full_noisy",
+          "count": 9,
+          "support_alpha_error_mean": 0.10309746994171783,
+          "joint_alpha_error_mean": 0.0912762678329931,
+          "chooser_alpha_error_mean": 0.09147509947679279,
+          "choose_joint_fraction": 0.6666666666666666
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "count": 9,
+          "support_alpha_error_mean": 0.15158637068043068,
+          "joint_alpha_error_mean": 0.14481322092325158,
+          "chooser_alpha_error_mean": 0.13893110767113453,
+          "choose_joint_fraction": 0.4444444444444444
+        }
+      ],
+      "by_cell": [
+        {
+          "condition": "sparse_full_noisy",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "low_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.11121130786998878,
+          "joint_alpha_error_mean": 0.23564305638601593,
+          "chooser_alpha_error_mean": 0.23564305638601593,
+          "choose_joint_fraction": 1.0
+        },
+        {
+          "condition": "sparse_full_noisy",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "mid_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.16936212355523253,
+          "joint_alpha_error_mean": 0.010063263644430257,
+          "chooser_alpha_error_mean": 0.010063263644430257,
+          "choose_joint_fraction": 1.0
+        },
+        {
+          "condition": "sparse_full_noisy",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "high_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.028718978399932166,
+          "joint_alpha_error_mean": 0.028122483468533115,
+          "chooser_alpha_error_mean": 0.028718978399932166,
+          "choose_joint_fraction": 0.0
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "low_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.07538138594586496,
+          "joint_alpha_error_mean": 0.18916195424841817,
+          "chooser_alpha_error_mean": 0.1924172891831166,
+          "choose_joint_fraction": 0.6666666666666666
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "mid_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.10389247269234277,
+          "joint_alpha_error_mean": 0.12479414738339227,
+          "chooser_alpha_error_mean": 0.10389247269234277,
+          "choose_joint_fraction": 0.0
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "high_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.27548525340308433,
+          "joint_alpha_error_mean": 0.12048356113794427,
+          "chooser_alpha_error_mean": 0.12048356113794427,
+          "choose_joint_fraction": 0.6666666666666666
+        }
+      ],
+      "plain_language_result": "The bank-invariant chooser beat both cached candidates on holdout_block_1: support 0.1273, joint 0.1180, chooser 0.1152.",
+      "bgp_interpretation": "strengthens BGP"
+    },
+    "confirmation": {
+      "label": "confirmation_block",
+      "count": 18,
+      "support_alpha_error_mean": 0.13192300436297458,
+      "joint_alpha_error_mean": 0.17729173662453585,
+      "chooser_alpha_error_mean": 0.16741606887306737,
+      "choose_joint_fraction": 0.4444444444444444,
+      "chooser_minus_support_alpha_error": 0.03549306451009279,
+      "chooser_minus_joint_alpha_error": -0.009875667751468475,
+      "beats_support": false,
+      "beats_joint": true,
+      "by_condition": [
+        {
+          "condition": "sparse_full_noisy",
+          "count": 9,
+          "support_alpha_error_mean": 0.12118899265339264,
+          "joint_alpha_error_mean": 0.1908940973431857,
+          "chooser_alpha_error_mean": 0.1922172965927912,
+          "choose_joint_fraction": 0.4444444444444444
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "count": 9,
+          "support_alpha_error_mean": 0.14265701607255654,
+          "joint_alpha_error_mean": 0.16368937590588603,
+          "chooser_alpha_error_mean": 0.14261484115334355,
+          "choose_joint_fraction": 0.4444444444444444
+        }
+      ],
+      "by_cell": [
+        {
+          "condition": "sparse_full_noisy",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "low_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.02074844521881536,
+          "joint_alpha_error_mean": 0.15966888300754242,
+          "chooser_alpha_error_mean": 0.16620480041477656,
+          "choose_joint_fraction": 0.3333333333333333
+        },
+        {
+          "condition": "sparse_full_noisy",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "mid_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.17502249181381202,
+          "joint_alpha_error_mean": 0.24546592274231346,
+          "chooser_alpha_error_mean": 0.24546592274231346,
+          "choose_joint_fraction": 0.6666666666666666
+        },
+        {
+          "condition": "sparse_full_noisy",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "high_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.16779604092755052,
+          "joint_alpha_error_mean": 0.1675474862797012,
+          "chooser_alpha_error_mean": 0.16498116662128348,
+          "choose_joint_fraction": 0.3333333333333333
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "low_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.1200612089812418,
+          "joint_alpha_error_mean": 0.11271883823028069,
+          "chooser_alpha_error_mean": 0.1204966160080585,
+          "choose_joint_fraction": 0.6666666666666666
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "mid_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.1568715889427683,
+          "joint_alpha_error_mean": 0.23835821618357347,
+          "chooser_alpha_error_mean": 0.15815373474555153,
+          "choose_joint_fraction": 0.3333333333333333
+        },
+        {
+          "condition": "sparse_partial_high_noise",
+          "alpha_strength_bin": "moderate",
+          "geometry_skew_bin": "high_skew",
+          "count": 3,
+          "support_alpha_error_mean": 0.15103825029365958,
+          "joint_alpha_error_mean": 0.1399910733038039,
+          "chooser_alpha_error_mean": 0.14919417270642063,
+          "choose_joint_fraction": 0.3333333333333333
+        }
+      ],
+      "plain_language_result": "The bank-invariant chooser beat the joint candidate but not the support-aware baseline on confirmation_block: support 0.1319, joint 0.1773, chooser 0.1674.",
+      "bgp_interpretation": "narrows the remaining solver bottleneck"
+    },
+    "model_path": "/home/runner/work/shape-budget/shape-budget/experiments/pose-anisotropy-interventions/bank-invariant-solver/outputs/models/baseline__frozen_ridge_chooser.json",
+    "holdout_success": true,
+    "working_solver": false,
+    "plain_language_result": "The bank-invariant chooser beat the joint candidate but not the support-aware baseline on confirmation_block: support 0.1319, joint 0.1773, chooser 0.1674.",
+    "bgp_interpretation": "narrows the remaining solver bottleneck"
+  },
+  "final_plain_language_result": "The bank-invariant chooser cleared holdout block 1 but failed fresh-bank confirmation without recalibration; the routed solver is not yet reliable on the focused slice.",
+  "final_bgp_interpretation": "narrows the remaining solver bottleneck"
+}
