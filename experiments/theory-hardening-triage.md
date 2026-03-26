@@ -3,7 +3,7 @@
 ## Purpose
 
 This note records the current experiment priority after the recent pose-free
-anisotropic solver challenge work.
+anisotropic solver milestone work.
 
 The key question is not whether that solver challenge matters at all.
 
@@ -11,13 +11,13 @@ It does.
 
 The key question is:
 
-> does the current solver challenge jeopardize the Budget Governor Principle in a general way, or is it a narrower inverse-and-representation problem that should not dominate the research program?
+> did the focused solver bottleneck ever jeopardize the Budget Governor Principle in a general way, or was it a narrower inverse-and-representation problem that should not dominate the research program?
 
 The solver challenge belongs to the second category.
 
 ## Current Read
 
-The pose-free weighted anisotropic solver challenge is real, but it is not a general threat to BGP.
+The pose-free weighted anisotropic bottleneck was real, but it was never a general threat to BGP.
 
 Why:
 
@@ -29,7 +29,7 @@ Why:
   - incomplete support
 - the oracle-alignment result already shows that much of the lost `alpha` signal is present in the observation and is being lost by practical inference rather than by failure of the underlying budget-governed structure
 
-So the current solver challenge is best read as:
+The focused moderate sparse slice is now solved in the tested regime by the entropy-gated bank ensemble solver, which means the bottleneck is best read as:
 
 - an important solver-design challenge in inverse recovery
 - a useful mechanism testbed
@@ -44,7 +44,7 @@ The main evidence classes are:
 1. representation independence
 2. operational usefulness
 3. scope boundaries and falsification structure
-4. solver challenge cleanup
+4. broader-scope solver validation and extension
 
 That order is intentional.
 
@@ -132,40 +132,45 @@ Where does BGP stay compact and where does it stop compressing the problem clean
 
 The goal is a disciplined scope map, not just more positive examples.
 
-## Priority 4: Solver Challenge Cleanup
+## Priority 4: Broader-Scope Solver Validation And Extension
 
 ### Why it still matters
 
-The current solver challenge is scientifically important and can still produce publishable mechanism results.
+The focused slice is solved in the tested regime, but broader solver work still matters scientifically and practically.
 
-But it is now a branch-specific disentanglement problem, not the highest-priority theory-hardening problem.
+The remaining work is no longer “close the focused bottleneck at all.” It is:
 
-### Current read on the solver challenge
+- validate that the same solver-policy idea extends beyond the solved slice
+- test harder support and anisotropy cells
+- test broader fresh-bank stability
+- and move outward to harder extension branches
 
-- sparse-full observations seem to benefit from geometry-level family switching
-- sparse-partial observations often benefit more from fixed-family local alpha handling
-- the first scalar regime-router pilot did not solve this globally
+### Current read on the remaining solver work
 
-So the solver challenge should remain active, but it should not dominate the program until the broader theory-hardening work above is stronger.
+- the focused moderate sparse slice no longer needs to dominate the program
+- solver extension work should now target broader validation and outward harder-scope tests
+- the theory-hardening sequence above remains the right completed foundation for that extension work
+
+So solver work should remain active, but the framing should change from “can the focused bottleneck be closed?” to “how far does the solved inverse policy generalize?”
 
 ## Recommended Order
 
 1. `REPRESENTATION_INDEPENDENCE_EXPERIMENT`
 2. `PROBE_SPECIALIZATION_EXPERIMENT`
 3. `SCOPE_BOUNDARY_EXPERIMENT`
-4. return to branch-aware solver routing and cleanup
+4. return to broader-scope solver validation and harder extension branches
 
 ## Working Decision
 
-The current solver challenge should be treated as:
+The focused solver bottleneck should be treated as:
 
 - important
 - informative
-- worth revisiting early
+- worth extending outward carefully
 
 But not as the main blocker on the broader BGP program.
 
-That means the immediate next experiment should be:
+That means the immediate theory-hardening next experiment should have been:
 
 > `REPRESENTATION_INDEPENDENCE_EXPERIMENT`
 
@@ -202,6 +207,12 @@ The result was the disciplined one the triage needed:
 - equal-weight three-source is about three-parameter and weighted three-source about five-parameter
 - the pose-free anisotropic solver challenge is now localized as a selective `alpha` fragility, not a general loss of compact budget structure
 
+The focused solver milestone has now also been completed:
+
+- the entropy-gated bank ensemble solver resolves the tested moderate sparse slice
+- the result is a solver-policy fix, not a theory rewrite
+- the remaining open work is broader validation and harder extension branches
+
 So the triage decision now becomes:
 
-> the theory-hardening sequence is complete. The next immediate priority can return to branch-aware solver challenge cleanup or outward harder-scope tests, but it no longer needs to treat universal-scope ambiguity as the main blocker.
+> the theory-hardening sequence is complete, and the focused solver slice is solved in the tested regime. The next immediate priority can move to broader-scope solver validation or outward harder-scope tests, but it no longer needs to treat the old focused bottleneck as the main blocker.

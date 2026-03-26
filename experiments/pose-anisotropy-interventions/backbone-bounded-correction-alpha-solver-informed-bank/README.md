@@ -12,6 +12,8 @@ This run tests a simpler rule:
 - keep the informed-bank Layer 2 open set unchanged
 - keep anchored and refined Layer 3 outputs unchanged
 - scale the refined move down when it tries to move too far from anchored
+- freeze the correction budget `tau` on a separate informed-bank calibration
+  block before scoring fresh holdout and confirmation rows
 
 ## Method
 
@@ -32,25 +34,33 @@ For each gate-open trial:
 So large excursions collapse back toward anchored, while small excursions keep
 most of the refined move.
 
+## Calibration-Frozen Tau
+
+`tau` is now chosen only on the informed-bank calibration block:
+
+- calibration rows: `18`
+- calibration open rows: `7`
+- frozen `tau = 0.054314`
+- calibration mean bounded open-trial error: `0.1223`
+
+So the current bounded result is no longer tuned on fresh evaluation rows.
+
 ## Main Result
-
-The best cached tau on the current fresh open-trial set is:
-
-- `tau = 0.083015`
 
 From [backbone_bounded_correction_alpha_solver_informed_bank_summary.json](outputs/backbone_bounded_correction_alpha_solver_informed_bank_summary.json):
 
 - mean open-trial anchored alpha error: `0.1356`
 - mean open-trial full refined alpha error: `0.1807`
-- mean open-trial bounded alpha error: `0.1304`
+- mean open-trial bounded alpha error: `0.1333`
 
 So bounded correction beats both:
 
-- anchored by `0.0052`
-- full refinement by `0.0503`
+- anchored by `0.0023`
+- full refinement by `0.0474`
 
-That makes this the strongest Layer 3 behavior we have on top of the corrected
-informed-bank stack.
+That keeps bounded correction as the strongest Layer 3 behavior we have on top
+of the corrected informed-bank stack, now under a calibration-frozen control
+parameter.
 
 ## Split Read
 
@@ -66,7 +76,7 @@ On holdout, bounded correction effectively collapses back to anchored.
 
 - anchored open-trial error: `0.1989`
 - full refined open-trial error: `0.2013`
-- bounded open-trial error: `0.1903`
+- bounded open-trial error: `0.1951`
 
 On confirmation, bounded correction keeps the useful small moves while
 suppressing the overreach.
@@ -80,6 +90,8 @@ The key point is:
 - the problem was not that refinement existed
 - the problem was that full refinement moved too far when correction excursion
   got large relative to anchored span
+- once `tau` is frozen on calibration, the gain shrinks slightly but remains
+  real on the same fresh open set
 
 So the useful Layer 3 action is not all-or-nothing refinement.
 It is bounded correction.
@@ -94,6 +106,7 @@ That fits the current stack very naturally:
 
 Data:
 
+- [backbone_bounded_correction_alpha_solver_informed_bank_calibration_trials.csv](outputs/backbone_bounded_correction_alpha_solver_informed_bank_calibration_trials.csv)
 - [backbone_bounded_correction_alpha_solver_informed_bank_trials.csv](outputs/backbone_bounded_correction_alpha_solver_informed_bank_trials.csv)
 - [backbone_bounded_correction_alpha_solver_informed_bank_split_summary.csv](outputs/backbone_bounded_correction_alpha_solver_informed_bank_split_summary.csv)
 - [backbone_bounded_correction_alpha_solver_informed_bank_cell_summary.csv](outputs/backbone_bounded_correction_alpha_solver_informed_bank_cell_summary.csv)

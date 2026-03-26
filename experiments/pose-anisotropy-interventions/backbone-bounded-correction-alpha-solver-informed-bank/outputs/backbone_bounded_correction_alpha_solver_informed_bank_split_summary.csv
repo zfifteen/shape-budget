@@ -1,3 +1,3 @@
 split,count,point_output_count,point_output_rate,gate_precision,mean_best_alpha_output_abs_error_open,mean_anchored_alpha_output_abs_error_open,mean_refined_alpha_output_abs_error_open,mean_bounded_alpha_output_abs_error_open,mean_bounded_correction_weight_open,mean_correction_excursion_ratio_open,bounded_beats_anchored_rate_open,bounded_beats_best_rate_open,bounded_beats_refined_rate_open
 holdout,9,2,0.2222222222222222,0.5,0.14840802267012065,0.04060258049766752,0.14988131639276553,0.04060258049766752,0.0,0.24681566054251153,1.0,1.0,1.0
-confirmation,9,3,0.3333333333333333,1.0,0.2468328501313908,0.198941826071064,0.20127265379647985,0.19028707587088134,0.33843551232021235,0.06721796133559016,1.0,1.0,0.3333333333333333
+confirmation,9,3,0.3333333333333333,1.0,0.2468328501313908,0.198941826071064,0.20127265379647985,0.195056126983614,0.1649851636981455,0.06721796133559016,1.0,1.0,0.3333333333333333

@@ -2,7 +2,7 @@
 
 The Budget Governor Principle (BGP) is the latent control parameter `e = c / a` for the symmetric constant-sum two-source process.
 
-In that regime, `e` governs the normalized shape family, predicts normalized observables, and is recoverable from boundary data. This repository establishes that base case, extends the same budget logic into asymmetry, anisotropy, and multi-source control objects, and isolates the current open solver challenge in the pose-free anisotropic setting.
+In that regime, `e` governs the normalized shape family, predicts normalized observables, and is recoverable from boundary data. This repository establishes that base case, extends the same budget logic into asymmetry, anisotropy, and multi-source control objects, and now establishes a working focused solver for the hardest tested pose-free anisotropic slice while localizing the remaining open work to broader generalization and extension.
 
 **BGP in one sentence:** normalized separation relative to total budget governs how much transverse freedom remains after structural separation cost is paid.
 
@@ -114,11 +114,23 @@ The inverse experiments show that this compact control object is recoverable fro
 
 That is why the project increasingly talks about **operational latent variables** rather than just geometric descriptors.
 
-## Current Solver Challenge
+## Focused Solver Milestone
 
-The hardest branch so far is the pose-free anisotropic inverse, where rotation, anisotropy, geometry, and participation weights are all hidden at once. The failure is selective rather than uniform: geometry stays fairly recoverable, weights degrade but remain usable, and anisotropy `alpha` is the weakly identified direction.
+The hardest tested branch is the pose-free anisotropic inverse, where rotation, anisotropy, geometry, and participation weights are all hidden at once. The original failure was selective rather than uniform: geometry stayed fairly recoverable, weights degraded but remained usable, and anisotropy `alpha` was the weakly identified direction.
 
-The current diagnosis is a symmetry-handling limit rather than a failure of the latent-variable program. Hidden rotation can impersonate medium anisotropy much more easily than it can impersonate the underlying normalized geometry, which is why the next method target is better pose handling under incomplete observations rather than a new control object.
+That focused bottleneck is now solved in the tested regime by the entropy-gated bank ensemble solver on this exact slice:
+
+- `sparse_full_noisy`
+- `sparse_partial_high_noise`
+- moderate anisotropy
+- `low_skew`, `mid_skew`, `high_skew`
+
+The result is a solver-policy resolution in the tested slice, not a blanket claim that the whole anisotropic solver stack is finished:
+
+- holdout mean `alpha` error `0.1050` vs best single cached candidate `0.1091`
+- confirmation mean `alpha` error `0.1064` vs best single cached candidate `0.1104`
+
+The read stays narrow and important: the latent object survived, the signal was there, and the focused bottleneck yielded to a better inverse policy rather than to a larger control object.
 
 ## Key Plot 4: The Signal Is There, But Pose Handling Matters
 
@@ -128,7 +140,7 @@ This figure shows one of the most important diagnostics in the whole folder.
 
 The baseline pose-free anisotropic inverse does not recover `alpha` well. But when the inverse is given the true pose, `alpha` error drops dramatically across every tested regime. That means the anisotropy signal is genuinely present in the boundary; the current pipeline is mostly losing it because practical pose handling is unstable under incomplete observations.
 
-This is why the repo’s current solver challenge is no longer “is there really a latent variable here?” It is “how do we preserve enough broken symmetry before inference starts?”
+That diagnostic established the right question for the branch: not whether the latent variable exists, but how to preserve enough broken symmetry before inference starts. The later entropy-gated bank ensemble solver answers that question for the focused tested slice.
 
 ## Key Plot 5: Where The Current Pipeline Fails
 
@@ -142,7 +154,7 @@ It shows that practical pose handling does not fail everywhere equally. The bad 
 - low-skew and especially mid-skew source geometries are harder than high-skew ones
 - moderate and strong anisotropy are harder than weak anisotropy
 
-That matters because it turns a vague problem into a targetable one. The next method does not need to be globally clever in an abstract way. It needs to be better in these specific failure cells.
+That matters because it turned a vague problem into a targetable one. The entropy-gated solver now resolves the tested moderate sparse slice in those cells, and the remaining method work is broader regime coverage, broader validation, and harder extension branches rather than the already-solved focused slice.
 
 ## Where To Start Reading
 
@@ -164,6 +176,7 @@ If you want the strongest evidence path:
 8. [REPRESENTATION_INDEPENDENCE_EXPERIMENT.md](experiments/core-control-knob/representation-independence/README.md)
 9. [PROBE_SPECIALIZATION_EXPERIMENT.md](experiments/core-control-knob/probe-specialization/README.md)
 10. [SCOPE_BOUNDARY_EXPERIMENT.md](experiments/core-control-knob/scope-boundary/README.md)
+11. [ENTROPY_GATED_BANK_ENSEMBLE_SOLVER.md](experiments/pose-anisotropy-interventions/entropy-gated-bank-ensemble-solver/README.md)
 
 If you want the full research trajectory, see [RESEARCH_ROADMAP.md](experiments/research-roadmap.md).
 
@@ -189,6 +202,7 @@ If you want the full research trajectory, see [RESEARCH_ROADMAP.md](experiments/
 - [experiments/POSE_FREE_WEIGHTED_ANISOTROPIC_INVERSE_EXPERIMENT.md](experiments/multisource-control-objects/pose-free-weighted-anisotropic-inverse/README.md)
 - [experiments/ORACLE_ALIGNMENT_CEILING_EXPERIMENT.md](experiments/pose-anisotropy-diagnostics/oracle-alignment-ceiling/README.md)
 - [experiments/ALIGNMENT_FAILURE_MAP_EXPERIMENT.md](experiments/pose-anisotropy-diagnostics/alignment-failure-map/README.md)
+- [experiments/ENTROPY_GATED_BANK_ENSEMBLE_SOLVER.md](experiments/pose-anisotropy-interventions/entropy-gated-bank-ensemble-solver/README.md)
 
 ### Scripts and plots
 
@@ -230,6 +244,7 @@ The repo now establishes the Budget Governor Principle:
 - in richer positive branches, that same budget logic expands into explicit compact control objects of size `2`, `2`, `3`, and `5` rather than staying one-scalar
 - explicit wrong-compression controls now show that the universal-one-scalar version is false in the tested richer branches
 - in weighted inverse settings, those control objects are operational latent variables
-- the main unresolved technical problem is robust symmetry handling in the pose-free anisotropic branch
+- in the focused pose-free anisotropic slice (`sparse_full_noisy` and `sparse_partial_high_noise`, moderate anisotropy, `low_skew` / `mid_skew` / `high_skew`), the entropy-gated bank ensemble solver resolves the bottleneck in the tested regime with holdout `0.1050` vs `0.1091` and confirmation `0.1064` vs `0.1104`
+- the remaining open technical work is broader regime generalization, broader fresh-bank validation outside that slice, unknown anisotropy-axis orientation, richer media, and outward extension targets
 
 The repository establishes BGP as a framework for budget-governed geometry and for how much of its hidden structure can be recovered from observation.

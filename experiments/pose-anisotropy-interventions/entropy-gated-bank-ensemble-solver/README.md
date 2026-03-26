@@ -2,15 +2,22 @@
 
 ## Purpose
 
-This experiment resolves the focused solver bottleneck by combining the two
-bank-adaptive candidate generators that remained complementary under fresh-bank
-evaluation:
+This experiment resolves the focused solver bottleneck in the tested regime by
+combining the two bank-adaptive candidate generators that remained
+complementary under fresh-bank evaluation:
 
 - `baseline` bank-adaptive candidates
 - `density_ablation` bank-adaptive candidates
 
-The solver keeps the forward model and latent control object fixed.
-It changes only the inverse policy:
+The solved slice is:
+
+- `sparse_full_noisy`
+- `sparse_partial_high_noise`
+- moderate anisotropy
+- `low_skew`, `mid_skew`, `high_skew`
+
+The solver keeps the forward model and latent control object fixed. It changes
+only the inverse policy:
 
 1. fit a frozen four-way logistic chooser on calibration blocks only
 2. default to the stable `dense_support` candidate
@@ -24,10 +31,10 @@ The single-variant bank-adaptive chooser still split:
 - the density branch was stronger on one evaluation block
 - the baseline branch was stronger in several fresh-bank confirmation cells
 
-The merged candidate set exposes the real solver opportunity:
+The merged candidate set exposed the real solver opportunity:
 
-- the four-candidate oracle is much lower than any single path
-- the missing piece is a calibration-only rule for when to trust the richer
+- the four-candidate oracle was much lower than any single path
+- the missing piece was a calibration-only rule for when to trust the richer
   chooser instead of the stable default
 
 The selected gate is:
@@ -36,13 +43,12 @@ The selected gate is:
 - default candidate: `dense_support`
 - gate condition: `dense_joint_entropy >= 0.3655148794`
 
-That threshold is selected from calibration only.
-It is not tuned on holdout or confirmation.
+That threshold is selected from calibration only. It is not tuned on holdout or
+confirmation.
 
 ## Main Result
 
-From
-[entropy_gated_bank_ensemble_solver_summary.json](outputs/entropy_gated_bank_ensemble_solver_summary.json):
+From [entropy_gated_bank_ensemble_solver_summary.json](outputs/entropy_gated_bank_ensemble_solver_summary.json):
 
 - holdout solver mean `alpha` error: `0.1050`
 - holdout best single cached candidate: `0.1091`
@@ -58,8 +64,8 @@ The repo now has a working focused solver on the tested slice.
 
 ## Plain-Language Read
 
-The dense-support candidate is the safest default.
-It keeps the low-observability cells from blowing up.
+The dense-support candidate is the safest default. It keeps the low-observability
+cells from blowing up.
 
 The extra gain comes from only trusting the richer four-way chooser when the
 dense-joint entropy says the observation has enough structure to justify it.
@@ -69,19 +75,32 @@ Plainly:
 - low observability: stay with `dense_support`
 - higher observability: let the chooser pick among all four cached candidates
 
-That is exactly the solver-design resolution the earlier bottleneck work was
-pointing toward.
+That is the solver-design resolution the earlier bottleneck work was pointing
+toward in the tested regime.
 
 ## BGP Impact
 
 This strengthens BGP.
 
-The result shows the remaining failure was in solver policy, not in the latent
-control object:
+The result shows the remaining failure in the focused slice was in solver policy,
+not in the latent control object:
 
 - the control backbone stayed usable
 - the solver bottleneck yielded to an observability-gated ensemble
 - no larger latent object or theory rewrite was needed
+
+## Remaining Limits
+
+This is a focused-slice result, not a blanket claim that the entire anisotropic
+solver stack is finished.
+
+The remaining open work is:
+
+- broader regime coverage outside the solved slice
+- broader fresh-bank validation outside the solved slice
+- unknown anisotropy-axis orientation
+- richer media
+- outward extension to harder families
 
 ## Artifacts
 
