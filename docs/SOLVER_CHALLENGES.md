@@ -175,7 +175,10 @@ If you are extending the solver stack, these are the best starting references.
 
 - [backbone consensus solver](../experiments/pose-anisotropy-interventions/backbone-consensus-solver/README.md)
 - [backbone observability gate](../experiments/pose-anisotropy-interventions/backbone-observability-gate/README.md)
+- [backbone observability gate informed-bank comparison](../experiments/pose-anisotropy-interventions/backbone-observability-gate-informed-bank/README.md)
+- [backbone observability gate ratio sweep](../experiments/pose-anisotropy-interventions/backbone-observability-gate-ratio-sweep/README.md)
 - [backbone conditional alpha solver](../experiments/pose-anisotropy-interventions/backbone-conditional-alpha-solver/README.md)
+- [backbone conditional alpha solver with informed bank](../experiments/pose-anisotropy-interventions/backbone-conditional-alpha-solver-informed-bank/README.md)
 - [backbone correction-flux-triggered alpha solver](../experiments/pose-anisotropy-interventions/backbone-correction-flux-triggered-alpha-solver/README.md)
 - [backbone correction-pressure-triggered alpha solver](../experiments/pose-anisotropy-interventions/backbone-correction-pressure-triggered-alpha-solver/README.md)
 - [persistent-mode informed bank](../experiments/pose-anisotropy-interventions/persistent-mode-informed-bank/README.md)
