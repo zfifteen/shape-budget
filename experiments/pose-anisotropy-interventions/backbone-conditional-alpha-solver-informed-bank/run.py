@@ -328,6 +328,27 @@ class AllRefineTrialRow:
     refined_beats_best_flag: int
 
 
+@dataclass
+class RefinementBankResult:
+    bank_seed: int
+    refined_alpha: float
+    refined_alpha_abs_error: float
+    refined_effective_count: float
+    refined_seed_count: int
+    refined_alpha_log: float
+
+
+@dataclass
+class RefinementOutcome:
+    bank_results: list[RefinementBankResult]
+    refined_alpha_output: float
+    refined_alpha_output_abs_error: float
+    refined_alpha_bank_log_span: float
+    refined_alpha_abs_error_mean: float
+    refined_beats_anchored_flag: int
+    refined_beats_best_flag: int
+
+
 def condition_index(condition: str) -> int:
     return TARGET_CONDITIONS.index(condition)
 
@@ -393,13 +414,51 @@ def balanced_accuracy(rows: list[TrialBase], metric_name: str, threshold: float,
     return 0.5 * (tpr + tnr)
 
 
+def strict_open_comparator_from_classifier(direction: str) -> str:
+    if direction == "ge":
+        return "lt"
+    if direction == "le":
+        return "gt"
+    raise ValueError(f"Unsupported classifier direction: {direction}")
+
+
+def threshold_compare(value: float, threshold: float, comparator: str) -> int:
+    if comparator == "ge":
+        return int(value >= threshold)
+    if comparator == "gt":
+        return int(value > threshold)
+    if comparator == "le":
+        return int(value <= threshold)
+    if comparator == "lt":
+        return int(value < threshold)
+    raise ValueError(f"Unsupported comparator: {comparator}")
+
+
 def load_gate_rule() -> dict[str, float | str]:
     payload = json.loads(GATE_SUMMARY_PATH.read_text(encoding="utf-8"))
     if "selected_for_layer3" in payload:
-        return payload["selected_for_layer3"]
+        rule = dict(payload["selected_for_layer3"])
+        rule["metric"] = str(rule["metric"])
+        rule["open_threshold"] = float(rule.get("open_threshold", rule.get("threshold")))
+        rule["open_comparator"] = str(rule.get("open_comparator", rule.get("direction")))
+        rule["classifier_threshold"] = float(rule.get("classifier_threshold", rule.get("threshold")))
+        rule["classifier_direction"] = str(rule.get("classifier_direction", rule.get("direction")))
+        return rule
     if "best_metric" in payload:
-        return payload["best_metric"]
-    return payload["proposed_informed_gate_rule"]
+        rule = dict(payload["best_metric"])
+        rule["metric"] = str(rule["metric"])
+        rule["open_threshold"] = float(rule["threshold"])
+        rule["open_comparator"] = strict_open_comparator_from_classifier(str(rule["direction"]))
+        rule["classifier_threshold"] = float(rule["threshold"])
+        rule["classifier_direction"] = str(rule["direction"])
+        return rule
+    rule = dict(payload["proposed_informed_gate_rule"])
+    rule["metric"] = str(rule["metric"])
+    rule["open_threshold"] = float(rule["threshold"])
+    rule["open_comparator"] = strict_open_comparator_from_classifier(str(rule["direction"]))
+    rule["classifier_threshold"] = float(rule["threshold"])
+    rule["classifier_direction"] = str(rule["direction"])
+    return rule
 
 
 def metric_value(row: TrialBase | TrialRow | AllRefineTrialRow, metric_name: str) -> float:
@@ -638,67 +697,108 @@ def prepare_trial(
     )
 
 
-def refine_trial(
-    prepared: TrialPrepared,
-    gate_metric_name: str,
-    gate_threshold: float,
-    gate_direction: str,
-) -> tuple[list[BankRow], TrialRow, AllRefineTrialRow]:
+def compute_refinement(prepared: TrialPrepared) -> RefinementOutcome:
     trial_base = prepared.trial_base
-    gate_metric_value = metric_value(trial_base, gate_metric_name)
-    if gate_direction == "ge":
-        gate_open_flag = int(gate_metric_value >= gate_threshold)
-    else:
-        gate_open_flag = int(gate_metric_value <= gate_threshold)
-
-    bank_rows: list[BankRow] = []
+    bank_results: list[RefinementBankResult] = []
     refined_alpha_logs: list[float] = []
     refined_alpha_errors: list[float] = []
 
     for state in prepared.bank_states:
-        refined_alpha = float("nan")
-        refined_alpha_error = float("nan")
-        refined_effective = float("nan")
-        refined_seed_count = 0
+        refined_logs_local: list[float] = []
+        refined_scores_local: list[float] = []
+        refined_base_weights: list[float] = []
 
-        if gate_open_flag:
-            refined_logs_local: list[float] = []
-            refined_scores_local: list[float] = []
-            refined_base_weights: list[float] = []
-
-            for candidate in state.seed_candidates:
-                seed_params = (
-                    candidate.rho,
-                    candidate.t,
-                    candidate.h,
-                    candidate.w1,
-                    candidate.w2,
-                    candidate.alpha,
-                )
-                refined_params, _, _, refined_score = candidate_conditioned_search(
-                    prepared.observed_signature,
-                    prepared.mask,
-                    seed_params,
-                    prepared.temperature,
-                )
-                refined_logs_local.append(math.log(float(refined_params[5])))
-                refined_scores_local.append(float(refined_score))
-                refined_base_weights.append(float(max(candidate.anchored_weight_layer2, NUMERIC_EPS)))
-
-            refined_scores_arr = np.array(refined_scores_local, dtype=float)
-            refined_base_weights_arr = np.array(refined_base_weights, dtype=float)
-            score_offsets = refined_scores_arr - float(np.min(refined_scores_arr))
-            refined_weights = normalize_weights(
-                refined_base_weights_arr * np.exp(-score_offsets / max(prepared.band, NUMERIC_EPS))
+        for candidate in state.seed_candidates:
+            seed_params = (
+                candidate.rho,
+                candidate.t,
+                candidate.h,
+                candidate.w1,
+                candidate.w2,
+                candidate.alpha,
             )
-            refined_log = float(np.sum(refined_weights * np.array(refined_logs_local, dtype=float)))
-            refined_alpha = float(math.exp(refined_log))
-            refined_alpha_error = float(abs(refined_alpha - prepared.true_alpha))
-            refined_effective = effective_count(refined_weights)
-            refined_seed_count = int(len(refined_logs_local))
-            refined_alpha_logs.append(refined_log)
-            refined_alpha_errors.append(refined_alpha_error)
+            refined_params, _, _, refined_score = candidate_conditioned_search(
+                prepared.observed_signature,
+                prepared.mask,
+                seed_params,
+                prepared.temperature,
+            )
+            refined_logs_local.append(math.log(float(refined_params[5])))
+            refined_scores_local.append(float(refined_score))
+            refined_base_weights.append(float(max(candidate.anchored_weight_layer2, NUMERIC_EPS)))
 
+        refined_scores_arr = np.array(refined_scores_local, dtype=float)
+        refined_base_weights_arr = np.array(refined_base_weights, dtype=float)
+        score_offsets = refined_scores_arr - float(np.min(refined_scores_arr))
+        refined_weights = normalize_weights(
+            refined_base_weights_arr * np.exp(-score_offsets / max(prepared.band, NUMERIC_EPS))
+        )
+        refined_log = float(np.sum(refined_weights * np.array(refined_logs_local, dtype=float)))
+        refined_alpha = float(math.exp(refined_log))
+        refined_alpha_error = float(abs(refined_alpha - prepared.true_alpha))
+        refined_effective = effective_count(refined_weights)
+        refined_seed_count = int(len(refined_logs_local))
+        refined_alpha_logs.append(refined_log)
+        refined_alpha_errors.append(refined_alpha_error)
+        bank_results.append(
+            RefinementBankResult(
+                bank_seed=int(state.bank_seed),
+                refined_alpha=float(refined_alpha),
+                refined_alpha_abs_error=float(refined_alpha_error),
+                refined_effective_count=float(refined_effective),
+                refined_seed_count=int(refined_seed_count),
+                refined_alpha_log=float(refined_log),
+            )
+        )
+
+    refined_alpha_output = float(math.exp(float(np.mean(refined_alpha_logs))))
+    refined_alpha_output_abs_error = float(abs(refined_alpha_output - prepared.true_alpha))
+    refined_alpha_bank_log_span = float(np.max(refined_alpha_logs) - np.min(refined_alpha_logs))
+    refined_alpha_abs_error_mean = float(np.mean(refined_alpha_errors))
+    refined_beats_anchored_flag = int(refined_alpha_output_abs_error <= trial_base.anchored_alpha_output_abs_error)
+    refined_beats_best_flag = int(refined_alpha_output_abs_error <= trial_base.best_alpha_output_abs_error)
+
+    return RefinementOutcome(
+        bank_results=bank_results,
+        refined_alpha_output=float(refined_alpha_output),
+        refined_alpha_output_abs_error=float(refined_alpha_output_abs_error),
+        refined_alpha_bank_log_span=float(refined_alpha_bank_log_span),
+        refined_alpha_abs_error_mean=float(refined_alpha_abs_error_mean),
+        refined_beats_anchored_flag=int(refined_beats_anchored_flag),
+        refined_beats_best_flag=int(refined_beats_best_flag),
+    )
+
+
+def refine_trial(
+    prepared: TrialPrepared,
+    gate_metric_name: str,
+    open_threshold: float,
+    open_comparator: str,
+) -> tuple[list[BankRow], TrialRow, AllRefineTrialRow]:
+    trial_base = prepared.trial_base
+    gate_metric_value = metric_value(trial_base, gate_metric_name)
+    gate_open_flag = threshold_compare(gate_metric_value, open_threshold, open_comparator)
+    refinement = compute_refinement(prepared)
+    bank_rows: list[BankRow] = []
+    bank_result_by_seed = {result.bank_seed: result for result in refinement.bank_results}
+
+    if gate_open_flag:
+        refined_alpha_output = refinement.refined_alpha_output
+        refined_alpha_output_abs_error = refinement.refined_alpha_output_abs_error
+        refined_alpha_bank_log_span = refinement.refined_alpha_bank_log_span
+        refined_alpha_abs_error_mean = refinement.refined_alpha_abs_error_mean
+        refined_beats_anchored_flag = refinement.refined_beats_anchored_flag
+        refined_beats_best_flag = refinement.refined_beats_best_flag
+    else:
+        refined_alpha_output = float("nan")
+        refined_alpha_output_abs_error = float("nan")
+        refined_alpha_bank_log_span = float("nan")
+        refined_alpha_abs_error_mean = float("nan")
+        refined_beats_anchored_flag = 0
+        refined_beats_best_flag = 0
+
+    for state in prepared.bank_states:
+        bank_refinement = bank_result_by_seed[int(state.bank_seed)]
         bank_rows.append(
             BankRow(
                 split=prepared.split,
@@ -725,27 +825,12 @@ def refine_trial(
                 trial_backbone_rho13=float(prepared.trial_backbone[1]),
                 trial_backbone_rho23=float(prepared.trial_backbone[2]),
                 gate_open_flag=int(gate_open_flag),
-                refined_alpha=float(refined_alpha),
-                refined_alpha_abs_error=float(refined_alpha_error),
-                refined_effective_count=float(refined_effective),
-                refined_seed_count=int(refined_seed_count),
+                refined_alpha=float(bank_refinement.refined_alpha) if gate_open_flag == 1 else float("nan"),
+                refined_alpha_abs_error=float(bank_refinement.refined_alpha_abs_error) if gate_open_flag == 1 else float("nan"),
+                refined_effective_count=float(bank_refinement.refined_effective_count) if gate_open_flag == 1 else float("nan"),
+                refined_seed_count=int(bank_refinement.refined_seed_count) if gate_open_flag == 1 else 0,
             )
         )
-
-    if gate_open_flag:
-        refined_alpha_output = float(math.exp(float(np.mean(refined_alpha_logs))))
-        refined_alpha_output_abs_error = float(abs(refined_alpha_output - prepared.true_alpha))
-        refined_alpha_bank_log_span = float(np.max(refined_alpha_logs) - np.min(refined_alpha_logs))
-        refined_alpha_abs_error_mean = float(np.mean(refined_alpha_errors))
-        refined_beats_anchored_flag = int(refined_alpha_output_abs_error <= trial_base.anchored_alpha_output_abs_error)
-        refined_beats_best_flag = int(refined_alpha_output_abs_error <= trial_base.best_alpha_output_abs_error)
-    else:
-        refined_alpha_output = float("nan")
-        refined_alpha_output_abs_error = float("nan")
-        refined_alpha_bank_log_span = float("nan")
-        refined_alpha_abs_error_mean = float("nan")
-        refined_beats_anchored_flag = 0
-        refined_beats_best_flag = 0
 
     trial_row = TrialRow(
         split=trial_base.split,
@@ -773,7 +858,7 @@ def refine_trial(
         anchored_alpha_output_abs_error=float(trial_base.anchored_alpha_output_abs_error),
         alpha_point_recoverable_flag=int(trial_base.alpha_point_recoverable_flag),
         alpha_point_unrecoverable_flag=int(trial_base.alpha_point_unrecoverable_flag),
-        gate_threshold=float(gate_threshold),
+        gate_threshold=float(open_threshold),
         gate_open_flag=int(gate_open_flag),
         point_output_flag=int(gate_open_flag),
         abstain_flag=int(1 - gate_open_flag),
@@ -813,19 +898,24 @@ def refine_trial(
         best_alpha_output_abs_error=float(trial_base.best_alpha_output_abs_error),
         anchored_alpha_output=float(trial_base.anchored_alpha_output),
         anchored_alpha_output_abs_error=float(trial_base.anchored_alpha_output_abs_error),
-        refined_alpha_output=float(refined_alpha_output),
-        refined_alpha_output_abs_error=float(refined_alpha_output_abs_error),
+        refined_alpha_output=float(refinement.refined_alpha_output),
+        refined_alpha_output_abs_error=float(refinement.refined_alpha_output_abs_error),
         best_alpha_bank_log_span=float(trial_base.best_alpha_bank_log_span),
         anchored_alpha_bank_log_span=float(trial_base.anchored_alpha_bank_log_span),
-        refined_alpha_bank_log_span=float(refined_alpha_bank_log_span),
-        refined_alpha_abs_error_mean=float(refined_alpha_abs_error_mean),
-        refined_beats_anchored_flag=int(refined_beats_anchored_flag),
-        refined_beats_best_flag=int(refined_beats_best_flag),
+        refined_alpha_bank_log_span=float(refinement.refined_alpha_bank_log_span),
+        refined_alpha_abs_error_mean=float(refinement.refined_alpha_abs_error_mean),
+        refined_beats_anchored_flag=int(refinement.refined_beats_anchored_flag),
+        refined_beats_best_flag=int(refinement.refined_beats_best_flag),
     )
     return bank_rows, trial_row, all_refine_row
 
 
-def summarize_by_split(rows: list[TrialRow], gate_metric_name: str, gate_direction: str) -> list[dict[str, float | str]]:
+def summarize_by_split(
+    rows: list[TrialRow],
+    gate_metric_name: str,
+    classifier_direction: str,
+    classifier_threshold: float,
+) -> list[dict[str, float | str]]:
     summary = []
     for split in BLOCK_SPECS:
         subset = [row for row in rows if row.split == split]
@@ -877,8 +967,8 @@ def summarize_by_split(rows: list[TrialRow], gate_metric_name: str, gate_directi
                 "gate_balanced_accuracy": balanced_accuracy(
                     base_subset,
                     gate_metric_name,
-                    subset[0].gate_threshold,
-                    gate_direction,
+                    classifier_threshold,
+                    classifier_direction,
                 ),
                 "gate_precision": rate_or_nan([row.alpha_point_recoverable_flag for row in open_subset]),
                 "gate_reject_unrecoverable_rate": rate_or_nan([row.gate_closed_and_unrecoverable_flag for row in unrecoverable_subset]),
@@ -1001,8 +1091,10 @@ def plot_open_alpha_spans(path: str, split_summary: list[dict[str, float | str]]
 def main() -> None:
     gate_rule = load_gate_rule()
     gate_metric_name = str(gate_rule["metric"])
-    gate_direction = str(gate_rule["direction"])
-    gate_threshold = float(gate_rule["threshold"])
+    gate_open_comparator = str(gate_rule["open_comparator"])
+    gate_open_threshold = float(gate_rule["open_threshold"])
+    classifier_direction = str(gate_rule["classifier_direction"])
+    classifier_threshold = float(gate_rule["classifier_threshold"])
     candidate_rows_by_bank = load_candidate_rows()
     layer2_trial_rows = load_layer2_trial_rows()
     regime_map = {str(regime["name"]): regime for regime in OBSERVATION_REGIMES}
@@ -1033,14 +1125,19 @@ def main() -> None:
         new_bank_rows, trial_row, all_refine_row = refine_trial(
             prepared,
             gate_metric_name,
-            gate_threshold,
-            gate_direction,
+            gate_open_threshold,
+            gate_open_comparator,
         )
         bank_rows.extend(new_bank_rows)
         trial_rows.append(trial_row)
         all_refine_rows.append(all_refine_row)
 
-    split_summary = summarize_by_split(trial_rows, gate_metric_name, gate_direction)
+    split_summary = summarize_by_split(
+        trial_rows,
+        gate_metric_name,
+        classifier_direction,
+        classifier_threshold,
+    )
     condition_summary = summarize_by_condition(trial_rows)
     cell_summary = summarize_by_cell(trial_rows)
 
@@ -1051,17 +1148,19 @@ def main() -> None:
 
     threshold_summary = {
         "metric": gate_metric_name,
-        "direction": gate_direction,
-        "threshold": gate_threshold,
+        "direction": classifier_direction,
+        "threshold": classifier_threshold,
+        "open_comparator": gate_open_comparator,
+        "open_threshold": gate_open_threshold,
         "calibration_balanced_accuracy": float(gate_rule["calibration_balanced_accuracy"]),
-        "holdout_balanced_accuracy": balanced_accuracy(holdout_rows, gate_metric_name, gate_threshold, gate_direction),
+        "holdout_balanced_accuracy": balanced_accuracy(holdout_rows, gate_metric_name, classifier_threshold, classifier_direction),
         "confirmation_balanced_accuracy": balanced_accuracy(
             confirmation_rows,
             gate_metric_name,
-            gate_threshold,
-            gate_direction,
+            classifier_threshold,
+            classifier_direction,
         ),
-        "overall_balanced_accuracy": balanced_accuracy(trial_bases, gate_metric_name, gate_threshold, gate_direction),
+        "overall_balanced_accuracy": balanced_accuracy(trial_bases, gate_metric_name, classifier_threshold, classifier_direction),
     }
 
     global_summary = {
@@ -1070,7 +1169,8 @@ def main() -> None:
         "bank_seeds": list(BANK_SEEDS),
         "top_k_refinement_seeds": TOP_K_REFINEMENT_SEEDS,
         "gate_metric": gate_metric_name,
-        "gate_direction": gate_direction,
+        "gate_open_comparator": gate_open_comparator,
+        "gate_classifier_direction": classifier_direction,
         "trial_count": len(trial_rows),
         "point_output_count": int(sum(row.point_output_flag for row in trial_rows)),
         "point_output_rate": float(np.mean([row.point_output_flag for row in trial_rows])),

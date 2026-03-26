@@ -17,13 +17,17 @@
   },
   "selected_for_layer3": {
     "metric": "ratio_candidate_times_span_over_effective",
+    "open_threshold": 0.700453425604268,
+    "open_comparator": "gt",
+    "classifier_threshold": 0.700453425604268,
+    "classifier_direction": "le",
     "threshold": 0.700453425604268,
-    "direction": "ge",
+    "direction": "le",
+    "selection_rule": "fallback_best_balanced_accuracy",
     "calibration_balanced_accuracy": 0.6666666666666667,
     "holdout_balanced_accuracy": 0.5833333333333334,
     "confirmation_balanced_accuracy": 0.8,
-    "oos_mean_balanced_accuracy": 0.6916666666666667,
-    "selection_rule": "fallback_best_balanced_accuracy"
+    "oos_mean_balanced_accuracy": 0.6916666666666667
   },
   "top5": [
     {

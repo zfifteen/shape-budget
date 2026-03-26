@@ -9,7 +9,8 @@
     ],
     "top_k_refinement_seeds": 3,
     "gate_metric": "ratio_candidate_times_span_over_effective",
-    "gate_direction": "ge",
+    "gate_open_comparator": "gt",
+    "gate_classifier_direction": "le",
     "trial_count": 18,
     "point_output_count": 5,
     "point_output_rate": 0.2777777777777778,
@@ -27,12 +28,14 @@
   },
   "gate_threshold": {
     "metric": "ratio_candidate_times_span_over_effective",
-    "direction": "ge",
+    "direction": "le",
     "threshold": 0.700453425604268,
+    "open_comparator": "gt",
+    "open_threshold": 0.700453425604268,
     "calibration_balanced_accuracy": 0.6666666666666667,
-    "holdout_balanced_accuracy": 0.5833333333333334,
-    "confirmation_balanced_accuracy": 0.8,
-    "overall_balanced_accuracy": 0.7
+    "holdout_balanced_accuracy": 0.41666666666666663,
+    "confirmation_balanced_accuracy": 0.2,
+    "overall_balanced_accuracy": 0.3
   },
   "by_split": [
     {
@@ -41,7 +44,7 @@
       "point_output_count": 2,
       "point_output_rate": 0.2222222222222222,
       "alpha_point_recoverable_rate": 0.3333333333333333,
-      "gate_balanced_accuracy": 0.5833333333333334,
+      "gate_balanced_accuracy": 0.41666666666666663,
       "gate_precision": 0.5,
       "gate_reject_unrecoverable_rate": 0.8333333333333334,
       "mean_best_alpha_output_abs_error_open": 0.14840802267012065,
@@ -59,7 +62,7 @@
       "point_output_count": 3,
       "point_output_rate": 0.3333333333333333,
       "alpha_point_recoverable_rate": 0.5555555555555556,
-      "gate_balanced_accuracy": 0.8,
+      "gate_balanced_accuracy": 0.2,
       "gate_precision": 1.0,
       "gate_reject_unrecoverable_rate": 1.0,
       "mean_best_alpha_output_abs_error_open": 0.2468328501313908,

@@ -40,9 +40,12 @@ This version uses the specialized informed-bank Layer 2 rule from
 
 - metric: `mean_candidate_count * mean_anchored_alpha_log_span / mean_anchored_effective_count`
 - threshold: `0.700453`
-- direction: `ge`
+- classifier direction: `le`
+- open comparator: `gt`
 
-The gate opens when that ratio rises above the threshold.
+The gate opens only when that ratio is strictly above the threshold. The
+classifier and open rule are now serialized separately, so threshold ties stay
+on the classifier side instead of being reopened by a direction flip.
 
 This run also restores the intended Layer 3 refinement weighting:
 
@@ -51,6 +54,9 @@ This run also restores the intended Layer 3 refinement weighting:
   solver math
 - the Layer 2 rule is loaded from the serialized specialized sweep output
   rather than from a hardcoded override
+- the `all_refine` artifact is truly gate-independent, so every fresh trial now
+  has a real refined output cached even when the current Layer 2 rule keeps it
+  closed
 
 ## Main Result
 
@@ -65,6 +71,8 @@ From [backbone_conditional_alpha_solver_informed_bank_summary.json](outputs/back
 - point-output rate: `0.2778`
 - gate precision: `0.8000`
 - gate reject-unrecoverable rate: `0.9000`
+- holdout classifier balanced accuracy: `0.4167`
+- confirmation classifier balanced accuracy: `0.2000`
 - best open-trial `alpha` error: `0.2075`
 - anchored open-trial `alpha` error: `0.1356`
 - refined open-trial `alpha` error: `0.1807`
@@ -125,7 +133,8 @@ What it now shows is:
 - the restored Layer 3 math is less flattering than the earlier cached result
 
 The current open problem is not gate serialization anymore.
-That part is fixed.
+That part is fixed, and the cached refinement path is now complete enough for
+downstream Layer 2 to Layer 3 rule selection.
 The remaining question is whether Layer 3 can produce a net-improving refined
 answer under the corrected weighting math.
 

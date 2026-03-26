@@ -310,10 +310,32 @@ def choose_threshold(values: np.ndarray, labels: np.ndarray) -> dict[str, object
     return best
 
 
-def open_mask(values: np.ndarray, threshold: float, direction: str) -> np.ndarray:
-    if direction == "ge":
+def open_mask(values: np.ndarray, threshold: float, comparator: str) -> np.ndarray:
+    if comparator == "ge":
         return values >= threshold
-    return values <= threshold
+    if comparator == "gt":
+        return values > threshold
+    if comparator == "le":
+        return values <= threshold
+    if comparator == "lt":
+        return values < threshold
+    raise ValueError(f"Unsupported comparator: {comparator}")
+
+
+def strict_open_rule(metric: str, threshold: float, classifier_direction: str) -> dict[str, object]:
+    if classifier_direction == "ge":
+        open_comparator = "lt"
+    elif classifier_direction == "le":
+        open_comparator = "gt"
+    else:
+        raise ValueError(f"Unsupported classifier direction: {classifier_direction}")
+    return {
+        "metric": metric,
+        "open_threshold": float(threshold),
+        "open_comparator": open_comparator,
+        "classifier_threshold": float(threshold),
+        "classifier_direction": classifier_direction,
+    }
 
 
 def choose_layer3_rule(leaderboard: list[dict[str, object]], downstream_df: pd.DataFrame) -> dict[str, object]:
@@ -323,7 +345,12 @@ def choose_layer3_rule(leaderboard: list[dict[str, object]], downstream_df: pd.D
         metric = str(item["metric"])
         threshold = float(item["threshold"])
         direction = str(item["direction"])
-        open_flags = open_mask(downstream_df[metric].to_numpy(dtype=float), threshold, direction)
+        open_rule = strict_open_rule(metric, threshold, direction)
+        open_flags = open_mask(
+            downstream_df[metric].to_numpy(dtype=float),
+            float(open_rule["open_threshold"]),
+            str(open_rule["open_comparator"]),
+        )
         scored = downstream_df.copy()
         scored["gate_open_flag"] = open_flags.astype(int)
 
@@ -356,6 +383,10 @@ def choose_layer3_rule(leaderboard: list[dict[str, object]], downstream_df: pd.D
                 "metric": metric,
                 "threshold": threshold,
                 "direction": direction,
+                "open_threshold": float(open_rule["open_threshold"]),
+                "open_comparator": str(open_rule["open_comparator"]),
+                "classifier_threshold": float(open_rule["classifier_threshold"]),
+                "classifier_direction": str(open_rule["classifier_direction"]),
                 "selection_rule": "downstream_open_trial_refined_error",
                 "calibration_balanced_accuracy": float(item["calibration_balanced_accuracy"]),
                 "holdout_balanced_accuracy": float(item["holdout_balanced_accuracy"]),
@@ -386,9 +417,22 @@ def choose_layer3_rule(leaderboard: list[dict[str, object]], downstream_df: pd.D
         )
         return candidates[0]
 
-    fallback = dict(leaderboard[0])
-    fallback["direction"] = "le" if str(fallback["direction"]) == "ge" else "ge"
-    fallback["selection_rule"] = "fallback_best_balanced_accuracy"
+    best = leaderboard[0]
+    fallback = {
+        **strict_open_rule(
+            str(best["metric"]),
+            float(best["threshold"]),
+            str(best["direction"]),
+        ),
+        "metric": str(best["metric"]),
+        "threshold": float(best["threshold"]),
+        "direction": str(best["direction"]),
+        "selection_rule": "fallback_best_balanced_accuracy",
+        "calibration_balanced_accuracy": float(best["calibration_balanced_accuracy"]),
+        "holdout_balanced_accuracy": float(best["holdout_balanced_accuracy"]),
+        "confirmation_balanced_accuracy": float(best["confirmation_balanced_accuracy"]),
+        "oos_mean_balanced_accuracy": float(best["oos_mean_balanced_accuracy"]),
+    }
     return fallback
 
 

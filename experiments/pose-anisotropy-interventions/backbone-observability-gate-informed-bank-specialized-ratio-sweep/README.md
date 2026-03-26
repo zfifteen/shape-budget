@@ -68,8 +68,10 @@ So the serialized Layer 3-facing rule falls back to the open-side form of the
 best pure Layer 2 classifier:
 
 - metric: `mean_candidate_count * mean_anchored_alpha_log_span / mean_anchored_effective_count`
-- threshold: `0.700453`
-- direction: `ge`
+- classifier threshold: `0.700453`
+- classifier direction: `le`
+- open threshold: `0.700453`
+- open comparator: `gt`
 - selection rule: `fallback_best_balanced_accuracy`
 
 That distinction matters:
@@ -77,7 +79,9 @@ That distinction matters:
 - `best_metric` remains the best unrecoverable classifier
 - `selected_for_layer3` is the rule Layer 3 actually consumes
 - when the downstream search finds no better open-rule, `selected_for_layer3`
-  becomes the direct open-side version of `best_metric`
+  becomes the strict open-side complement of `best_metric`
+- threshold equality stays on the classifier side, because the serialized open
+  rule uses explicit boundary semantics instead of flipping `ge` and `le`
 
 So this sweep now produces a single source of truth for both:
 

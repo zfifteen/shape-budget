@@ -1,0 +1,364 @@
+{
+  "experiment": "entropy-gated-bank-ensemble-solver",
+  "focus_alpha_bin": "moderate",
+  "default_candidate": "dense_support",
+  "gate_feature": "d_joint_entropy",
+  "gate_threshold": 0.3655148794219478,
+  "calibration": {
+    "label": "calibration",
+    "count": 36,
+    "solver_alpha_error_mean": 0.10406291605519041,
+    "best_single_alpha_error_mean": 0.1595705360951762,
+    "best_single_candidate": "baseline_joint",
+    "oracle4_alpha_error_mean": 0.10406291605519041,
+    "single_candidate_means": {
+      "baseline_support": 0.1861657517439466,
+      "baseline_joint": 0.1595705360951762,
+      "dense_support": 0.16957273720534835,
+      "dense_joint": 0.16869017081597978
+    },
+    "gate_open_rate": 0.9444444444444444,
+    "beats_best_single": true,
+    "by_condition": [
+      {
+        "condition": "sparse_full_noisy",
+        "count": 18,
+        "solver_alpha_error_mean": 0.09211265064994038,
+        "best_single_alpha_error_mean": 0.09211265064994038,
+        "gate_open_rate": 0.8888888888888888
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "count": 18,
+        "solver_alpha_error_mean": 0.11601318146044043,
+        "best_single_alpha_error_mean": 0.11601318146044043,
+        "gate_open_rate": 1.0
+      }
+    ],
+    "by_cell": [
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "low_skew",
+        "count": 6,
+        "solver_alpha_error_mean": 0.02281187566807687,
+        "best_single_alpha_error_mean": 0.02281187566807687,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_joint": 2,
+          "baseline_support": 2,
+          "dense_support": 2
+        }
+      },
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "mid_skew",
+        "count": 6,
+        "solver_alpha_error_mean": 0.09171113788793338,
+        "best_single_alpha_error_mean": 0.09171113788793338,
+        "gate_open_rate": 0.6666666666666666,
+        "chosen_candidate_counts": {
+          "baseline_joint": 1,
+          "baseline_support": 1,
+          "dense_support": 4
+        }
+      },
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "high_skew",
+        "count": 6,
+        "solver_alpha_error_mean": 0.16181493839381086,
+        "best_single_alpha_error_mean": 0.16181493839381086,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_joint": 1,
+          "baseline_support": 1,
+          "dense_joint": 4
+        }
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "low_skew",
+        "count": 6,
+        "solver_alpha_error_mean": 0.16250702863220987,
+        "best_single_alpha_error_mean": 0.16250702863220987,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_joint": 1,
+          "baseline_support": 2,
+          "dense_joint": 1,
+          "dense_support": 2
+        }
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "mid_skew",
+        "count": 6,
+        "solver_alpha_error_mean": 0.13674370090687746,
+        "best_single_alpha_error_mean": 0.13674370090687746,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_support": 4,
+          "dense_support": 2
+        }
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "high_skew",
+        "count": 6,
+        "solver_alpha_error_mean": 0.04878881484223394,
+        "best_single_alpha_error_mean": 0.04878881484223394,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_joint": 1,
+          "baseline_support": 2,
+          "dense_joint": 1,
+          "dense_support": 2
+        }
+      }
+    ],
+    "plain_language_result": "The entropy-gated ensemble beat the best single cached candidate on calibration: solver 0.1041 vs best single baseline_joint at 0.1596.",
+    "bgp_interpretation": "strengthens BGP"
+  },
+  "holdout": {
+    "label": "holdout_block_1",
+    "count": 18,
+    "solver_alpha_error_mean": 0.105036026036684,
+    "best_single_alpha_error_mean": 0.10906377107310064,
+    "best_single_candidate": "dense_support",
+    "oracle4_alpha_error_mean": 0.06688786352165282,
+    "single_candidate_means": {
+      "baseline_support": 0.1273419203110743,
+      "baseline_joint": 0.11804474437812236,
+      "dense_support": 0.10906377107310064,
+      "dense_joint": 0.1355810582876911
+    },
+    "gate_open_rate": 0.8888888888888888,
+    "beats_best_single": true,
+    "by_condition": [
+      {
+        "condition": "sparse_full_noisy",
+        "count": 9,
+        "solver_alpha_error_mean": 0.0624819453791996,
+        "best_single_alpha_error_mean": 0.047502211024346166,
+        "gate_open_rate": 0.7777777777777778
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "count": 9,
+        "solver_alpha_error_mean": 0.1475901066941684,
+        "best_single_alpha_error_mean": 0.0862735160189595,
+        "gate_open_rate": 1.0
+      }
+    ],
+    "by_cell": [
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "low_skew",
+        "count": 3,
+        "solver_alpha_error_mean": 0.11121130786998883,
+        "best_single_alpha_error_mean": 0.11121130786998883,
+        "gate_open_rate": 0.6666666666666666,
+        "chosen_candidate_counts": {
+          "baseline_support": 2,
+          "dense_support": 1
+        }
+      },
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "mid_skew",
+        "count": 3,
+        "solver_alpha_error_mean": 0.009138538522995399,
+        "best_single_alpha_error_mean": 0.0061882312202297856,
+        "gate_open_rate": 0.6666666666666666,
+        "chosen_candidate_counts": {
+          "dense_joint": 1,
+          "dense_support": 2
+        }
+      },
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "high_skew",
+        "count": 3,
+        "solver_alpha_error_mean": 0.06709598974461457,
+        "best_single_alpha_error_mean": 0.02510709398281989,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_support": 2,
+          "dense_support": 1
+        }
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "low_skew",
+        "count": 3,
+        "solver_alpha_error_mean": 0.18242074501903563,
+        "best_single_alpha_error_mean": 0.06538484178178416,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_joint": 1,
+          "dense_support": 2
+        }
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "mid_skew",
+        "count": 3,
+        "solver_alpha_error_mean": 0.13948070317987157,
+        "best_single_alpha_error_mean": 0.08072992291492787,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_joint": 1,
+          "baseline_support": 1,
+          "dense_support": 1
+        }
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "high_skew",
+        "count": 3,
+        "solver_alpha_error_mean": 0.12086887188359792,
+        "best_single_alpha_error_mean": 0.11270578336016646,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_joint": 1,
+          "baseline_support": 1,
+          "dense_support": 1
+        }
+      }
+    ],
+    "plain_language_result": "The entropy-gated ensemble beat the best single cached candidate on holdout_block_1: solver 0.1050 vs best single dense_support at 0.1091.",
+    "bgp_interpretation": "strengthens BGP"
+  },
+  "confirmation": {
+    "label": "confirmation_block",
+    "count": 18,
+    "solver_alpha_error_mean": 0.10640608306811991,
+    "best_single_alpha_error_mean": 0.11038420760693732,
+    "best_single_candidate": "dense_joint",
+    "oracle4_alpha_error_mean": 0.07869765515734592,
+    "single_candidate_means": {
+      "baseline_support": 0.13192300436297458,
+      "baseline_joint": 0.1772917366245359,
+      "dense_support": 0.147540912836163,
+      "dense_joint": 0.11038420760693732
+    },
+    "gate_open_rate": 0.8888888888888888,
+    "beats_best_single": true,
+    "by_condition": [
+      {
+        "condition": "sparse_full_noisy",
+        "count": 9,
+        "solver_alpha_error_mean": 0.1454872410430456,
+        "best_single_alpha_error_mean": 0.11807206208222557,
+        "gate_open_rate": 0.7777777777777778
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "count": 9,
+        "solver_alpha_error_mean": 0.06732492509319415,
+        "best_single_alpha_error_mean": 0.03932324823246628,
+        "gate_open_rate": 1.0
+      }
+    ],
+    "by_cell": [
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "low_skew",
+        "count": 3,
+        "solver_alpha_error_mean": 0.023199759459272922,
+        "best_single_alpha_error_mean": 0.014212527811581296,
+        "gate_open_rate": 0.3333333333333333,
+        "chosen_candidate_counts": {
+          "dense_support": 3
+        }
+      },
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "mid_skew",
+        "count": 3,
+        "solver_alpha_error_mean": 0.24546592274231352,
+        "best_single_alpha_error_mean": 0.17502249181381205,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_joint": 1,
+          "baseline_support": 1,
+          "dense_joint": 1
+        }
+      },
+      {
+        "condition": "sparse_full_noisy",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "high_skew",
+        "count": 3,
+        "solver_alpha_error_mean": 0.1677960409275505,
+        "best_single_alpha_error_mean": 0.16498116662128337,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_support": 2,
+          "dense_support": 1
+        }
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "low_skew",
+        "count": 3,
+        "solver_alpha_error_mean": 0.12006120898124188,
+        "best_single_alpha_error_mean": 0.04525927780167501,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_support": 3
+        }
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "mid_skew",
+        "count": 3,
+        "solver_alpha_error_mean": 0.02639444274623019,
+        "best_single_alpha_error_mean": 0.02639444274623019,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_support": 2,
+          "dense_joint": 1
+        }
+      },
+      {
+        "condition": "sparse_partial_high_noise",
+        "alpha_strength_bin": "moderate",
+        "geometry_skew_bin": "high_skew",
+        "count": 3,
+        "solver_alpha_error_mean": 0.05551912355211038,
+        "best_single_alpha_error_mean": 0.04631602414949365,
+        "gate_open_rate": 1.0,
+        "chosen_candidate_counts": {
+          "baseline_support": 2,
+          "dense_support": 1
+        }
+      }
+    ],
+    "plain_language_result": "The entropy-gated ensemble beat the best single cached candidate on confirmation_block: solver 0.1064 vs best single dense_joint at 0.1104.",
+    "bgp_interpretation": "strengthens BGP"
+  },
+  "overall": {
+    "working_solver": true,
+    "plain_language_result": "The entropy-gated ensemble solved the focused slice in the tested regime: holdout 0.1050 vs 0.1091, confirmation 0.1064 vs 0.1104.",
+    "bgp_interpretation": "strengthens BGP"
+  },
+  "plain_language_result": "The entropy-gated ensemble solved the focused slice in the tested regime: holdout 0.1050 vs 0.1091, confirmation 0.1064 vs 0.1104.",
+  "bgp_interpretation": "strengthens BGP"
+}
