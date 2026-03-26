@@ -72,6 +72,11 @@ EXISTING_TRIALS_PATH = (
 )
 LEADERBOARD_CSV = OUTPUT_DIR / "backbone_observability_gate_informed_bank_specialized_ratio_sweep_leaderboard.csv"
 SUMMARY_JSON = OUTPUT_DIR / "backbone_observability_gate_informed_bank_specialized_ratio_sweep_summary.json"
+ALL_REFINE_TRIALS_PATH = (
+    ROOT
+    / "experiments/pose-anisotropy-interventions/backbone-conditional-alpha-solver-informed-bank/outputs/"
+    "backbone_conditional_alpha_solver_informed_bank_all_refine_trials.csv"
+)
 
 METHOD = "persistent_mode_informed"
 TARGET_CONDITION = "sparse_partial_high_noise"
@@ -305,9 +310,94 @@ def choose_threshold(values: np.ndarray, labels: np.ndarray) -> dict[str, object
     return best
 
 
-def main() -> None:
-    existing = pd.read_csv(EXISTING_TRIALS_PATH)
-    existing = existing[(existing["method"] == METHOD) & (existing["split"].isin(["holdout", "confirmation"]))].copy()
+def open_mask(values: np.ndarray, threshold: float, direction: str) -> np.ndarray:
+    if direction == "ge":
+        return values >= threshold
+    return values <= threshold
+
+
+def choose_layer3_rule(leaderboard: list[dict[str, object]], downstream_df: pd.DataFrame) -> dict[str, object]:
+    candidates: list[dict[str, object]] = []
+
+    for item in leaderboard:
+        metric = str(item["metric"])
+        threshold = float(item["threshold"])
+        direction = str(item["direction"])
+        open_flags = open_mask(downstream_df[metric].to_numpy(dtype=float), threshold, direction)
+        scored = downstream_df.copy()
+        scored["gate_open_flag"] = open_flags.astype(int)
+
+        open_subset = scored[scored["gate_open_flag"] == 1].copy()
+        if open_subset.empty:
+            continue
+
+        holdout_open = open_subset[open_subset["split"] == "holdout"]
+        confirmation_open = open_subset[open_subset["split"] == "confirmation"]
+        if holdout_open.empty or confirmation_open.empty:
+            continue
+
+        holdout_refined = float(holdout_open["refined_alpha_output_abs_error"].mean())
+        holdout_anchored = float(holdout_open["anchored_alpha_output_abs_error"].mean())
+        holdout_best = float(holdout_open["best_alpha_output_abs_error"].mean())
+        confirmation_refined = float(confirmation_open["refined_alpha_output_abs_error"].mean())
+        confirmation_anchored = float(confirmation_open["anchored_alpha_output_abs_error"].mean())
+        confirmation_best = float(confirmation_open["best_alpha_output_abs_error"].mean())
+
+        if not (
+            holdout_refined <= holdout_anchored
+            and holdout_refined <= holdout_best
+            and confirmation_refined <= confirmation_anchored
+            and confirmation_refined <= confirmation_best
+        ):
+            continue
+
+        candidates.append(
+            {
+                "metric": metric,
+                "threshold": threshold,
+                "direction": direction,
+                "selection_rule": "downstream_open_trial_refined_error",
+                "calibration_balanced_accuracy": float(item["calibration_balanced_accuracy"]),
+                "holdout_balanced_accuracy": float(item["holdout_balanced_accuracy"]),
+                "confirmation_balanced_accuracy": float(item["confirmation_balanced_accuracy"]),
+                "oos_mean_balanced_accuracy": float(item["oos_mean_balanced_accuracy"]),
+                "point_output_count": int(len(open_subset)),
+                "point_output_rate": float(len(open_subset) / len(scored)),
+                "mean_refined_alpha_output_abs_error_open": float(open_subset["refined_alpha_output_abs_error"].mean()),
+                "mean_refined_alpha_bank_log_span_open": float(open_subset["refined_alpha_bank_log_span"].mean()),
+                "holdout_point_output_count": int(len(holdout_open)),
+                "holdout_mean_refined_alpha_output_abs_error_open": holdout_refined,
+                "holdout_mean_anchored_alpha_output_abs_error_open": holdout_anchored,
+                "holdout_mean_best_alpha_output_abs_error_open": holdout_best,
+                "confirmation_point_output_count": int(len(confirmation_open)),
+                "confirmation_mean_refined_alpha_output_abs_error_open": confirmation_refined,
+                "confirmation_mean_anchored_alpha_output_abs_error_open": confirmation_anchored,
+                "confirmation_mean_best_alpha_output_abs_error_open": confirmation_best,
+            }
+        )
+
+    if candidates:
+        candidates.sort(
+            key=lambda item: (
+                round(float(item["mean_refined_alpha_output_abs_error_open"]), 12),
+                -int(item["point_output_count"]),
+                round(float(item["mean_refined_alpha_bank_log_span_open"]), 12),
+            )
+        )
+        return candidates[0]
+
+    fallback = dict(leaderboard[0])
+    fallback["direction"] = "le" if str(fallback["direction"]) == "ge" else "ge"
+    fallback["selection_rule"] = "fallback_best_balanced_accuracy"
+    return fallback
+
+
+def load_or_build_leaderboard(existing: pd.DataFrame) -> tuple[list[dict[str, object]], int, int, int, int]:
+    if LEADERBOARD_CSV.exists():
+        cached = pd.read_csv(LEADERBOARD_CSV)
+        leaderboard = cached.to_dict(orient="records")
+        return leaderboard, int(CALIBRATION_SEEDS.__len__() * len(GEOMETRY_SKEW_BIN_LABELS)), 0, int(len(existing[existing["split"] == "holdout"])), int(len(existing[existing["split"] == "confirmation"]))
+
     calibration = calibration_rows()
     df = pd.concat([calibration, existing], ignore_index=True)
     ratio_df = build_ratio_frame(df)
@@ -354,16 +444,31 @@ def main() -> None:
         reverse=True,
     )
     write_csv(LEADERBOARD_CSV, leaderboard)
+    return leaderboard, int(len(calibration_df)), int(len(metric_columns(ratio_df))), int(len(holdout_df)), int(len(confirmation_df))
+
+
+def main() -> None:
+    existing = pd.read_csv(EXISTING_TRIALS_PATH)
+    existing = existing[(existing["method"] == METHOD) & (existing["split"].isin(["holdout", "confirmation"]))].copy()
+    leaderboard, calibration_count, metric_count, holdout_count, confirmation_count = load_or_build_leaderboard(existing)
+
+    downstream = pd.read_csv(ALL_REFINE_TRIALS_PATH)
+    downstream = downstream[
+        (downstream["condition"] == TARGET_CONDITION) & (downstream["split"].isin(["holdout", "confirmation"]))
+    ].copy()
+    downstream = build_ratio_frame(downstream)
+    selected_for_layer3 = choose_layer3_rule(leaderboard, downstream)
 
     summary = {
         "experiment": "backbone-observability-gate-informed-bank-specialized-ratio-sweep",
         "method": METHOD,
         "target_condition": TARGET_CONDITION,
-        "calibration_count": int(len(calibration_df)),
-        "holdout_count": int(len(holdout_df)),
-        "confirmation_count": int(len(confirmation_df)),
-        "metric_count": int(len(metric_columns(ratio_df))),
+        "calibration_count": calibration_count,
+        "holdout_count": holdout_count,
+        "confirmation_count": confirmation_count,
+        "metric_count": metric_count if metric_count > 0 else int(len(leaderboard)),
         "best_metric": leaderboard[0],
+        "selected_for_layer3": selected_for_layer3,
         "top5": leaderboard[:5],
     }
     SUMMARY_JSON.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")

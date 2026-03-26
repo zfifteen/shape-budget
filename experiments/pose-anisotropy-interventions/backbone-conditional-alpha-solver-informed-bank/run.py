@@ -63,10 +63,12 @@ FOCUS_ALPHA_BIN, softmin_temperature = load_symbols(
     "softmin_temperature",
 )
 
-BANK_SEEDS, = load_symbols(
+BANK_SEEDS, FINAL_BANK_SIZE, score_band = load_symbols(
     "run_persistent_mode_informed_bank_constants_for_layer3",
     ROOT / "experiments/pose-anisotropy-interventions/persistent-mode-informed-bank/run.py",
     "BANK_SEEDS",
+    "FINAL_BANK_SIZE",
+    "score_band",
 )
 
 import matplotlib
@@ -91,6 +93,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 FIGURE_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIGURE_DIR, exist_ok=True)
+PREFIX = "backbone_conditional_alpha_solver_informed_bank"
 
 ATLAS_ROWS_PATH = (
     ROOT
@@ -119,12 +122,6 @@ NUMERIC_EPS = 1.0e-9
 ALPHA_STABLE_LOG_SPAN_THRESHOLD = 0.20
 ALPHA_POINT_ABS_ERROR_THRESHOLD = 0.15
 TOP_K_REFINEMENT_SEEDS = 3
-GATE_RULE_OVERRIDE = {
-    "metric": "ratio_std_over_set_span",
-    "threshold": 0.215677985967846,
-    "direction": "ge",
-    "calibration_balanced_accuracy": 0.5833333333333334,
-}
 
 
 @dataclass
@@ -187,12 +184,11 @@ class TrialBase:
     mean_best_entropy: float
     mean_candidate_count: float
     mean_alpha_log_span_set: float
+    mean_geometry_span_norm_set: float
+    mean_ambiguity_ratio: float
     mean_anchored_alpha_log_std: float
     mean_anchored_alpha_log_span: float
     mean_anchored_effective_count: float
-    ratio_std_over_set_span: float
-    ratio_candidate_times_anchored_span_over_std: float
-    ratio_candidate_times_span_over_effective: float
     best_alpha_bank_log_span: float
     anchored_alpha_bank_log_span: float
     best_alpha_abs_error_mean: float
@@ -218,6 +214,7 @@ class TrialPrepared:
     observed_signature: np.ndarray
     mask: np.ndarray
     temperature: float
+    band: float
     trial_backbone: np.ndarray
     bank_states: list[BankState]
     trial_base: TrialBase
@@ -267,12 +264,11 @@ class TrialRow:
     mean_best_entropy: float
     mean_candidate_count: float
     mean_alpha_log_span_set: float
+    mean_geometry_span_norm_set: float
+    mean_ambiguity_ratio: float
     mean_anchored_alpha_log_std: float
     mean_anchored_alpha_log_span: float
     mean_anchored_effective_count: float
-    ratio_std_over_set_span: float
-    ratio_candidate_times_anchored_span_over_std: float
-    ratio_candidate_times_span_over_effective: float
     best_alpha_bank_log_span: float
     anchored_alpha_bank_log_span: float
     best_alpha_abs_error_mean: float
@@ -295,6 +291,37 @@ class TrialRow:
     trial_backbone_rho23: float
     refined_alpha_output: float
     refined_alpha_output_abs_error: float
+    refined_alpha_bank_log_span: float
+    refined_alpha_abs_error_mean: float
+    refined_beats_anchored_flag: int
+    refined_beats_best_flag: int
+
+
+@dataclass
+class AllRefineTrialRow:
+    split: str
+    observation_seed: int
+    condition: str
+    geometry_skew_bin: str
+    true_alpha: float
+    true_t: float
+    true_rotation_shift: int
+    mean_best_entropy: float
+    mean_candidate_count: float
+    mean_alpha_log_span_set: float
+    mean_geometry_span_norm_set: float
+    mean_ambiguity_ratio: float
+    mean_anchored_alpha_log_std: float
+    mean_anchored_alpha_log_span: float
+    mean_anchored_effective_count: float
+    best_alpha_output: float
+    best_alpha_output_abs_error: float
+    anchored_alpha_output: float
+    anchored_alpha_output_abs_error: float
+    refined_alpha_output: float
+    refined_alpha_output_abs_error: float
+    best_alpha_bank_log_span: float
+    anchored_alpha_bank_log_span: float
     refined_alpha_bank_log_span: float
     refined_alpha_abs_error_mean: float
     refined_beats_anchored_flag: int
@@ -353,9 +380,10 @@ def rate_or_nan(flags: list[int]) -> float:
 def balanced_accuracy(rows: list[TrialBase], metric_name: str, threshold: float, direction: str) -> float:
     labels = np.array([row.alpha_point_unrecoverable_flag for row in rows], dtype=int)
     if direction == "ge":
-        preds = np.array([int(getattr(row, metric_name) >= threshold) for row in rows], dtype=int)
+        open_preds = np.array([int(metric_value(row, metric_name) >= threshold) for row in rows], dtype=int)
     else:
-        preds = np.array([int(getattr(row, metric_name) <= threshold) for row in rows], dtype=int)
+        open_preds = np.array([int(metric_value(row, metric_name) <= threshold) for row in rows], dtype=int)
+    preds = 1 - open_preds
     positives = int(np.sum(labels == 1))
     negatives = int(np.sum(labels == 0))
     if positives == 0 or negatives == 0:
@@ -366,12 +394,50 @@ def balanced_accuracy(rows: list[TrialBase], metric_name: str, threshold: float,
 
 
 def load_gate_rule() -> dict[str, float | str]:
-    if GATE_RULE_OVERRIDE:
-        return GATE_RULE_OVERRIDE
     payload = json.loads(GATE_SUMMARY_PATH.read_text(encoding="utf-8"))
+    if "selected_for_layer3" in payload:
+        return payload["selected_for_layer3"]
     if "best_metric" in payload:
         return payload["best_metric"]
     return payload["proposed_informed_gate_rule"]
+
+
+def metric_value(row: TrialBase | TrialRow | AllRefineTrialRow, metric_name: str) -> float:
+    if hasattr(row, metric_name):
+        return float(getattr(row, metric_name))
+
+    candidate_count = float(row.mean_candidate_count)
+    set_span = float(row.mean_alpha_log_span_set)
+    geometry_span = float(row.mean_geometry_span_norm_set)
+    ambiguity = float(row.mean_ambiguity_ratio)
+    anchored_std = float(row.mean_anchored_alpha_log_std)
+    anchored_span = float(row.mean_anchored_alpha_log_span)
+    anchored_effective = float(row.mean_anchored_effective_count)
+
+    values = {
+        "metric_std": anchored_std,
+        "metric_ambiguity": ambiguity,
+        "metric_set_span": set_span,
+        "metric_anchored_span": anchored_span,
+        "ratio_std_over_set_span": anchored_std / max(set_span, NUMERIC_EPS),
+        "ratio_std_over_ambiguity": anchored_std / max(ambiguity, NUMERIC_EPS),
+        "ratio_ambiguity_over_std": ambiguity / max(anchored_std, NUMERIC_EPS),
+        "ratio_effective_over_count": anchored_effective / max(candidate_count, NUMERIC_EPS),
+        "ratio_count_over_effective": candidate_count / max(anchored_effective, NUMERIC_EPS),
+        "ratio_std_times_effective_over_count": anchored_std * anchored_effective / max(candidate_count, NUMERIC_EPS),
+        "ratio_anchored_span_over_std": anchored_span / max(anchored_std, NUMERIC_EPS),
+        "ratio_candidate_times_anchored_span_over_std": candidate_count * anchored_span / max(anchored_std, NUMERIC_EPS),
+        "ratio_effective_times_anchored_span_over_std": anchored_effective * anchored_span / max(anchored_std, NUMERIC_EPS),
+        "ratio_candidate_times_std_over_effective": candidate_count * anchored_std / max(anchored_effective, NUMERIC_EPS),
+        "ratio_candidate_times_ambiguity_over_effective": candidate_count * ambiguity / max(anchored_effective, NUMERIC_EPS),
+        "ratio_candidate_times_std_over_ambiguity": candidate_count * anchored_std / max(ambiguity, NUMERIC_EPS),
+        "ratio_candidate_times_span_over_effective": candidate_count * anchored_span / max(anchored_effective, NUMERIC_EPS),
+        "ratio_geomspan_over_std": geometry_span / max(anchored_std, NUMERIC_EPS),
+        "ratio_geomspan_times_count_over_effective": geometry_span * candidate_count / max(anchored_effective, NUMERIC_EPS),
+    }
+    if metric_name not in values:
+        raise AttributeError(f"Unsupported gate metric: {metric_name}")
+    return float(values[metric_name])
 
 
 def load_candidate_rows() -> dict[tuple[str, int, str, str, int], list[CandidateRow]]:
@@ -430,12 +496,11 @@ def load_layer2_trial_rows() -> dict[tuple[str, int, str, str], dict[str, float 
                 "mean_best_entropy": float(raw["mean_best_entropy"]),
                 "mean_candidate_count": float(raw["mean_candidate_count"]),
                 "mean_alpha_log_span_set": float(raw["mean_alpha_log_span_set"]),
+                "mean_geometry_span_norm_set": float(raw["mean_geometry_span_norm_set"]),
+                "mean_ambiguity_ratio": float(raw["mean_ambiguity_ratio"]),
                 "mean_anchored_alpha_log_std": float(raw["mean_anchored_alpha_log_std"]),
                 "mean_anchored_alpha_log_span": float(raw["mean_anchored_alpha_log_span"]),
                 "mean_anchored_effective_count": float(raw["mean_anchored_effective_count"]),
-                "ratio_std_over_set_span": float(raw["mean_anchored_alpha_log_std"]) / max(float(raw["mean_alpha_log_span_set"]), NUMERIC_EPS),
-                "ratio_candidate_times_anchored_span_over_std": float(raw["ratio_candidate_times_anchored_span_over_std"]),
-                "ratio_candidate_times_span_over_effective": float(raw["mean_candidate_count"]) * float(raw["mean_anchored_alpha_log_span"]) / max(float(raw["mean_anchored_effective_count"]), NUMERIC_EPS),
                 "best_alpha_bank_log_span": float(raw["best_alpha_bank_log_span"]),
                 "anchored_alpha_bank_log_span": float(raw["anchored_alpha_bank_log_span"]),
                 "best_alpha_abs_error_mean": float(raw["best_alpha_abs_error_mean"]),
@@ -537,12 +602,11 @@ def prepare_trial(
         mean_best_entropy=float(layer2_row["mean_best_entropy"]),
         mean_candidate_count=float(layer2_row["mean_candidate_count"]),
         mean_alpha_log_span_set=float(layer2_row["mean_alpha_log_span_set"]),
+        mean_geometry_span_norm_set=float(layer2_row["mean_geometry_span_norm_set"]),
+        mean_ambiguity_ratio=float(layer2_row["mean_ambiguity_ratio"]),
         mean_anchored_alpha_log_std=float(layer2_row["mean_anchored_alpha_log_std"]),
         mean_anchored_alpha_log_span=float(layer2_row["mean_anchored_alpha_log_span"]),
         mean_anchored_effective_count=float(layer2_row["mean_anchored_effective_count"]),
-        ratio_std_over_set_span=float(layer2_row["ratio_std_over_set_span"]),
-        ratio_candidate_times_anchored_span_over_std=float(layer2_row["ratio_candidate_times_anchored_span_over_std"]),
-        ratio_candidate_times_span_over_effective=float(layer2_row["ratio_candidate_times_span_over_effective"]),
         best_alpha_bank_log_span=float(layer2_row["best_alpha_bank_log_span"]),
         anchored_alpha_bank_log_span=float(layer2_row["anchored_alpha_bank_log_span"]),
         best_alpha_abs_error_mean=float(layer2_row["best_alpha_abs_error_mean"]),
@@ -567,6 +631,7 @@ def prepare_trial(
         observed_signature=observed_signature,
         mask=mask,
         temperature=temperature,
+        band=score_band(regime),
         trial_backbone=trial_backbone,
         bank_states=bank_states,
         trial_base=trial_base,
@@ -578,13 +643,13 @@ def refine_trial(
     gate_metric_name: str,
     gate_threshold: float,
     gate_direction: str,
-) -> tuple[list[BankRow], TrialRow]:
+) -> tuple[list[BankRow], TrialRow, AllRefineTrialRow]:
     trial_base = prepared.trial_base
-    metric_value = float(getattr(trial_base, gate_metric_name))
+    gate_metric_value = metric_value(trial_base, gate_metric_name)
     if gate_direction == "ge":
-        gate_open_flag = int(metric_value < gate_threshold)
+        gate_open_flag = int(gate_metric_value >= gate_threshold)
     else:
-        gate_open_flag = int(metric_value > gate_threshold)
+        gate_open_flag = int(gate_metric_value <= gate_threshold)
 
     bank_rows: list[BankRow] = []
     refined_alpha_logs: list[float] = []
@@ -623,7 +688,9 @@ def refine_trial(
             refined_scores_arr = np.array(refined_scores_local, dtype=float)
             refined_base_weights_arr = np.array(refined_base_weights, dtype=float)
             score_offsets = refined_scores_arr - float(np.min(refined_scores_arr))
-            refined_weights = normalize_weights(refined_base_weights_arr * np.exp(-score_offsets))
+            refined_weights = normalize_weights(
+                refined_base_weights_arr * np.exp(-score_offsets / max(prepared.band, NUMERIC_EPS))
+            )
             refined_log = float(np.sum(refined_weights * np.array(refined_logs_local, dtype=float)))
             refined_alpha = float(math.exp(refined_log))
             refined_alpha_error = float(abs(refined_alpha - prepared.true_alpha))
@@ -691,12 +758,11 @@ def refine_trial(
         mean_best_entropy=float(trial_base.mean_best_entropy),
         mean_candidate_count=float(trial_base.mean_candidate_count),
         mean_alpha_log_span_set=float(trial_base.mean_alpha_log_span_set),
+        mean_geometry_span_norm_set=float(trial_base.mean_geometry_span_norm_set),
+        mean_ambiguity_ratio=float(trial_base.mean_ambiguity_ratio),
         mean_anchored_alpha_log_std=float(trial_base.mean_anchored_alpha_log_std),
         mean_anchored_alpha_log_span=float(trial_base.mean_anchored_alpha_log_span),
         mean_anchored_effective_count=float(trial_base.mean_anchored_effective_count),
-        ratio_std_over_set_span=float(trial_base.ratio_std_over_set_span),
-        ratio_candidate_times_anchored_span_over_std=float(trial_base.ratio_candidate_times_anchored_span_over_std),
-        ratio_candidate_times_span_over_effective=float(trial_base.ratio_candidate_times_span_over_effective),
         best_alpha_bank_log_span=float(trial_base.best_alpha_bank_log_span),
         anchored_alpha_bank_log_span=float(trial_base.anchored_alpha_bank_log_span),
         best_alpha_abs_error_mean=float(trial_base.best_alpha_abs_error_mean),
@@ -727,7 +793,36 @@ def refine_trial(
         refined_beats_anchored_flag=int(refined_beats_anchored_flag),
         refined_beats_best_flag=int(refined_beats_best_flag),
     )
-    return bank_rows, trial_row
+    all_refine_row = AllRefineTrialRow(
+        split=trial_base.split,
+        observation_seed=int(trial_base.observation_seed),
+        condition=trial_base.condition,
+        geometry_skew_bin=trial_base.geometry_skew_bin,
+        true_alpha=float(trial_base.true_alpha),
+        true_t=float(trial_base.true_t),
+        true_rotation_shift=int(trial_base.true_rotation_shift),
+        mean_best_entropy=float(trial_base.mean_best_entropy),
+        mean_candidate_count=float(trial_base.mean_candidate_count),
+        mean_alpha_log_span_set=float(trial_base.mean_alpha_log_span_set),
+        mean_geometry_span_norm_set=float(trial_base.mean_geometry_span_norm_set),
+        mean_ambiguity_ratio=float(trial_base.mean_ambiguity_ratio),
+        mean_anchored_alpha_log_std=float(trial_base.mean_anchored_alpha_log_std),
+        mean_anchored_alpha_log_span=float(trial_base.mean_anchored_alpha_log_span),
+        mean_anchored_effective_count=float(trial_base.mean_anchored_effective_count),
+        best_alpha_output=float(trial_base.best_alpha_output),
+        best_alpha_output_abs_error=float(trial_base.best_alpha_output_abs_error),
+        anchored_alpha_output=float(trial_base.anchored_alpha_output),
+        anchored_alpha_output_abs_error=float(trial_base.anchored_alpha_output_abs_error),
+        refined_alpha_output=float(refined_alpha_output),
+        refined_alpha_output_abs_error=float(refined_alpha_output_abs_error),
+        best_alpha_bank_log_span=float(trial_base.best_alpha_bank_log_span),
+        anchored_alpha_bank_log_span=float(trial_base.anchored_alpha_bank_log_span),
+        refined_alpha_bank_log_span=float(refined_alpha_bank_log_span),
+        refined_alpha_abs_error_mean=float(refined_alpha_abs_error_mean),
+        refined_beats_anchored_flag=int(refined_beats_anchored_flag),
+        refined_beats_best_flag=int(refined_beats_best_flag),
+    )
+    return bank_rows, trial_row, all_refine_row
 
 
 def summarize_by_split(rows: list[TrialRow], gate_metric_name: str, gate_direction: str) -> list[dict[str, float | str]]:
@@ -750,12 +845,11 @@ def summarize_by_split(rows: list[TrialRow], gate_metric_name: str, gate_directi
                 mean_best_entropy=row.mean_best_entropy,
                 mean_candidate_count=row.mean_candidate_count,
                 mean_alpha_log_span_set=row.mean_alpha_log_span_set,
+                mean_geometry_span_norm_set=row.mean_geometry_span_norm_set,
+                mean_ambiguity_ratio=row.mean_ambiguity_ratio,
                 mean_anchored_alpha_log_std=row.mean_anchored_alpha_log_std,
                 mean_anchored_alpha_log_span=row.mean_anchored_alpha_log_span,
                 mean_anchored_effective_count=row.mean_anchored_effective_count,
-                ratio_std_over_set_span=row.ratio_std_over_set_span,
-                ratio_candidate_times_anchored_span_over_std=row.ratio_candidate_times_anchored_span_over_std,
-                ratio_candidate_times_span_over_effective=row.ratio_candidate_times_span_over_effective,
                 best_alpha_bank_log_span=row.best_alpha_bank_log_span,
                 anchored_alpha_bank_log_span=row.anchored_alpha_bank_log_span,
                 best_alpha_abs_error_mean=row.best_alpha_abs_error_mean,
@@ -934,10 +1028,17 @@ def main() -> None:
 
     bank_rows: list[BankRow] = []
     trial_rows: list[TrialRow] = []
+    all_refine_rows: list[AllRefineTrialRow] = []
     for prepared in prepared_trials:
-        new_bank_rows, trial_row = refine_trial(prepared, gate_metric_name, gate_threshold, gate_direction)
+        new_bank_rows, trial_row, all_refine_row = refine_trial(
+            prepared,
+            gate_metric_name,
+            gate_threshold,
+            gate_direction,
+        )
         bank_rows.extend(new_bank_rows)
         trial_rows.append(trial_row)
+        all_refine_rows.append(all_refine_row)
 
     split_summary = summarize_by_split(trial_rows, gate_metric_name, gate_direction)
     condition_summary = summarize_by_condition(trial_rows)
@@ -964,7 +1065,8 @@ def main() -> None:
     }
 
     global_summary = {
-        "final_bank_size": int(np.mean([row.candidate_count for row in bank_rows])),
+        "nominal_final_bank_size": int(FINAL_BANK_SIZE),
+        "mean_band_candidate_count": float(np.mean([row.candidate_count for row in bank_rows])),
         "bank_seeds": list(BANK_SEEDS),
         "top_k_refinement_seeds": TOP_K_REFINEMENT_SEEDS,
         "gate_metric": gate_metric_name,
@@ -993,18 +1095,18 @@ def main() -> None:
         "by_cell": cell_summary,
     }
 
-    prefix = "backbone_conditional_alpha_solver_informed_bank"
-    write_csv(os.path.join(OUTPUT_DIR, f"{prefix}_bank_rows.csv"), [asdict(row) for row in bank_rows])
-    write_csv(os.path.join(OUTPUT_DIR, f"{prefix}_trials.csv"), [asdict(row) for row in trial_rows])
-    write_csv(os.path.join(OUTPUT_DIR, f"{prefix}_split_summary.csv"), split_summary)
-    write_csv(os.path.join(OUTPUT_DIR, f"{prefix}_condition_summary.csv"), condition_summary)
-    write_csv(os.path.join(OUTPUT_DIR, f"{prefix}_cell_summary.csv"), cell_summary)
-    with open(os.path.join(OUTPUT_DIR, f"{prefix}_summary.json"), "w", encoding="utf-8", newline="\n") as handle:
+    write_csv(os.path.join(OUTPUT_DIR, f"{PREFIX}_bank_rows.csv"), [asdict(row) for row in bank_rows])
+    write_csv(os.path.join(OUTPUT_DIR, f"{PREFIX}_trials.csv"), [asdict(row) for row in trial_rows])
+    write_csv(os.path.join(OUTPUT_DIR, f"{PREFIX}_all_refine_trials.csv"), [asdict(row) for row in all_refine_rows])
+    write_csv(os.path.join(OUTPUT_DIR, f"{PREFIX}_split_summary.csv"), split_summary)
+    write_csv(os.path.join(OUTPUT_DIR, f"{PREFIX}_condition_summary.csv"), condition_summary)
+    write_csv(os.path.join(OUTPUT_DIR, f"{PREFIX}_cell_summary.csv"), cell_summary)
+    with open(os.path.join(OUTPUT_DIR, f"{PREFIX}_summary.json"), "w", encoding="utf-8", newline="\n") as handle:
         json.dump(payload, handle, indent=2)
         handle.write("\n")
 
-    plot_open_alpha_errors(os.path.join(FIGURE_DIR, f"{prefix}_alpha_error.png"), split_summary)
-    plot_open_alpha_spans(os.path.join(FIGURE_DIR, f"{prefix}_alpha_span.png"), split_summary)
+    plot_open_alpha_errors(os.path.join(FIGURE_DIR, f"{PREFIX}_alpha_error.png"), split_summary)
+    plot_open_alpha_spans(os.path.join(FIGURE_DIR, f"{PREFIX}_alpha_span.png"), split_summary)
 
     print(json.dumps(payload, indent=2))
 

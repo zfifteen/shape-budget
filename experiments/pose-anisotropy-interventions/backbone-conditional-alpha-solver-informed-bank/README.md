@@ -38,32 +38,40 @@ It is a cached integrated pass:
 This version uses the specialized informed-bank Layer 2 rule from
 [backbone observability gate informed-bank specialized ratio sweep](../backbone-observability-gate-informed-bank-specialized-ratio-sweep/README.md):
 
-- metric: `mean_anchored_alpha_log_std / mean_alpha_log_span_set`
-- threshold: `0.215678`
+- metric: `mean_candidate_count * mean_anchored_alpha_log_span / mean_anchored_effective_count`
+- threshold: `0.700453`
 - direction: `ge`
 
-The gate opens when that ratio falls below the threshold.
+The gate opens when that ratio rises above the threshold.
+
+This run also restores the intended Layer 3 refinement weighting:
+
+- refined seed weights use `exp(-score_offset / band)`
+- `band` comes from the observation regime, matching the earlier conditional
+  solver math
+- the Layer 2 rule is loaded from the serialized specialized sweep output
+  rather than from a hardcoded override
 
 ## Main Result
 
-This is the first integrated informed-bank Layer 3 pass that behaves cleanly on
-both fresh splits inside the trials it opens.
+The math-corrected integrated pass is more conservative than the earlier
+optimistic version.
 
 From [backbone_conditional_alpha_solver_informed_bank_summary.json](outputs/backbone_conditional_alpha_solver_informed_bank_summary.json):
 
-- point-output count: `4 / 18`
-- point-output rate: `0.2222`
-- gate precision: `0.7500`
+- nominal final bank size: `300`
+- mean band candidate count: `209.9259`
+- point-output count: `5 / 18`
+- point-output rate: `0.2778`
+- gate precision: `0.8000`
 - gate reject-unrecoverable rate: `0.9000`
-- best open-trial `alpha` error: `0.1266`
-- anchored open-trial `alpha` error: `0.1264`
-- refined open-trial `alpha` error: `0.0514`
+- best open-trial `alpha` error: `0.2075`
+- anchored open-trial `alpha` error: `0.1356`
+- refined open-trial `alpha` error: `0.1807`
 
-So the open-trial refinement is now doing something much sharper:
-
-- it opens rarely
-- it opens mostly in the right places
-- and when it opens, refined beats both anchored and best-bank
+So the corrected stack still gives a reasonably selective gate, but the current
+Layer 3 refinement does not beat the anchored answer overall on the opened
+trials.
 
 ## By Split
 
@@ -73,70 +81,59 @@ So the open-trial refinement is now doing something much sharper:
 - point-output rate: `0.2222`
 - gate balanced accuracy: `0.5833`
 - gate precision: `0.5000`
-- best open-trial error: `0.1535`
-- anchored open-trial error: `0.1417`
-- refined open-trial error: `0.0647`
+- best open-trial error: `0.1484`
+- anchored open-trial error: `0.0406`
+- refined open-trial error: `0.1499`
 
 ### Confirmation
 
-- point-output count: `2 / 9`
-- point-output rate: `0.2222`
-- gate balanced accuracy: `0.7000`
+- point-output count: `3 / 9`
+- point-output rate: `0.3333`
+- gate balanced accuracy: `0.8000`
 - gate precision: `1.0000`
-- best open-trial error: `0.0996`
-- anchored open-trial error: `0.1111`
-- refined open-trial error: `0.0381`
+- best open-trial error: `0.2468`
+- anchored open-trial error: `0.1989`
+- refined open-trial error: `0.2013`
 
-That is the important change.
-The earlier informed-bank integration was still over-opening.
-This version is selective enough that the opened trials are genuinely good.
+The confirmation side remains close, but holdout is clearly not there yet.
 
 ## Cell Read
 
-The gate opens in four cells:
+The gate opens in five fresh cells:
 
 - holdout `low_skew`
-- holdout `mid_skew`
+- holdout `high_skew`
 - confirmation `low_skew`
 - confirmation `mid_skew`
+- confirmation `high_skew`
 
-It stays closed in both `high_skew` fresh cells.
+The cell picture is mixed, not uniformly good:
 
-When it opens, refinement is uniformly good:
-
-- `refined_beats_anchored_rate_open = 1.0`
-- `refined_beats_best_rate_open = 1.0`
-
-The strongest confirmation gains are:
-
-- `confirmation + low_skew`: `0.1641 -> 0.0504`
-- `confirmation + mid_skew`: `0.0582 -> 0.0257`
-
-The holdout gains are real too:
-
-- `holdout + low_skew`: `0.1643 -> 0.0399`
-- `holdout + mid_skew`: `0.1190 -> 0.0895`
+- holdout `high_skew`: refined beats best but not anchored
+- confirmation `low_skew`: refined beats both anchored and best
+- confirmation `mid_skew`: refined loses to both anchored and best
+- confirmation `high_skew`: refined beats both anchored and best
 
 ## Interpretation
 
-This is a meaningful solver step.
+This is still a useful integration result, but it is a corrective one.
 
 What it now shows is:
 
 - Layer 1 improves the candidate family
-- Layer 2 can be tightened into a selective informed-bank gate
-- Layer 3 refinement can then produce very strong open-trial `alpha` recovery
+- Layer 2 can be serialized cleanly and consumed without hardcoded drift
+- the restored Layer 3 math is less flattering than the earlier cached result
 
-What remains open is not whether the integrated stack can work.
-It can.
-The remaining question is coverage:
-
-- can we safely expand beyond this very selective `4 / 18` open-trial regime?
+The current open problem is not gate serialization anymore.
+That part is fixed.
+The remaining question is whether Layer 3 can produce a net-improving refined
+answer under the corrected weighting math.
 
 So the next implementation move is:
 
-1. preserve this specialized Layer 2 rule as the current best selective gate
-2. look for a controlled way to widen coverage without losing the clean open-trial win
+1. keep this Layer 2 rule as the current informed-bank source of truth
+2. revisit Layer 3 correction behavior under the restored band-scaled weights
+3. only widen coverage after refinement is net-positive again
 
 ## Artifacts
 
@@ -144,6 +141,7 @@ Data:
 
 - [backbone_conditional_alpha_solver_informed_bank_bank_rows.csv](outputs/backbone_conditional_alpha_solver_informed_bank_bank_rows.csv)
 - [backbone_conditional_alpha_solver_informed_bank_trials.csv](outputs/backbone_conditional_alpha_solver_informed_bank_trials.csv)
+- [backbone_conditional_alpha_solver_informed_bank_all_refine_trials.csv](outputs/backbone_conditional_alpha_solver_informed_bank_all_refine_trials.csv)
 - [backbone_conditional_alpha_solver_informed_bank_split_summary.csv](outputs/backbone_conditional_alpha_solver_informed_bank_split_summary.csv)
 - [backbone_conditional_alpha_solver_informed_bank_condition_summary.csv](outputs/backbone_conditional_alpha_solver_informed_bank_condition_summary.csv)
 - [backbone_conditional_alpha_solver_informed_bank_cell_summary.csv](outputs/backbone_conditional_alpha_solver_informed_bank_cell_summary.csv)

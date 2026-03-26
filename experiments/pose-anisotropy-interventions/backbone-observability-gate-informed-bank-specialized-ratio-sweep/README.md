@@ -37,6 +37,14 @@ That gives:
 Each metric is calibrated on the informed-bank calibration block, then frozen
 and scored on holdout and confirmation.
 
+The sweep now serializes two selections:
+
+- `best_metric`: the strongest pure Layer 2 unrecoverable classifier
+- `selected_for_layer3`: the rule Layer 3 should actually consume
+
+Those are not forced to be the same object. `selected_for_layer3` is stored as
+an open-rule, not as an unrecoverable classifier.
+
 ## Main Result
 
 The best Layer 2 rule by out-of-sample balanced accuracy is:
@@ -51,30 +59,30 @@ The best Layer 2 rule by out-of-sample balanced accuracy is:
 
 That is the strongest pure gate rule in this specialized sweep.
 
-## More Important Result
+## Layer 3 Selection
 
-For the integrated Layer 3 stack, the best downstream rule was not the same as
-the best pure gate rule.
+After restoring the intended Layer 3 weighting math, no downstream candidate
+rule cleared the current Layer 3 selection criteria on both fresh splits.
 
-The rule that gave the cleanest downstream open-trial behavior was:
+So the serialized Layer 3-facing rule falls back to the open-side form of the
+best pure Layer 2 classifier:
 
-- metric: `mean_anchored_alpha_log_std / mean_alpha_log_span_set`
-- threshold: `0.215678`
+- metric: `mean_candidate_count * mean_anchored_alpha_log_span / mean_anchored_effective_count`
+- threshold: `0.700453`
 - direction: `ge`
+- selection rule: `fallback_best_balanced_accuracy`
 
-This is the rule used in
-[backbone conditional alpha solver with informed bank](../backbone-conditional-alpha-solver-informed-bank/README.md).
+That distinction matters:
 
-Why it matters:
+- `best_metric` remains the best unrecoverable classifier
+- `selected_for_layer3` is the rule Layer 3 actually consumes
+- when the downstream search finds no better open-rule, `selected_for_layer3`
+  becomes the direct open-side version of `best_metric`
 
-- it opens only `4 / 18` fresh trials
-- but on those open trials, refined beats both anchored and best-bank on both
-  holdout and confirmation
-
-So this sweep produced two useful outcomes:
+So this sweep now produces a single source of truth for both:
 
 1. the best pure Layer 2 classifier
-2. the best Layer 2 rule for the integrated Layer 3 objective
+2. the current Layer 3-facing gate rule
 
 ## Top Metrics
 
