@@ -1,0 +1,7 @@
+split,condition,alpha_strength_bin,geometry_skew_bin,count,point_output_rate,alpha_point_recoverable_rate,gate_precision,mean_best_alpha_output_abs_error_open,mean_anchored_alpha_output_abs_error_open,mean_refined_alpha_output_abs_error_open,mean_refined_alpha_bank_log_span_open,refined_beats_anchored_rate_open,refined_beats_best_rate_open
+holdout,sparse_partial_high_noise,moderate,low_skew,3,0.3333333333333333,0.3333333333333333,1.0,0.15334837082458874,0.16427740073373798,0.03991842951025437,0.18473935857570992,1.0,1.0
+holdout,sparse_partial_high_noise,moderate,mid_skew,3,0.3333333333333333,0.3333333333333333,0.0,0.15367243554143917,0.1190282064510031,0.08947570269690597,0.005930372483199192,1.0,1.0
+holdout,sparse_partial_high_noise,moderate,high_skew,3,0.0,0.3333333333333333,nan,nan,nan,nan,nan,nan,nan
+confirmation,sparse_partial_high_noise,moderate,low_skew,3,0.3333333333333333,0.6666666666666666,1.0,0.1453626608168075,0.1640596584378864,0.05043285278431475,0.24506607891650733,1.0,1.0
+confirmation,sparse_partial_high_noise,moderate,mid_skew,3,0.3333333333333333,0.6666666666666666,1.0,0.05387333471620548,0.05817916095054154,0.02570263287564334,0.02632012395162006,1.0,1.0
+confirmation,sparse_partial_high_noise,moderate,high_skew,3,0.0,0.3333333333333333,nan,nan,nan,nan,nan,nan,nan

@@ -62,6 +62,7 @@ Each experiment lives in its own folder with:
 - [Persistent-Mode Informed Bank](pose-anisotropy-interventions/persistent-mode-informed-bank/README.md)
 - [Backbone Observability Gate Informed-Bank Comparison](pose-anisotropy-interventions/backbone-observability-gate-informed-bank/README.md)
 - [Backbone Observability Gate Ratio Sweep](pose-anisotropy-interventions/backbone-observability-gate-ratio-sweep/README.md)
+- [Backbone Observability Gate Informed-Bank Specialized Ratio Sweep](pose-anisotropy-interventions/backbone-observability-gate-informed-bank-specialized-ratio-sweep/README.md)
 - [Backbone Correction-Pressure-Triggered Alpha Solver](pose-anisotropy-interventions/backbone-correction-pressure-triggered-alpha-solver/README.md)
 - [Backbone Correction-Flux-Triggered Alpha Solver](pose-anisotropy-interventions/backbone-correction-flux-triggered-alpha-solver/README.md)
 - [Backbone Conditional Alpha Solver With Informed Bank](pose-anisotropy-interventions/backbone-conditional-alpha-solver-informed-bank/README.md)

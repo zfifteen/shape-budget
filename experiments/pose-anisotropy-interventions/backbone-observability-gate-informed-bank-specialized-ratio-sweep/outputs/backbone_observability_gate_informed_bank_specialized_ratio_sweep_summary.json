@@ -1,0 +1,65 @@
+{
+  "experiment": "backbone-observability-gate-informed-bank-specialized-ratio-sweep",
+  "method": "persistent_mode_informed",
+  "target_condition": "sparse_partial_high_noise",
+  "calibration_count": 18,
+  "holdout_count": 9,
+  "confirmation_count": 9,
+  "metric_count": 19,
+  "best_metric": {
+    "metric": "ratio_candidate_times_span_over_effective",
+    "threshold": 0.700453425604268,
+    "direction": "le",
+    "calibration_balanced_accuracy": 0.6666666666666667,
+    "holdout_balanced_accuracy": 0.5833333333333334,
+    "confirmation_balanced_accuracy": 0.8,
+    "oos_mean_balanced_accuracy": 0.6916666666666667
+  },
+  "top5": [
+    {
+      "metric": "ratio_candidate_times_span_over_effective",
+      "threshold": 0.700453425604268,
+      "direction": "le",
+      "calibration_balanced_accuracy": 0.6666666666666667,
+      "holdout_balanced_accuracy": 0.5833333333333334,
+      "confirmation_balanced_accuracy": 0.8,
+      "oos_mean_balanced_accuracy": 0.6916666666666667
+    },
+    {
+      "metric": "metric_anchored_span",
+      "threshold": 0.40245538260093466,
+      "direction": "le",
+      "calibration_balanced_accuracy": 0.625,
+      "holdout_balanced_accuracy": 0.5833333333333334,
+      "confirmation_balanced_accuracy": 0.8,
+      "oos_mean_balanced_accuracy": 0.6916666666666667
+    },
+    {
+      "metric": "ratio_geomspan_over_std",
+      "threshold": 5.526794145630842,
+      "direction": "ge",
+      "calibration_balanced_accuracy": 0.625,
+      "holdout_balanced_accuracy": 0.5833333333333334,
+      "confirmation_balanced_accuracy": 0.8,
+      "oos_mean_balanced_accuracy": 0.6916666666666667
+    },
+    {
+      "metric": "ratio_std_over_set_span",
+      "threshold": 0.215677985967846,
+      "direction": "ge",
+      "calibration_balanced_accuracy": 0.5833333333333334,
+      "holdout_balanced_accuracy": 0.5833333333333334,
+      "confirmation_balanced_accuracy": 0.7,
+      "oos_mean_balanced_accuracy": 0.6416666666666666
+    },
+    {
+      "metric": "ratio_ambiguity_over_std",
+      "threshold": 4.067204078827906,
+      "direction": "ge",
+      "calibration_balanced_accuracy": 0.5833333333333334,
+      "holdout_balanced_accuracy": 0.5833333333333334,
+      "confirmation_balanced_accuracy": 0.7,
+      "oos_mean_balanced_accuracy": 0.6416666666666666
+    }
+  ]
+}

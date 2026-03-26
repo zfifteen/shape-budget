@@ -1,0 +1,42 @@
+{
+  "experiment": "backbone-observability-gate-ratio-sweep",
+  "source_trials": "experiments/pose-anisotropy-interventions/backbone-observability-gate-informed-bank/outputs/backbone_observability_gate_informed_bank_trials.csv",
+  "method_counts": {
+    "legacy_random_5seed": 36,
+    "one_shot_random": 36,
+    "persistent_mode_informed": 36
+  },
+  "metric_count": 18,
+  "best_by_method": {
+    "legacy_random_5seed": {
+      "method": "legacy_random_5seed",
+      "metric": "metric_std",
+      "threshold": 0.1890273560986377,
+      "direction": "ge",
+      "calibration_balanced_accuracy": 0.7083333333333334,
+      "holdout_balanced_accuracy": 0.6428571428571428,
+      "confirmation_balanced_accuracy": 0.75,
+      "oos_mean_balanced_accuracy": 0.6964285714285714
+    },
+    "one_shot_random": {
+      "method": "one_shot_random",
+      "metric": "ratio_anchored_span_over_std",
+      "threshold": 2.5661538091211047,
+      "direction": "le",
+      "calibration_balanced_accuracy": 0.75,
+      "holdout_balanced_accuracy": 0.6071428571428572,
+      "confirmation_balanced_accuracy": 0.6666666666666666,
+      "oos_mean_balanced_accuracy": 0.6369047619047619
+    },
+    "persistent_mode_informed": {
+      "method": "persistent_mode_informed",
+      "metric": "ratio_candidate_times_anchored_span_over_std",
+      "threshold": 444.13143102872425,
+      "direction": "le",
+      "calibration_balanced_accuracy": 0.6818181818181819,
+      "holdout_balanced_accuracy": 0.75,
+      "confirmation_balanced_accuracy": 0.6666666666666666,
+      "oos_mean_balanced_accuracy": 0.7083333333333333
+    }
+  }
+}
