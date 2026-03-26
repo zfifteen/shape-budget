@@ -66,6 +66,7 @@ Each experiment lives in its own folder with:
 - [Backbone Correction-Pressure-Triggered Alpha Solver](pose-anisotropy-interventions/backbone-correction-pressure-triggered-alpha-solver/README.md)
 - [Backbone Correction-Flux-Triggered Alpha Solver](pose-anisotropy-interventions/backbone-correction-flux-triggered-alpha-solver/README.md)
 - [Backbone Conditional Alpha Solver With Informed Bank](pose-anisotropy-interventions/backbone-conditional-alpha-solver-informed-bank/README.md)
+- [Backbone Bounded Correction Alpha Solver With Informed Bank](pose-anisotropy-interventions/backbone-bounded-correction-alpha-solver-informed-bank/README.md)
 - [Backbone Conditional Alpha Solver](pose-anisotropy-interventions/backbone-conditional-alpha-solver/README.md)
 - [Backbone Observability Gate](pose-anisotropy-interventions/backbone-observability-gate/README.md)
 - [Backbone Consensus Solver](pose-anisotropy-interventions/backbone-consensus-solver/README.md)
