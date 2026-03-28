@@ -182,6 +182,20 @@ The newest failure-map result puts a shape on that solver challenge:
 
 ![Alignment failure map. Practical pose handling fails in specific regions rather than uniformly, which means the remaining problem is now localized enough to target directly.](figures/figure6_alignment_failure_map_capture.png){ width=92% }
 
+A cross-artifact phase split sharpens that diagnosis further. The calibration-frozen ambiguity gate from the shadow ensemble study and the calibration-frozen anchored-uncertainty gate from the backbone observability layer do not define the same object. Together they separate three regimes in the focused slice:
+
+- low ambiguity,
+- gauge-broad trials that are wide before anchoring but narrow after the backbone is fixed,
+- and bundle-broad trials that stay wide even after anchoring.
+
+In the current `72`-trial focused dataset, `63` trials are ambiguity-high. But `44` of those `63` are gauge-broad rather than bundle-broad. Their point-recoverable rate is `0.5909`. The remaining `19` bundle-broad trials have point-recoverable rate `0.0526`. So the hard branch is not one continuous confidence loss. Most of the observed width is a gauge-broad phase that the backbone mostly quotients out, while a smaller subset remains truly bundle-broad after anchoring.
+
+![Pose-free alpha phase map. Pre-anchor ambiguity and post-anchor anchored-width separate the focused branch into low-ambiguity, gauge-broad, and bundle-broad regimes. The key split is that many wide pre-anchor families collapse after backbone anchoring, while a smaller subset stays wide and remains largely non-pointable.](figures/figure7_alpha_phase_map_dashboard.png){ width=96% }
+
+The gate-control consequence is equally narrow. Ambiguity and entropy are not redundant solver signals. On fresh blocks, the largest chooser headroom sits where both pre-anchor ambiguity and dense-joint entropy are high. The both-high quadrant has mean oracle gain `0.0665` over the default candidate, versus `0.0365` in the entropy-high ambiguity-low quadrant and `0.0049` in the ambiguity-high entropy-low quadrant. That is why ambiguity alone does not replace the working entropy gate: ambiguity measures structural load, while entropy measures whether richer chooser freedom is likely to pay off.
+
+![Fresh-block gate control map. Ambiguity measures structural load and entropy measures chooser opportunity. The strongest gains sit where both axes are high, which explains why an ambiguity gate alone does not beat the current entropy-gated solver under the frozen shadow protocol.](figures/figure8_alpha_gate_control_axes.png){ width=96% }
+
 That diagnosis set up the later solver result. The entropy-gated bank ensemble solver now resolves the focused slice in the tested regime:
 
 - `sparse_full_noisy`

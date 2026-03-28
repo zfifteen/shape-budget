@@ -132,6 +132,8 @@ The result is a solver-policy resolution in the tested slice, not a blanket clai
 
 The read stays narrow and important: the latent object survived, the signal was there, and the focused bottleneck yielded to a better inverse policy rather than to a larger control object.
 
+Cross-artifact analysis sharpens that read further. High pre-anchor `alpha` ambiguity in the focused slice is not one regime. Among the current `63` ambiguity-high trials, `44` become narrow after backbone anchoring and have point-recoverable rate `0.5909`, while only `19` stay wide after anchoring and those have point-recoverable rate `0.0526`. This strengthens the BGP interpretation of the hard branch: the main limit is selective observability of an extension coordinate under hidden pose, not collapse of the compact latent control object.
+
 ## Key Plot 4: The Signal Is There, But Pose Handling Matters
 
 ![Oracle alignment ceiling](technical-note/figures/figure5_oracle_alignment_ceiling_alpha_methods.png)
