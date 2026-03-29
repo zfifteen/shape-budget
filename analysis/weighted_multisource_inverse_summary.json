@@ -1,0 +1,67 @@
+{
+  "summary": {
+    "reference_bank_size": 300,
+    "equal_weight_bank_size": 150,
+    "test_trials_per_regime": 40,
+    "best_geometry_mae_mean": 0.06228008068753412,
+    "worst_geometry_mae_mean": 0.0859501201128164,
+    "best_weight_mae_mean": 0.0860774477740788,
+    "worst_weight_mae_mean": 0.1248384081307328,
+    "best_weighted_fit_rmse_mean": 0.002944344872478687,
+    "worst_weighted_fit_rmse_mean": 0.015177472346304274,
+    "smallest_fit_improvement_factor_mean": 1.877072393448215,
+    "largest_fit_improvement_factor_mean": 5.525478092801579
+  },
+  "by_condition": [
+    {
+      "condition": "full_clean",
+      "geometry_mae_mean": 0.06636020807242145,
+      "geometry_mae_p95": 0.14787565686129886,
+      "weight_mae_mean": 0.09961589504883935,
+      "weight_mae_p95": 0.1969897803904009,
+      "weighted_fit_rmse_mean": 0.002944344872478687,
+      "equal_weight_baseline_fit_rmse_mean": 0.01320494125766472,
+      "fit_improvement_factor_mean": 5.525478092801579
+    },
+    {
+      "condition": "full_noisy",
+      "geometry_mae_mean": 0.07503339766857398,
+      "geometry_mae_p95": 0.1707141086719578,
+      "weight_mae_mean": 0.09324257043112855,
+      "weight_mae_p95": 0.2072175783201945,
+      "weighted_fit_rmse_mean": 0.003123076527096767,
+      "equal_weight_baseline_fit_rmse_mean": 0.012232158692167601,
+      "fit_improvement_factor_mean": 4.877916927970136
+    },
+    {
+      "condition": "partial_arc_noisy",
+      "geometry_mae_mean": 0.06228008068753412,
+      "geometry_mae_p95": 0.16009314686422565,
+      "weight_mae_mean": 0.0860774477740788,
+      "weight_mae_p95": 0.18032876054728333,
+      "weighted_fit_rmse_mean": 0.004279879422164177,
+      "equal_weight_baseline_fit_rmse_mean": 0.015236950144182356,
+      "fit_improvement_factor_mean": 4.216735304534975
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "geometry_mae_mean": 0.07734241410220079,
+      "geometry_mae_p95": 0.18523818245850374,
+      "weight_mae_mean": 0.09814567646495082,
+      "weight_mae_p95": 0.24509318139786437,
+      "weighted_fit_rmse_mean": 0.0064296356641700605,
+      "equal_weight_baseline_fit_rmse_mean": 0.01404317666726535,
+      "fit_improvement_factor_mean": 2.9858487214657776
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "geometry_mae_mean": 0.0859501201128164,
+      "geometry_mae_p95": 0.20045535816989551,
+      "weight_mae_mean": 0.1248384081307328,
+      "weight_mae_p95": 0.2716199450413322,
+      "weighted_fit_rmse_mean": 0.015177472346304274,
+      "equal_weight_baseline_fit_rmse_mean": 0.018457377537993917,
+      "fit_improvement_factor_mean": 1.877072393448215
+    }
+  ]
+}

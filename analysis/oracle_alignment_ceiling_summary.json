@@ -1,0 +1,156 @@
+{
+  "summary": {
+    "reference_bank_size": 300,
+    "test_trials_per_regime": 40,
+    "audits": {
+      "harmonic_invariance": {
+        "max_aligned_rotation_rmse": 0.0
+      },
+      "pca_invariance": {
+        "max_aligned_rotation_rmse": 0.0
+      },
+      "harmonic_clean_recovery": {
+        "audit_cases": 30,
+        "exact_recovery_fraction": 1.0,
+        "max_aligned_fit_rmse": 0.0
+      },
+      "pca_clean_recovery": {
+        "audit_cases": 30,
+        "exact_recovery_fraction": 1.0,
+        "max_aligned_fit_rmse": 0.0
+      },
+      "oracle_identity": {
+        "audit_cases": 30,
+        "max_oracle_identity_rmse": 0.0
+      },
+      "oracle_clean_recovery": {
+        "audit_cases": 30,
+        "exact_recovery_fraction": 1.0,
+        "max_fit_rmse": 0.0
+      }
+    },
+    "largest_oracle_alpha_improvement_vs_baseline": 13.205947895989402,
+    "smallest_oracle_alpha_improvement_vs_baseline": 5.650553790449798,
+    "largest_harmonic_fraction_of_oracle_alpha_gain": 0.19206292686280016,
+    "smallest_harmonic_fraction_of_oracle_alpha_gain": -0.5040046488328906,
+    "largest_pca_fraction_of_oracle_alpha_gain": 0.196033569821968,
+    "smallest_pca_fraction_of_oracle_alpha_gain": -0.28993356089728417
+  },
+  "by_condition": [
+    {
+      "condition": "full_clean",
+      "baseline_geometry_mae_mean": 0.08389998458658306,
+      "baseline_weight_mae_mean": 0.16226219152107274,
+      "baseline_alpha_error_mean": 0.2750107713549131,
+      "baseline_fit_rmse_mean": 0.00797099286361631,
+      "harmonic_geometry_mae_mean": 0.08526123580247412,
+      "harmonic_weight_mae_mean": 0.15299052248029485,
+      "harmonic_alpha_error_mean": 0.2263776339091307,
+      "harmonic_fit_rmse_mean": 0.008901640286813586,
+      "pca_geometry_mae_mean": 0.08864083991667149,
+      "pca_weight_mae_mean": 0.14736693257753436,
+      "pca_alpha_error_mean": 0.22537220913540912,
+      "pca_fit_rmse_mean": 0.009026486822782221,
+      "oracle_geometry_mae_mean": 0.08625514072555344,
+      "oracle_weight_mae_mean": 0.10867306138218347,
+      "oracle_alpha_error_mean": 0.02179617007726322,
+      "oracle_fit_rmse_mean": 0.010538257616002503,
+      "oracle_alpha_improvement_vs_baseline": 12.617389678097249,
+      "oracle_geometry_ratio_vs_baseline": 1.0280709960862975,
+      "harmonic_fraction_of_oracle_alpha_gain": 0.19206292686280016,
+      "pca_fraction_of_oracle_alpha_gain": 0.196033569821968
+    },
+    {
+      "condition": "full_noisy",
+      "baseline_geometry_mae_mean": 0.0948420819598951,
+      "baseline_weight_mae_mean": 0.12973210200176796,
+      "baseline_alpha_error_mean": 0.12505787483317155,
+      "baseline_fit_rmse_mean": 0.008454152506115439,
+      "harmonic_geometry_mae_mean": 0.0926512852552815,
+      "harmonic_weight_mae_mean": 0.1336441350895216,
+      "harmonic_alpha_error_mean": 0.1260875488136545,
+      "harmonic_fit_rmse_mean": 0.012722395310342449,
+      "pca_geometry_mae_mean": 0.09497993981107734,
+      "pca_weight_mae_mean": 0.12648290741085236,
+      "pca_alpha_error_mean": 0.1044324039300305,
+      "pca_fit_rmse_mean": 0.009611857940397515,
+      "oracle_geometry_mae_mean": 0.09263355858898864,
+      "oracle_weight_mae_mean": 0.09848702474693179,
+      "oracle_alpha_error_mean": 0.017449485646670537,
+      "oracle_fit_rmse_mean": 0.010742131874899249,
+      "oracle_alpha_improvement_vs_baseline": 7.166851640525766,
+      "oracle_geometry_ratio_vs_baseline": 0.9767136768271245,
+      "harmonic_fraction_of_oracle_alpha_gain": -0.009568714746750633,
+      "pca_fraction_of_oracle_alpha_gain": 0.1916715886100116
+    },
+    {
+      "condition": "partial_arc_noisy",
+      "baseline_geometry_mae_mean": 0.09562958887656892,
+      "baseline_weight_mae_mean": 0.16323335028631947,
+      "baseline_alpha_error_mean": 0.3038208104065444,
+      "baseline_fit_rmse_mean": 0.015308890864783351,
+      "harmonic_geometry_mae_mean": 0.11962970615961263,
+      "harmonic_weight_mae_mean": 0.15581704782844366,
+      "harmonic_alpha_error_mean": 0.2726968325346536,
+      "harmonic_fit_rmse_mean": 0.07409401423435945,
+      "pca_geometry_mae_mean": 0.09195466712437805,
+      "pca_weight_mae_mean": 0.18264341141791057,
+      "pca_alpha_error_mean": 0.2680135340399821,
+      "pca_fit_rmse_mean": 0.05717600835786887,
+      "oracle_geometry_mae_mean": 0.08589088559390383,
+      "oracle_weight_mae_mean": 0.11158662835144803,
+      "oracle_alpha_error_mean": 0.023006361436486787,
+      "oracle_fit_rmse_mean": 0.012697621285927857,
+      "oracle_alpha_improvement_vs_baseline": 13.205947895989402,
+      "oracle_geometry_ratio_vs_baseline": 0.8981622383085319,
+      "harmonic_fraction_of_oracle_alpha_gain": 0.11083467387822861,
+      "pca_fraction_of_oracle_alpha_gain": 0.12751222915306717
+    },
+    {
+      "condition": "sparse_full_noisy",
+      "baseline_geometry_mae_mean": 0.08245416366336586,
+      "baseline_weight_mae_mean": 0.1333958379683337,
+      "baseline_alpha_error_mean": 0.1928676231717002,
+      "baseline_fit_rmse_mean": 0.013043946658637257,
+      "harmonic_geometry_mae_mean": 0.09784530289079621,
+      "harmonic_weight_mae_mean": 0.18016646486105067,
+      "harmonic_alpha_error_mean": 0.2806166872826471,
+      "harmonic_fit_rmse_mean": 0.07262632215662805,
+      "pca_geometry_mae_mean": 0.11375209807751549,
+      "pca_weight_mae_mean": 0.15506423584579718,
+      "pca_alpha_error_mean": 0.24334612308634354,
+      "pca_fit_rmse_mean": 0.05826292890449849,
+      "oracle_geometry_mae_mean": 0.07499765409400964,
+      "oracle_weight_mae_mean": 0.11859232316488547,
+      "oracle_alpha_error_mean": 0.018763943147825545,
+      "oracle_fit_rmse_mean": 0.013127518382396291,
+      "oracle_alpha_improvement_vs_baseline": 10.278629691651492,
+      "oracle_geometry_ratio_vs_baseline": 0.9095678224352772,
+      "harmonic_fraction_of_oracle_alpha_gain": -0.5040046488328906,
+      "pca_fraction_of_oracle_alpha_gain": -0.28993356089728417
+    },
+    {
+      "condition": "sparse_partial_high_noise",
+      "baseline_geometry_mae_mean": 0.09326595416803507,
+      "baseline_weight_mae_mean": 0.13979023809322272,
+      "baseline_alpha_error_mean": 0.25400508041323616,
+      "baseline_fit_rmse_mean": 0.0483470615221895,
+      "harmonic_geometry_mae_mean": 0.10425017818676804,
+      "harmonic_weight_mae_mean": 0.16296777352758304,
+      "harmonic_alpha_error_mean": 0.29284083811431916,
+      "harmonic_fit_rmse_mean": 0.06746923386177714,
+      "pca_geometry_mae_mean": 0.11677361845086828,
+      "pca_weight_mae_mean": 0.1941422922556663,
+      "pca_alpha_error_mean": 0.29854265855681517,
+      "pca_fit_rmse_mean": 0.06135361487015467,
+      "oracle_geometry_mae_mean": 0.09726308576045109,
+      "oracle_weight_mae_mean": 0.1382790520538808,
+      "oracle_alpha_error_mean": 0.044952245360895274,
+      "oracle_fit_rmse_mean": 0.024790234013366615,
+      "oracle_alpha_improvement_vs_baseline": 5.650553790449798,
+      "oracle_geometry_ratio_vs_baseline": 1.0428573494805455,
+      "harmonic_fraction_of_oracle_alpha_gain": -0.18577005995331095,
+      "pca_fraction_of_oracle_alpha_gain": -0.21304460249213103
+    }
+  ]
+}

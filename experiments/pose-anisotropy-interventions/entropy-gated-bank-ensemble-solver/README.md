@@ -21,7 +21,7 @@ only the inverse policy:
 
 1. fit a frozen four-way logistic chooser on calibration blocks only
 2. default to the stable `dense_support` candidate
-3. open an observability gate only when `dense_joint_entropy` is high enough
+3. open an observability gate only when `d_joint_entropy` is high enough
 4. when the gate opens, trust the frozen four-way chooser
 
 ## Why This Solver
@@ -39,9 +39,9 @@ The merged candidate set exposed the real solver opportunity:
 
 The selected gate is:
 
-- feature: `dense_joint_entropy`
+- feature: `d_joint_entropy`
 - default candidate: `dense_support`
-- gate condition: `dense_joint_entropy >= 0.3655148794`
+- gate condition: `d_joint_entropy >= 0.3655148794`
 
 That threshold is selected from calibration only. It is not tuned on holdout or
 confirmation.
@@ -60,33 +60,48 @@ So this solver clears both evaluation blocks:
 - holdout improvement: about `0.0040`
 - confirmation improvement: about `0.0040`
 
-The repo now has a working focused solver on the tested slice.
+The experiments show a solver-policy result on the tested slice.
+
+The gate rule is fixed from calibration only:
+
+- open the chooser when `d_joint_entropy >= 0.3655148794`
+- otherwise return `dense_support`
+
+The solver selects one cached candidate when the gate opens. It does not
+average bank outputs.
+
+Under the matched frozen shadow protocol, the ambiguity-gated alternative is
+worse on fresh combined data:
+
+- entropy gate fresh combined mean `alpha` error: `0.105721`
+- ambiguity gate fresh combined mean `alpha` error: `0.116399`
 
 ## Plain-Language Read
 
 The dense-support candidate is the safest default. It keeps the low-observability
 cells from blowing up.
 
-The extra gain comes from only trusting the richer four-way chooser when the
-dense-joint entropy says the observation has enough structure to justify it.
+The extra gain comes from trusting the richer four-way chooser only when
+`d_joint_entropy` is high enough to justify leaving that default.
 
 Plainly:
 
 - low observability: stay with `dense_support`
 - higher observability: let the chooser pick among all four cached candidates
 
-That is the solver-design resolution the earlier bottleneck work was pointing
-toward in the tested regime.
+Per-cell results remain mixed, but the aggregate gain holds on both independent
+fresh evaluation blocks.
 
 ## BGP Impact
 
 This strengthens BGP.
 
 The result shows the remaining failure in the focused slice was in solver policy,
-not in the latent control object:
+not in the latent control object. This is a practical observability gate in the
+tested regime, not a new control law:
 
 - the control backbone stayed usable
-- the solver bottleneck yielded to an observability-gated ensemble
+- the solver bottleneck yielded to a frozen observability-gated bank policy
 - no larger latent object or theory rewrite was needed
 
 ## Remaining Limits

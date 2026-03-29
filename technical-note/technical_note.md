@@ -205,14 +205,27 @@ That diagnosis set up the later solver result. The entropy-gated bank ensemble s
 - moderate anisotropy
 - `low_skew`, `mid_skew`, `high_skew`
 
-The four-way chooser and the entropy gate threshold were fit on calibration blocks only and then frozen before disjoint holdout and confirmation evaluation.
+The experiments show a solver-policy result in that tested slice. The four-way
+chooser and the entropy gate threshold were fit on calibration blocks only and
+then frozen before disjoint holdout and confirmation evaluation. The gate opens
+when `d_joint_entropy >= 0.3655148794219478` and otherwise returns
+`dense_support`. When the gate opens, the solver selects one cached candidate
+rather than averaging bank outputs.
 
 On disjoint evaluation blocks it achieved:
 
 - holdout mean `alpha` error `0.1050` versus best single cached candidate `0.1091`
 - confirmation mean `alpha` error `0.1064` versus best single cached candidate `0.1104`
 
-The current pose-free anisotropy result is therefore not “BGP breaks.” It is “the latent structure survives, the focused moderate sparse bottleneck yields to a better inverse policy in the tested regime, and the remaining open work is broader than that solved slice.”
+Under the matched frozen shadow protocol, the entropy gate also beat the
+ambiguity-gated alternative on fresh combined data: `0.105721` versus
+`0.116399` mean `alpha` error.
+
+Per-cell results remain mixed, so this is not a claim that the gate beats the
+best single candidate in every sub-condition. The supported claim is narrower:
+the latent structure survives, the focused moderate sparse bottleneck yields to
+a better inverse policy in the tested regime, and the remaining open work is
+broader than that solved slice.
 
 # What The Repo Establishes
 

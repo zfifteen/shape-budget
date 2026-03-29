@@ -1,0 +1,8 @@
+{
+  "num_metric_rows": 95,
+  "num_collapse_rows": 190,
+  "max_equation_residual": 1.587618925213974e-14,
+  "max_rms_equation_residual": 3.1364301515766568e-15,
+  "max_scale_collapse_error": 3.973642985026043e-08,
+  "mean_scale_collapse_error": 2.2397885823728392e-11
+}
