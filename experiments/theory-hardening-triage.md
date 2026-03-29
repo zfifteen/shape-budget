@@ -1,5 +1,9 @@
 # Theory Hardening Triage
 
+This note is preserved as a historical prioritization memo.
+Its completion language records how priorities moved during the hardening sequence.
+For the current repo-level milestone framing, use [technical note](../technical-note/technical_note.md) and [solver challenges](../docs/SOLVER_CHALLENGES.md).
+
 ## Purpose
 
 This note records the current experiment priority after the recent pose-free

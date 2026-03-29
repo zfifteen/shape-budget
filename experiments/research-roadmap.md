@@ -1,5 +1,9 @@
 # Shape Budget Research Roadmap
 
+This document now serves as project-history plus open-target context.
+Completed items are preserved to keep the research sequence auditable.
+For the current repo-level milestone framing, use [technical note](../technical-note/technical_note.md) and [solver challenges](../docs/SOLVER_CHALLENGES.md).
+
 ## Purpose
 
 The experiments establish a specific claim:
