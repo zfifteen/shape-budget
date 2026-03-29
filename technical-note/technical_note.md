@@ -2,7 +2,7 @@
 title: "The Budget Governor Principle"
 subtitle: "Technical Note on Control-Knob Sufficiency, Low-Dimensional Generalization, Inverse Recovery, and Symmetry-Limited Pose-Free Inference"
 author: "Dionisio Alberto Lopez III"
-date: "March 24, 2026"
+date: "March 29, 2026"
 documentclass: article
 fontsize: 11pt
 geometry: margin=1in
@@ -188,6 +188,8 @@ A cross-artifact phase split sharpens that diagnosis further. The calibration-fr
 - gauge-broad trials that are wide before anchoring but narrow after the backbone is fixed,
 - and bundle-broad trials that stay wide even after anchoring.
 
+In plain language, many of the hard trials look broad at first only because pose ambiguity is still mixed into the candidate family. Once the geometry backbone is anchored, a large fraction of that width collapses, and the truly hard remainder is the smaller subset that stays broad even after that anchor.
+
 In the current `72`-trial focused dataset, `63` trials are ambiguity-high. But `44` of those `63` are gauge-broad rather than bundle-broad. Their point-recoverable rate is `0.5909`. The remaining `19` bundle-broad trials have point-recoverable rate `0.0526`. So the hard branch is not one continuous confidence loss. Most of the observed width is a gauge-broad phase that the backbone mostly quotients out, while a smaller subset remains truly bundle-broad after anchoring.
 
 ![Pose-free alpha phase map. Pre-anchor ambiguity and post-anchor anchored-width separate the focused branch into low-ambiguity, gauge-broad, and bundle-broad regimes. The key split is that many wide pre-anchor families collapse after backbone anchoring, while a smaller subset stays wide and remains largely non-pointable.](figures/figure7_alpha_phase_map_dashboard.png){ width=96% }
@@ -202,6 +204,8 @@ That diagnosis set up the later solver result. The entropy-gated bank ensemble s
 - `sparse_partial_high_noise`
 - moderate anisotropy
 - `low_skew`, `mid_skew`, `high_skew`
+
+The four-way chooser and the entropy gate threshold were fit on calibration blocks only and then frozen before disjoint holdout and confirmation evaluation.
 
 On disjoint evaluation blocks it achieved:
 
@@ -270,7 +274,7 @@ The main practical engineering lesson from the current phase is just as importan
 
 > when one part of the hidden budget state becomes weakly identifiable, the right next move is a better inverse policy that respects observability structure before assuming the latent control object itself must change.
 
-# Next Revision Targets
+# Open Technical Targets
 
 The strongest next steps are:
 
