@@ -1,0 +1,13 @@
+condition,geometry_skew_bin,trial_in_cell,support_alpha,joint_alpha,resolved_alpha,resolved_choose_joint,cell
+sparse_full_noisy,low_skew,0,0.02146066672266289,0.053337312193588726,0.02146066672266289,0,sparse_full_noisy::low_skew
+sparse_full_noisy,low_skew,1,0.03396212585724201,0.03396212585724201,0.03396212585724201,0,sparse_full_noisy::low_skew
+sparse_full_noisy,mid_skew,0,0.009835318762325462,0.009835318762325462,0.009835318762325462,0,sparse_full_noisy::mid_skew
+sparse_full_noisy,mid_skew,1,0.012715047409596725,0.012715047409596725,0.012715047409596725,0,sparse_full_noisy::mid_skew
+sparse_full_noisy,high_skew,0,0.4759277156754953,0.4759277156754953,0.4759277156754953,0,sparse_full_noisy::high_skew
+sparse_full_noisy,high_skew,1,0.18597592571230936,0.18441504927991004,0.18441504927991004,1,sparse_full_noisy::high_skew
+sparse_partial_high_noise,low_skew,0,0.19625242563910106,0.05515155265418503,0.05515155265418503,1,sparse_partial_high_noise::low_skew
+sparse_partial_high_noise,low_skew,1,0.012290745568467987,0.3229253708329576,0.012290745568467987,0,sparse_partial_high_noise::low_skew
+sparse_partial_high_noise,mid_skew,0,0.12644113875850138,0.12644113875850138,0.12644113875850138,0,sparse_partial_high_noise::mid_skew
+sparse_partial_high_noise,mid_skew,1,0.48511059029671033,0.48511059029671033,0.48511059029671033,0,sparse_partial_high_noise::mid_skew
+sparse_partial_high_noise,high_skew,0,0.40336118440108826,0.0265324102104032,0.0265324102104032,1,sparse_partial_high_noise::high_skew
+sparse_partial_high_noise,high_skew,1,0.09339623164376043,0.41600974402489754,0.09339623164376043,0,sparse_partial_high_noise::high_skew
