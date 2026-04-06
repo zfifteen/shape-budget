@@ -12,6 +12,8 @@ and the normalized transverse residue is
 
 This gives the base case a direct resource interpretation. Two offset sources share a fixed total budget. Part of that budget is consumed by the separation between the sources. The remainder is available for transverse spread. The visible shape records that allocation exactly.
 
+In that tested base case, this flips the usual reading of eccentricity. `e = c / a` is not best understood as a label read off a finished ellipse after the fact. It is the allocation readout of how much fixed total budget was consumed by source separation before any transverse residue could appear. The visible locus is the boundary record of that hidden allocation.
+
 When separation is small relative to total budget, the separation tax is small and the locus stays wide. When separation is large relative to total budget, the separation tax is high and the locus becomes narrow and elongated. The control parameter therefore measures structural load, not just finished-shape appearance.
 
 The base-case claim is precise:
@@ -22,4 +24,4 @@ The base-case claim is precise:
 
 This is why the central question in this project is not only “what shape is this?” It is also “how much of the available budget has already been consumed by structural separation?”
 
-In the symmetric two-source setting, the answer is carried by one latent control parameter. In richer settings, the same budget logic expands into higher-dimensional control objects built from normalized placement, participation, and medium structure.
+In the symmetric two-source setting, the answer is carried by one latent control parameter. The inverse task is to recover that pre-geometry allocation readout from the visible boundary. In richer settings, the same budget logic expands into higher-dimensional control objects built from normalized placement, participation, and medium structure.

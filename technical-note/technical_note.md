@@ -11,7 +11,7 @@ bibliography: references.bib
 link-citations: true
 colorlinks: true
 abstract: |
-  The Budget Governor Principle (BGP) is the experimentally established control-parameter law for the symmetric constant-sum two-source Euclidean process. In that base case, BGP is the latent control parameter `e = c/a` for normalized geometry and `b/a = sqrt(1-e^2)` is the corresponding transverse residue. Controlled computational studies in this repository show that this parameter governs normalized shape, remains recoverable from noisy boundary observations when the source positions are known, and outperforms raw separation and raw budget variables under scale shift. Additional studies show that the same budget logic extends in a structured way: asymmetry upgrades the family from one knob to two, the hyperbola case yields a deficit-side twin, controlled anisotropy adds a medium parameter removable by whitening, and equal-weight and weighted three-source families are governed by compact normalized control objects. In weighted multi-source and anisotropic settings those control objects form operational latent variables recoverable from boundary data. The pose-free anisotropic inverse remains the hardest tested branch, but the focused bottleneck slice is now solved in the tested regime by the entropy-gated bank ensemble solver. On the solved slice (`sparse_full_noisy` and `sparse_partial_high_noise`, moderate anisotropy, `low_skew` / `mid_skew` / `high_skew`), the solver achieves holdout mean `alpha` error `0.1050` versus best single `0.1091` and confirmation mean `alpha` error `0.1064` versus best single `0.1104`. The remaining open work is broader regime generalization, broader validation, unknown-axis media, richer media, and outward extension.
+  The Budget Governor Principle (BGP) is the experimentally established control-parameter law for the symmetric constant-sum two-source Euclidean process. In that base case, BGP is the latent control parameter `e = c/a` for normalized geometry and `b/a = sqrt(1-e^2)` is the corresponding transverse residue. In the tested base case, `e = c/a` is not only a descriptor of the finished boundary; it is the allocation readout of how much fixed total budget is consumed by separation before transverse residue remains. Controlled computational studies in this repository show that this parameter governs normalized shape, remains recoverable from noisy boundary observations when the source positions are known, and outperforms raw separation and raw budget variables under scale shift. Additional studies show that the same budget logic extends in a structured way: asymmetry upgrades the family from one knob to two, the hyperbola case yields a deficit-side twin, controlled anisotropy adds a medium parameter removable by whitening, and equal-weight and weighted three-source families are governed by compact normalized control objects. In weighted multi-source and anisotropic settings those control objects form operational latent variables recoverable from boundary data. The pose-free anisotropic inverse remains the hardest tested branch, but the focused bottleneck slice is now solved in the tested regime by the entropy-gated bank ensemble solver. On the solved slice (`sparse_full_noisy` and `sparse_partial_high_noise`, moderate anisotropy, `low_skew` / `mid_skew` / `high_skew`), the solver achieves holdout mean `alpha` error `0.1050` versus best single `0.1091` and confirmation mean `alpha` error `0.1064` versus best single `0.1104`. The remaining open work is broader regime generalization, broader validation, unknown-axis media, richer media, and outward extension.
 ---
 
 **Keywords:** ellipse eccentricity; conic geometry; inverse problems; latent variables; anisotropy; multi-source geometry; scale collapse; shape analysis
@@ -20,7 +20,7 @@ abstract: |
 
 BGP is the latent control parameter `e = c/a` for the symmetric constant-sum two-source Euclidean process.
 
-The repository establishes that base case, extends the same budget logic into compact low-dimensional control objects for richer families, and demonstrates boundary-only recovery of those control objects in weighted multi-source settings [@shapebudget2026].
+The repository establishes that base case, extends the same budget logic into compact low-dimensional control objects for richer families, and demonstrates boundary-only recovery of those control objects in weighted multi-source settings [@shapebudget2026]. In the tested base case, the boundary is the visible residue of a prior budget allocation and `e = c/a` is the readout recovered from that residue.
 
 The established result set is:
 
@@ -49,6 +49,8 @@ $$
 \frac{b}{a} = \sqrt{1-e^2}.
 $$
 
+This gives the base case an inverse reading. The ellipse boundary is not the primary hidden object. It is the visible residue of a prior allocation decision under fixed total budget. In that tested regime, eccentricity is best read as the allocation readout `c/a`, not merely as a post hoc label attached to a finished curve.
+
 The core BGP reading is therefore:
 
 > normalized source separation relative to total budget governs how much geometric freedom remains after structural separation cost is paid.
@@ -57,7 +59,7 @@ In the symmetric ellipse case, that control object collapses to one scalar. In r
 
 # Why This Matters Computationally
 
-The computational importance of BGP is narrower and stronger than static shape description:
+The computational importance of BGP is narrower and stronger than static shape description. In the tested base case, the inverse target is not only a shape label. It is the hidden budget allocation whose residue survives in the boundary:
 
 1. the symmetric ratio `e = c/a` is the sufficient organizing variable for normalized geometry in the tested base case,
 2. that variable is operational in recovery and prediction,
@@ -136,6 +138,8 @@ The important point is that the principle did not survive as “still one scalar
 
 The most important shift in the repository is inferential, not geometric.
 
+The deeper shift is not only from descriptor to latent variable. It is from treating the boundary as the primary object to treating it as compressed evidence about hidden allocation structure.
+
 In the weighted three-source canonical-pose inverse, a simple boundary-only reference-bank inverse recovered the normalized source triangle and normalized weights with useful accuracy:
 
 - mean geometry MAE ranged from `0.062` to `0.086`,
@@ -171,6 +175,8 @@ The matched ambiguity study made that diagnosis much sharper. Hiding rotation br
 
 The oracle alignment ceiling then showed that the missing signal is largely still there. Giving the inverse the true pose improved `alpha` by about `5.65x` to `13.21x` across all regimes while leaving geometry roughly stable.
 
+The evidence therefore points to a symmetry-limited inverse, not a missing-signal inverse. Once pose is hidden, distinct latent states become much less separable in the pose-free observation, and that folding is concentrated much more strongly along `alpha` than along geometry.
+
 ![Oracle alignment ceiling. Once true pose is restored, most of the lost anisotropy signal comes back, which means the main solver challenge is practical symmetry handling rather than missing information in the boundary.](figures/figure5_oracle_alignment_ceiling_alpha_methods.png){ width=92% }
 
 The newest failure-map result puts a shape on that solver challenge:
@@ -188,7 +194,7 @@ A cross-artifact phase split sharpens that diagnosis further. The calibration-fr
 - gauge-broad trials that are wide before anchoring but narrow after the backbone is fixed,
 - and bundle-broad trials that stay wide even after anchoring.
 
-In plain language, many of the hard trials look broad at first only because pose ambiguity is still mixed into the candidate family. Once the geometry backbone is anchored, a large fraction of that width collapses, and the truly hard remainder is the smaller subset that stays broad even after that anchor.
+In plain language, many of the hard trials look broad at first only because pose ambiguity is still mixed into the candidate family. Once the geometry backbone is anchored, a large fraction of that width collapses, and the truly hard remainder is the smaller subset that stays broad even after that anchor. What is missing in those broad cases is not raw boundary signal by itself but enough symmetry-breaking context to make the allocation-and-medium state point-unique.
 
 In the current `72`-trial focused dataset, `63` trials are ambiguity-high. But `44` of those `63` are gauge-broad rather than bundle-broad. Their point-recoverable rate is `0.5909`. The remaining `19` bundle-broad trials have point-recoverable rate `0.0526`. So the hard branch is not one continuous confidence loss. Most of the observed width is a gauge-broad phase that the backbone mostly quotients out, while a smaller subset remains truly bundle-broad after anchoring.
 

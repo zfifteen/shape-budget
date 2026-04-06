@@ -20,6 +20,8 @@ Define:
 - \(S = 2a\) — total reach budget
 - \(d = 2c\) — source separation
 
+In the BGP reading of this base case, \(e = c / a\) is the normalized allocation readout: the fraction of total reach budget already committed to structural separation before transverse residue remains.
+
 Assume \(0 \le c \le a\), equivalently \(0 \le e \le 1\). The case \(0 \le e < 1\) gives a proper ellipse; \(e = 1\) is the degenerate line-segment limit.
 
 The constant-sum constraint requires that for any point \(P = (x, y)\) on the locus:
@@ -84,7 +86,7 @@ Dividing through by \(b^2\):
 \boxed{\frac{x^2}{a^2} + \frac{y^2}{b^2} = 1}
 \]
 
-This is the standard ellipse equation. The constant-sum construction is exactly equivalent to it.
+This is the standard ellipse equation. The constant-sum construction is exactly equivalent to it. In the BGP reading, the equation describes the visible boundary implied by the budget split; it does not replace `e = c/a` as the governing control variable.
 
 ---
 

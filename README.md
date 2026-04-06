@@ -2,11 +2,18 @@
 
 The Budget Governor Principle (BGP) is the latent control parameter `e = c / a` for the symmetric constant-sum two-source process.
 
-In that regime, `e` governs the normalized shape family, predicts normalized observables, and is recoverable from boundary data. This repository establishes that base case, extends the same budget logic into asymmetry, anisotropy, and multi-source control objects, and now establishes a working focused solver for the hardest tested pose-free anisotropic slice while localizing the remaining open work to broader generalization and extension.
+In that regime, `e` governs the normalized shape family, predicts normalized observables, and is recoverable from boundary data. In the tested base case, that gives eccentricity an inverse reading: it is the boundary-visible allocation readout of how much total budget was already committed to separation before transverse freedom remained. This repository establishes that base case, extends the same budget logic into asymmetry, anisotropy, and multi-source control objects, and now establishes a working focused solver for the hardest tested pose-free anisotropic slice while localizing the remaining open work to broader generalization and extension.
 
 **BGP in one sentence:** normalized separation relative to total budget governs how much transverse freedom remains after structural separation cost is paid.
 
 The project name is **Shape Budget**. The scientific claim developed here is the **Budget Governor Principle**.
+
+## Vault Context
+
+For the vault-native project context and recent experiment notes, start with:
+
+- [PROJECT_CONTEXT.md](docs/PROJECT_CONTEXT.md)
+- [Obsidian vault context smoke test](experiments/notes/2026-03-31-obsidian-vault-context-smoke-test.md)
 
 ## The Base Case
 
@@ -31,6 +38,8 @@ and the remaining normalized transverse spread is:
 ```text
 b / a = sqrt(1 - e^2)
 ```
+
+In that tested base case, the visible ellipse is not the primary hidden object. The boundary is the residue of a prior budget allocation, and `e = c / a` is the readout of how much of the fixed total budget was spent on separation before the remaining transverse spread could appear.
 
 So the core scientific question in this repo is not only:
 
@@ -112,7 +121,7 @@ In the weighted three-source case, the important hidden object is:
 
 The inverse experiments show that this compact control object is recoverable from boundary-only data and clearly outperforms simpler baselines that ignore the weight degrees of freedom.
 
-That is why the project increasingly talks about **operational latent variables** rather than just geometric descriptors.
+That is why the project increasingly talks about **operational latent variables** rather than just geometric descriptors. In the tested regime, the boundary is acting less like a final label surface and more like a boundary record of the hidden allocation structure that produced it.
 
 ## Focused Solver Milestone
 
@@ -140,7 +149,7 @@ Cross-artifact analysis sharpens that read further. High pre-anchor `alpha` ambi
 
 This figure shows one of the most important diagnostics in the whole folder.
 
-The baseline pose-free anisotropic inverse does not recover `alpha` well. But when the inverse is given the true pose, `alpha` error drops dramatically across every tested regime. That means the anisotropy signal is genuinely present in the boundary; the current pipeline is mostly losing it because practical pose handling is unstable under incomplete observations.
+The baseline pose-free anisotropic inverse does not recover `alpha` well. But when the inverse is given the true pose, `alpha` error drops dramatically across every tested regime. That means the anisotropy signal is genuinely present in the boundary; the current pipeline is mostly losing it because practical pose handling is unstable under incomplete observations. The evidence points to a symmetry-limited inverse: once rotation is hidden, distinct latent states become much less separable in the pose-free observation, especially along the `alpha` direction.
 
 That diagnostic established the right question for the branch: not whether the latent variable exists, but how to preserve enough broken symmetry before inference starts. The later entropy-gated bank ensemble solver answers that question for the focused tested slice.
 
